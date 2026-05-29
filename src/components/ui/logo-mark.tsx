@@ -14,28 +14,12 @@ export function LogoMark({ size = 20, className }: LogoMarkProps) {
       className={className}
     >
       {/* Background */}
-      <rect width="100" height="100" rx="20" fill="#EE661D" />
+      <rect width="100" height="100" rx="22" fill="#EE661D" />
 
-      {/* Root node */}
-      <rect x="28" y="10" width="44" height="24" rx="5" fill="white" />
-
-      {/* Vertical connector from root */}
-      <rect x="44" y="34" width="12" height="14" fill="rgba(255,255,255,0.6)" />
-
-      {/* Horizontal bar */}
-      <rect x="18" y="48" width="64" height="10" fill="rgba(255,255,255,0.6)" />
-
-      {/* Left stem */}
-      <rect x="18" y="58" width="12" height="10" fill="rgba(255,255,255,0.6)" />
-
-      {/* Right stem */}
-      <rect x="70" y="58" width="12" height="10" fill="rgba(255,255,255,0.6)" />
-
-      {/* Left child node */}
-      <rect x="6" y="68" width="36" height="22" rx="5" fill="rgba(255,255,255,0.92)" />
-
-      {/* Right child node */}
-      <rect x="58" y="68" width="36" height="22" rx="5" fill="rgba(255,255,255,0.92)" />
+      {/* Phosphor tree-fill icon (viewBox 256 → scaled to fit with padding) */}
+      <g transform="translate(12,12) scale(0.297)" fill="white">
+        <path d="M128,187.85a72.44,72.44,0,0,0,8,4.62V232a8,8,0,0,1-16,0V192.47A72.44,72.44,0,0,0,128,187.85ZM198.1,62.59a76,76,0,0,0-140.2,0A71.71,71.71,0,0,0,16,127.8C15.9,166,48,199,86.14,200A72.22,72.22,0,0,0,120,192.47V156.94L76.42,135.16a8,8,0,1,1,7.16-14.32L120,139.06V88a8,8,0,0,1,16,0v27.06l36.42-18.22a8,8,0,1,1,7.16,14.32L136,132.94v59.53A72.17,72.17,0,0,0,168,200l1.82,0C208,199,240.11,166,240,127.8A71.71,71.71,0,0,0,198.1,62.59Z"/>
+      </g>
     </svg>
   );
 }
