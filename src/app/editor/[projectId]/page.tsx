@@ -87,6 +87,8 @@ export default function EditorPage() {
       } else {
         setNodes([]);
         setEdges([]);
+        // New project — persist the row immediately so it appears on the home page
+        await saveProject(projectId, projectTitle, { nodes: [], edges: [] });
       }
       const meta = list.find((p) => p.id === projectId);
       if (meta?.title) setProjectTitle(meta.title);
