@@ -81,17 +81,17 @@ export default function EditorPage() {
         getProjectList(),
       ]);
       if (cancelled) return;
-      if (saved) {
-        setNodes(saved.nodes);
-        setEdges(saved.edges);
-      } else {
-        setNodes([]);
-        setEdges([]);
-        // New project — persist the row immediately so it appears on the home page
-        await saveProject(projectId, projectTitle, { nodes: [], edges: [] });
-      }
+      const nodes = saved?.nodes ?? [];
+      const edges = saved?.edges ?? [];
+      setNodes(nodes);
+      setEdges(edges);
       const meta = list.find((p) => p.id === projectId);
       if (meta?.title) setProjectTitle(meta.title);
+      // New project — no row in `projects` table yet; create it now so it
+      // shows up on the home page even if the user navigates back immediately.
+      if (!meta) {
+        await saveProject(projectId, projectTitle, { nodes, edges });
+      }
       markClean();
       setIsLoading(false);
     })();
