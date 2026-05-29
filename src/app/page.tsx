@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, FolderOpen, Trash2, Clock, Loader2 } from 'lucide-react';
 import { getProjectList, deleteProject, type ProjectMeta } from '@/lib/storage';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { AboutButton } from '@/components/ui/about-modal';
 import { generateId } from '@/lib/utils';
 import { Tooltip } from '@/components/ui/tooltip';
 import { useAuthStore } from '@/store/authStore';
@@ -89,6 +90,7 @@ export default function Home() {
         </div>
         <div className="flex items-center gap-3">
           <span className="text-xs text-gray-400 hidden sm:block">{user.email}</span>
+          <AboutButton variant="text" />
           <Button variant="ghost" size="sm" className="text-sm text-gray-500" onClick={() => signOut().then(() => router.replace('/auth'))}>
             Sign out
           </Button>

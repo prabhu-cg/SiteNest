@@ -10,6 +10,7 @@ import {
 import type { LayoutDirection } from '@/lib/layout';
 import { useTheme } from 'next-themes';
 import { Tooltip } from '@/components/ui/tooltip';
+import { AboutButton } from '@/components/ui/about-modal';
 
 interface ToolbarProps {
   projectId: string;
@@ -226,6 +227,12 @@ export default function Toolbar({
         >
           {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
         </button>
+      </Tooltip>
+
+      <div className="w-px h-4 bg-gray-200 dark:bg-gray-700" />
+
+      <Tooltip content="About SiteNest" side="bottom">
+        <AboutButton variant="icon" />
       </Tooltip>
 
       <div className="w-px h-4 bg-gray-200 dark:bg-gray-700" />
