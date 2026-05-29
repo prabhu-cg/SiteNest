@@ -35,7 +35,6 @@ export function AboutButton({ variant = 'icon' }: AboutButtonProps) {
         <button
           onClick={() => setOpen(true)}
           className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-          title="About SiteNest"
         >
           <Info className="w-3.5 h-3.5" />
         </button>
