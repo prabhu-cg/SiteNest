@@ -1,6 +1,7 @@
 'use client';
+import type React from 'react';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import ReactFlow, {
   Node,

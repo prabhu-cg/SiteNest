@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { X, Plus, Trash2, GripVertical, Search, Check, Loader2, Download } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { Tooltip } from '@/components/ui/tooltip';
@@ -46,7 +46,7 @@ export default function WireframeModal({ pageTitle, blocks: initialBlocks, onClo
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [isDirty, setIsDirty] = useState(false);
   const [exporting, setExporting] = useState(false);
-  const dragIndexRef = React.useRef<number | null>(null);
+  const dragIndexRef = useRef<number | null>(null);
   const exportRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);

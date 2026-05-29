@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCanvasStore } from '@/store/canvasStore';
 import {
@@ -89,6 +89,7 @@ function SaveStatus() {
       return () => clearTimeout(t);
     }
     prevDirtyRef.current = isDirty;
+    return undefined;
   }, [isDirty]);
 
   if (display.type === 'idle') {

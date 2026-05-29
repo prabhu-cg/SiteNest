@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Canvas from '@/components/canvas/Canvas';
 import Sidebar from '@/components/canvas/Sidebar';

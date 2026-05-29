@@ -1,6 +1,7 @@
 'use client';
+import type React from 'react';
 
-import React, { memo, useState, useCallback, useRef } from 'react';
+import { memo, useState, useCallback, useRef } from 'react';
 import { Handle, Position } from 'reactflow';
 import { cn } from '@/lib/utils';
 import { useCanvasStore } from '@/store/canvasStore';

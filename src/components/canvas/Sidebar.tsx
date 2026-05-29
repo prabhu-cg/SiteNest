@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useCanvasStore } from '@/store/canvasStore';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
@@ -14,7 +14,7 @@ interface SidebarProps {
   onAddNode?: () => void;
 }
 
-export default function Sidebar({ projectId, onAddNode }: SidebarProps) {
+export default function Sidebar({ projectId: _projectId, onAddNode }: SidebarProps) {
   const { nodes, selectedNodeId, setSelectedNode, deleteNode, addNode } = useCanvasStore();
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 

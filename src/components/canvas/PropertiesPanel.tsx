@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useCanvasStore } from '@/store/canvasStore';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,7 +16,7 @@ interface PropertiesPanelProps {
 }
 
 function BlocksSection({
-  nodeId,
+  nodeId: _nodeId,
   blocks,
   onUpdate,
   onOpenEditor,
