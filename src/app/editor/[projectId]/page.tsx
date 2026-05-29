@@ -68,30 +68,43 @@ export default function EditorPage() {
     return () => window.removeEventListener('keydown', handler);
   }, [undo, redo]);
 
-  // Load project from localStorage on mount
+  // Load project from Supabase on mount (waits for auth)
   useEffect(() => {
+    if (!user) return;
     setProjectId(projectId);
-    const saved = loadProject(projectId);
-    if (saved) {
-      setNodes(saved.nodes);
-      setEdges(saved.edges);
-    } else {
-      setNodes([]);
-      setEdges([]);
-    }
-    const meta = getProjectList().find((p) => p.id === projectId);
-    if (meta?.title) setProjectTitle(meta.title);
-    markClean();
-    setIsLoading(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectId]);
+    let cancelled = false;
 
-  // Auto-save to localStorage whenever nodes/edges change
+    setIsLoading(true);
+    (async () => {
+      const [saved, list] = await Promise.all([
+        loadProject(projectId),
+        getProjectList(),
+      ]);
+      if (cancelled) return;
+      if (saved) {
+        setNodes(saved.nodes);
+        setEdges(saved.edges);
+      } else {
+        setNodes([]);
+        setEdges([]);
+      }
+      const meta = list.find((p) => p.id === projectId);
+      if (meta?.title) setProjectTitle(meta.title);
+      markClean();
+      setIsLoading(false);
+    })();
+
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectId, user?.id]);
+
+  // Auto-save to Supabase whenever nodes/edges change
   useEffect(() => {
     if (!isDirty || isLoading) return;
     const timer = setTimeout(() => {
-      saveProject(projectId, projectTitle, { nodes, edges });
-      markClean();
+      saveProject(projectId, projectTitle, { nodes, edges })
+        .then(() => markClean())
+        .catch(() => { /* silently swallow save errors */ });
     }, 800);
     return () => clearTimeout(timer);
   }, [nodes, edges, isDirty, isLoading, projectId, projectTitle, markClean]);

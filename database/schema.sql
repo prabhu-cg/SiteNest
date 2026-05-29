@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS sitemap_nodes (
   status VARCHAR(50) DEFAULT 'draft',
   position_x FLOAT DEFAULT 0,
   position_y FLOAT DEFAULT 0,
+  wireframe JSONB DEFAULT '[]',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -64,9 +65,28 @@ ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sitemap_nodes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE edges ENABLE ROW LEVEL SECURITY;
 
--- Users RLS: Users can only read their own data
+-- Trigger: auto-create users row on auth signup
+CREATE OR REPLACE FUNCTION handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.users (auth_id, email)
+  VALUES (NEW.id, NEW.email)
+  ON CONFLICT (auth_id) DO NOTHING;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+
+-- Users RLS: Users can only read/write their own data
 CREATE POLICY "Users can view own data" ON users
   FOR SELECT USING (auth_id = auth.uid());
+
+CREATE POLICY "Users can insert own profile" ON users
+  FOR INSERT WITH CHECK (auth_id = auth.uid());
 
 CREATE POLICY "Users can update own data" ON users
   FOR UPDATE USING (auth_id = auth.uid());

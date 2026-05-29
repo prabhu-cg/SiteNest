@@ -37,8 +37,9 @@ export default function Home() {
   }, [user, authLoading, router]);
 
   useEffect(() => {
-    setProjects(getProjectList().sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)));
-  }, []);
+    if (!user) return;
+    getProjectList().then(setProjects);
+  }, [user]);
 
   if (authLoading || !user) {
     return (
@@ -60,8 +61,9 @@ export default function Home() {
 
   const confirmDelete = () => {
     if (pendingDeleteId) {
-      deleteProject(pendingDeleteId);
-      setProjects((prev) => prev.filter((p) => p.id !== pendingDeleteId));
+      const idToDelete = pendingDeleteId;
+      deleteProject(idToDelete).catch(() => { /* silently swallow */ });
+      setProjects((prev) => prev.filter((p) => p.id !== idToDelete));
     }
     setPendingDeleteId(null);
   };

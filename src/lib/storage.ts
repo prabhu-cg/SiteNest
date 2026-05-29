@@ -1,7 +1,5 @@
+import { supabase } from '@/lib/supabase';
 import type { SitemapNode, Edge } from '@/types';
-
-const PROJECT_PREFIX = 'sitenest_project_';
-const PROJECT_LIST_KEY = 'sitenest_projects';
 
 export interface ProjectMeta {
   id: string;
@@ -16,49 +14,104 @@ interface ProjectData {
   edges: Edge[];
 }
 
-export function saveProject(id: string, title: string, data: ProjectData): void {
-  try {
-    localStorage.setItem(`${PROJECT_PREFIX}${id}`, JSON.stringify(data));
-    const list = getProjectList();
-    const existing = list.find((p) => p.id === id);
-    const now = new Date().toISOString();
-    if (existing) {
-      existing.title = title;
-      existing.nodeCount = data.nodes.length;
-      existing.updatedAt = now;
-    } else {
-      list.push({ id, title, nodeCount: data.nodes.length, createdAt: now, updatedAt: now });
-    }
-    localStorage.setItem(PROJECT_LIST_KEY, JSON.stringify(list));
-  } catch {
-    // localStorage may be unavailable
+async function getInternalUserId(): Promise<string | null> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data } = await supabase
+    .from('users')
+    .select('id')
+    .eq('auth_id', user.id)
+    .single();
+
+  if (data) return data.id;
+
+  // Backfill: user row missing (pre-trigger accounts)
+  const { data: inserted } = await supabase
+    .from('users')
+    .insert({ auth_id: user.id, email: user.email ?? '' })
+    .select('id')
+    .single();
+
+  return inserted?.id ?? null;
+}
+
+export async function getProjectList(): Promise<ProjectMeta[]> {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('id, title, updated_at, created_at, sitemap_nodes(id)')
+    .order('updated_at', { ascending: false });
+
+  if (error || !data) return [];
+
+  return data.map((p: any) => ({
+    id: p.id,
+    title: p.title,
+    nodeCount: p.sitemap_nodes?.length ?? 0,
+    createdAt: p.created_at,
+    updatedAt: p.updated_at,
+  }));
+}
+
+export async function loadProject(id: string): Promise<ProjectData | null> {
+  const [{ data: nodesData, error: nodesErr }, { data: edgesData, error: edgesErr }] =
+    await Promise.all([
+      supabase.from('sitemap_nodes').select('*').eq('project_id', id),
+      supabase.from('edges').select('*').eq('project_id', id),
+    ]);
+
+  if (nodesErr || edgesErr) return null;
+
+  return {
+    nodes: (nodesData ?? []) as SitemapNode[],
+    edges: (edgesData ?? []) as Edge[],
+  };
+}
+
+export async function saveProject(id: string, title: string, data: ProjectData): Promise<void> {
+  const userId = await getInternalUserId();
+  if (!userId) return;
+
+  await supabase
+    .from('projects')
+    .upsert({ id, user_id: userId, title, updated_at: new Date().toISOString() }, { onConflict: 'id' });
+
+  const { nodes, edges } = data;
+  const now = new Date().toISOString();
+
+  if (nodes.length > 0) {
+    await supabase
+      .from('sitemap_nodes')
+      .upsert(
+        nodes.map((n) => ({ ...n, project_id: id, updated_at: now })),
+        { onConflict: 'id' }
+      );
+    await supabase
+      .from('sitemap_nodes')
+      .delete()
+      .eq('project_id', id)
+      .not('id', 'in', `(${nodes.map((n) => n.id).join(',')})`);
+  } else {
+    await supabase.from('sitemap_nodes').delete().eq('project_id', id);
+  }
+
+  if (edges.length > 0) {
+    await supabase
+      .from('edges')
+      .upsert(
+        edges.map((e) => ({ ...e, project_id: id })),
+        { onConflict: 'id' }
+      );
+    await supabase
+      .from('edges')
+      .delete()
+      .eq('project_id', id)
+      .not('id', 'in', `(${edges.map((e) => e.id).join(',')})`);
+  } else {
+    await supabase.from('edges').delete().eq('project_id', id);
   }
 }
 
-export function loadProject(id: string): ProjectData | null {
-  try {
-    const raw = localStorage.getItem(`${PROJECT_PREFIX}${id}`);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-export function getProjectList(): ProjectMeta[] {
-  try {
-    const raw = localStorage.getItem(PROJECT_LIST_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-export function deleteProject(id: string): void {
-  try {
-    localStorage.removeItem(`${PROJECT_PREFIX}${id}`);
-    const list = getProjectList().filter((p) => p.id !== id);
-    localStorage.setItem(PROJECT_LIST_KEY, JSON.stringify(list));
-  } catch {
-    // ignore
-  }
+export async function deleteProject(id: string): Promise<void> {
+  await supabase.from('projects').delete().eq('id', id);
 }
