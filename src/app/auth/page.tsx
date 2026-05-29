@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Mail, CheckCircle } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
+import { LogoMark } from '@/components/ui/logo-mark';
 
 type Mode = 'signin' | 'signup';
 
@@ -61,9 +62,7 @@ export default function AuthPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center mb-3">
-            <span className="text-white text-lg font-bold">S</span>
-          </div>
+          <LogoMark size={40} className="mb-3" />
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">SiteNest</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Visual sitemap builder</p>
         </div>

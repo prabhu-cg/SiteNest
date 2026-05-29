@@ -10,6 +10,7 @@ import { AboutButton } from '@/components/ui/about-modal';
 import { generateId } from '@/lib/utils';
 import { Tooltip } from '@/components/ui/tooltip';
 import { useAuthStore } from '@/store/authStore';
+import { LogoMark } from '@/components/ui/logo-mark';
 
 function formatLastEdited(iso: string): string {
   const d = new Date(iso);
@@ -83,9 +84,7 @@ export default function Home() {
       {/* Nav */}
       <nav className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-accent rounded-lg flex items-center justify-center">
-            <span className="text-white text-sm font-bold">S</span>
-          </div>
+          <LogoMark size={28} />
           <span className="text-lg font-bold text-gray-900 dark:text-white">SiteNest</span>
         </div>
         <div className="flex items-center gap-3">

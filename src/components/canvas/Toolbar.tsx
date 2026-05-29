@@ -11,6 +11,7 @@ import type { LayoutDirection } from '@/lib/layout';
 import { useTheme } from 'next-themes';
 import { Tooltip } from '@/components/ui/tooltip';
 import { AboutButton } from '@/components/ui/about-modal';
+import { LogoMark } from '@/components/ui/logo-mark';
 
 interface ToolbarProps {
   projectId: string;
@@ -154,9 +155,7 @@ export default function Toolbar({
 
       {/* Logo */}
       <div className="flex items-center gap-1.5 mr-1">
-        <div className="w-5 h-5 bg-accent rounded-md flex items-center justify-center">
-          <span className="text-white text-[10px] font-bold">S</span>
-        </div>
+        <LogoMark size={20} />
         <span className="text-sm font-bold text-gray-900 dark:text-gray-50">SiteNest</span>
       </div>
 

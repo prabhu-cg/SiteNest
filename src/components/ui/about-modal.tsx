@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { X, Info } from 'lucide-react';
+import { LogoMark } from '@/components/ui/logo-mark';
 
 const TECH_STACK = [
   { name: 'Next.js 15', role: 'Framework' },
@@ -53,9 +54,7 @@ export function AboutButton({ variant = 'icon' }: AboutButtonProps) {
           >
             {/* Header */}
             <div className="px-6 pt-6 pb-4 border-b border-gray-100 dark:border-gray-800 flex items-start gap-4">
-              <div className="w-12 h-12 bg-accent rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
-                <span className="text-white text-xl font-bold">S</span>
-              </div>
+              <LogoMark size={48} className="flex-shrink-0 shadow-md rounded-xl" />
               <div className="flex-1 min-w-0">
                 <h2 className="text-base font-bold text-gray-900 dark:text-white">SiteNest</h2>
                 <p className="text-xs text-gray-400 mt-0.5">Visual Sitemap Builder</p>

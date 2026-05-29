@@ -3,6 +3,7 @@ import { Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import AuthProvider from "@/components/providers/AuthProvider";
+import { LogoMark } from "@/components/ui/logo-mark";
 
 const manrope = Manrope({
   variable: "--font-sans",
@@ -34,9 +35,7 @@ export default function RootLayout({
           </AuthProvider>
           {/* Mobile block — shown only on screens narrower than 1024px */}
           <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#FFF9EB] px-8 text-center lg:hidden">
-            <div className="w-14 h-14 bg-accent rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-              <span className="text-white text-2xl font-bold">S</span>
-            </div>
+            <LogoMark size={56} className="mb-6 shadow-lg rounded-2xl" />
             <h1 className="text-xl font-bold text-gray-900 mb-2">SiteNest is built for desktop</h1>
             <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
               For the best experience, please open SiteNest on a laptop or desktop computer. Mobile support is coming soon.
