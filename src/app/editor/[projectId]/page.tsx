@@ -80,18 +80,18 @@ export default function EditorPage() {
         loadProject(projectId),
         getProjectList(),
       ]);
-      if (cancelled) return;
+      const meta = list.find((p) => p.id === projectId);
       const nodes = saved?.nodes ?? [];
       const edges = saved?.edges ?? [];
-      setNodes(nodes);
-      setEdges(edges);
-      const meta = list.find((p) => p.id === projectId);
-      if (meta?.title) setProjectTitle(meta.title);
-      // New project — no row in `projects` table yet; create it now so it
-      // shows up on the home page even if the user navigates back immediately.
+      // Save new project row before checking cancelled so it persists even
+      // if the user navigates away during load (e.g. direct URL access).
       if (!meta) {
         await saveProject(projectId, projectTitle, { nodes, edges });
       }
+      if (cancelled) return;
+      setNodes(nodes);
+      setEdges(edges);
+      if (meta?.title) setProjectTitle(meta.title);
       markClean();
       setIsLoading(false);
     })();

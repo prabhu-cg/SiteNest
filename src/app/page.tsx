@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Plus, FolderOpen, Trash2, Clock, Loader2 } from 'lucide-react';
-import { getProjectList, deleteProject, type ProjectMeta } from '@/lib/storage';
+import { getProjectList, deleteProject, saveProject, type ProjectMeta } from '@/lib/storage';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { AboutButton } from '@/components/ui/about-modal';
 import { generateId } from '@/lib/utils';
@@ -51,8 +51,11 @@ export default function Home() {
     );
   }
 
-  const handleNewProject = () => {
+  const handleNewProject = async () => {
     const id = generateId();
+    try {
+      await saveProject(id, 'Untitled Project', { nodes: [], edges: [] });
+    } catch { /* editor will handle fallback */ }
     router.push(`/editor/${id}`);
   };
 
