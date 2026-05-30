@@ -28,6 +28,7 @@ import { Trash2, ZoomIn, ZoomOut, Scan, Lock, Unlock } from 'lucide-react';
 import { Tooltip } from '@/components/ui/tooltip';
 import { computeHierarchicalLayout, computeRadialLayout, type LayoutDirection } from '@/lib/layout';
 import { useCanvasStore } from '@/store/canvasStore';
+import { generateId } from '@/lib/utils';
 import SitemapNode from './SitemapNode';
 import type { SitemapNode as SitemapNodeType, Edge as StoreEdge } from '@/types';
 
@@ -350,7 +351,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
   const onConnect = useCallback(
     (connection: Connection) => {
       addEdgeToStore({
-        id: `${connection.source}-${connection.target}`,
+        id: generateId(),
         source_node_id: connection.source || '',
         target_node_id: connection.target || '',
         project_id: projectId,
