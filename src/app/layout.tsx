@@ -19,6 +19,11 @@ const jetbrains_mono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "SiteNest - Visual Sitemap Builder",
   description: "Create beautiful visual sitemaps for your projects",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
