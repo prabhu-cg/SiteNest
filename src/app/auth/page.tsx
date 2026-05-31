@@ -96,8 +96,8 @@ export default function AuthPage() {
       <div className="flex-1 bg-[#FFF9EB] flex flex-col items-center justify-center px-8 py-12">
         {/* Logo + wordmark */}
         <div className="flex flex-col items-center mb-8">
-          <LogoMark size={44} className="mb-3 rounded-xl shadow-sm" />
-          <h1 className="text-xl font-bold text-gray-900">SiteNest</h1>
+          <LogoMark size={52} className="mb-3 rounded-xl shadow-sm" />
+          <h1 className="text-2xl font-bold text-gray-900">SiteNest</h1>
           <p className="text-sm text-gray-500 mt-1">Visual sitemap builder</p>
         </div>
 
