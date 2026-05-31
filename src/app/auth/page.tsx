@@ -77,13 +77,15 @@ export default function AuthPage() {
           </svg>
         </div>
 
-        {/* Tagline bottom-left */}
-        <div className="absolute bottom-16 left-8 right-8 z-10">
-          <span className="text-white/60 text-4xl font-serif leading-none select-none">&ldquo;</span>
-          <p className="text-white text-lg font-medium leading-snug mt-1">
-            Every great website starts<br />with a clear plan.
-          </p>
-          <p className="text-white/60 text-sm mt-2">— Build yours visually</p>
+        {/* Tagline — vertically centered */}
+        <div className="absolute inset-0 flex items-center z-10 pointer-events-none">
+          <div className="px-8">
+            <span className="text-white/60 leading-none select-none" style={{ fontSize: '10rem' }}>&ldquo;</span>
+            <p className="text-white font-medium leading-snug -mt-8" style={{ fontSize: '24px' }}>
+              Every great website starts<br />with a clear plan.
+            </p>
+            <p className="text-white/60 text-sm mt-2">— Build yours visually</p>
+          </div>
         </div>
 
         {/* Copyright */}
