@@ -6,23 +6,24 @@ import { Loader2, Mail, CheckCircle } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { LogoMark } from '@/components/ui/logo-mark';
 
-type Mode = 'signin' | 'signup';
+type Mode = 'signin' | 'signup' | 'forgot';
 
 export default function AuthPage() {
   const router = useRouter();
-  const { user, isLoading: authLoading, signIn, signUp, error, setError } = useAuthStore();
+  const { user, isLoading: authLoading, signIn, signUp, forgotPassword, error, setError } = useAuthStore();
 
   const [mode, setMode] = useState<Mode>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
 
   useEffect(() => {
     if (!authLoading && user) router.replace('/');
   }, [user, authLoading, router]);
 
-  const switchMode = (m: Mode) => { setMode(m); setError(null); setConfirmed(false); };
+  const switchMode = (m: Mode) => { setMode(m); setError(null); setConfirmed(false); setResetSent(false); };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,13 +33,16 @@ export default function AuthPage() {
       if (mode === 'signin') {
         await signIn(email, password);
         router.replace('/');
-      } else {
+      } else if (mode === 'signup') {
         const { needsConfirmation } = await signUp(email, password);
         if (needsConfirmation) {
           setConfirmed(true);
         } else {
           router.replace('/');
         }
+      } else {
+        await forgotPassword(email);
+        setResetSent(true);
       }
     } catch {
       // error already set in store
@@ -121,11 +125,69 @@ export default function AuthPage() {
                 Back to sign in
               </button>
             </div>
+          ) : resetSent ? (
+            <div className="text-center py-4">
+              <CheckCircle className="w-10 h-10 text-green-500 mx-auto mb-3" />
+              <h2 className="text-base font-semibold text-gray-900 mb-1">Reset link sent</h2>
+              <p className="text-sm text-gray-500">
+                We sent a password reset link to{' '}
+                <span className="font-medium text-gray-700">{email}</span>.
+                Check your inbox and follow the link.
+              </p>
+              <button
+                onClick={() => switchMode('signin')}
+                className="mt-5 text-sm text-[#FD6920] hover:underline"
+              >
+                Back to sign in
+              </button>
+            </div>
+          ) : mode === 'forgot' ? (
+            <>
+              <button
+                onClick={() => switchMode('signin')}
+                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 mb-4 transition-colors"
+              >
+                ← Back to sign in
+              </button>
+              <h2 className="text-sm font-semibold text-gray-900 mb-1">Forgot your password?</h2>
+              <p className="text-xs text-gray-500 mb-4">Enter your email and we&apos;ll send you a reset link.</p>
+
+              <form onSubmit={handleSubmit} className="space-y-3">
+                {error && (
+                  <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs">
+                    {error}
+                  </div>
+                )}
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      required
+                      autoComplete="email"
+                      className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FD6920]/30 focus:border-[#FD6920] text-gray-900 placeholder-gray-400"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full py-2 mt-1 bg-[#FD6920] hover:bg-[#e85e18] text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  Send reset link
+                </button>
+              </form>
+            </>
           ) : (
             <>
               {/* Mode tabs */}
               <div className="flex rounded-lg bg-gray-100 p-0.5 mb-5">
-                {(['signin', 'signup'] as Mode[]).map((m) => (
+                {(['signin', 'signup'] as const).map((m) => (
                   <button
                     key={m}
                     onClick={() => switchMode(m)}
@@ -165,7 +227,18 @@ export default function AuthPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Password</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-medium text-gray-700">Password</label>
+                    {mode === 'signin' && (
+                      <button
+                        type="button"
+                        onClick={() => switchMode('forgot')}
+                        className="text-xs text-[#FD6920] hover:underline"
+                      >
+                        Forgot password?
+                      </button>
+                    )}
+                  </div>
                   <input
                     type="password"
                     value={password}
