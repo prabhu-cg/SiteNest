@@ -24,7 +24,7 @@ import ReactFlow, {
   getSmoothStepPath,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { Trash2, ZoomIn, ZoomOut, Scan, Lock, Unlock } from 'lucide-react';
+import { Trash2, ZoomIn, ZoomOut, Scan, Lock, Unlock, Plus } from 'lucide-react';
 import { Tooltip } from '@/components/ui/tooltip';
 import { computeHierarchicalLayout, computeRadialLayout, type LayoutDirection } from '@/lib/layout';
 import { useCanvasStore } from '@/store/canvasStore';
@@ -189,6 +189,16 @@ function ExportController({
   return null;
 }
 
+function ContextBridge({
+  screenToFlowRef,
+}: {
+  screenToFlowRef: React.MutableRefObject<((pos: { x: number; y: number }) => { x: number; y: number }) | null>;
+}) {
+  const { screenToFlowPosition } = useReactFlow();
+  useEffect(() => { screenToFlowRef.current = screenToFlowPosition; }, [screenToFlowPosition, screenToFlowRef]);
+  return null;
+}
+
 function ZoomIndicator() {
   const { zoom } = useViewport();
   return (
@@ -274,14 +284,19 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
     addEdge: addEdgeToStore,
     deleteEdge: deleteEdgeFromStore,
     updateNode,
+    addNode,
+    setSelectedNode,
+    lastUsedColor,
   } = useCanvasStore();
 
   const edgeUpdateSuccessful = useRef(false);
   const edgeUpdateStartPos = useRef<{ x: number; y: number } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const screenToFlowRef = useRef<((pos: { x: number; y: number }) => { x: number; y: number }) | null>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
+  const [contextMenu, setContextMenu] = useState<{ screenX: number; screenY: number; flowX: number; flowY: number } | null>(null);
 
   // Sync store → React Flow nodes. Store is the position source of truth;
   // drag positions are persisted to the store on onNodeDragStop so they stay in sync.
@@ -411,7 +426,44 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
   const handlePaneClick = useCallback(() => {
     onNodeSelect?.(null as any);
     setSelectedEdgeId(null);
+    setContextMenu(null);
   }, [onNodeSelect]);
+
+  const onPaneContextMenu = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    const flowPos = screenToFlowRef.current?.({ x: e.clientX, y: e.clientY }) ?? { x: e.clientX, y: e.clientY };
+    setContextMenu({ screenX: e.clientX, screenY: e.clientY, flowX: flowPos.x, flowY: flowPos.y });
+  }, []);
+
+  const handleContextAddPage = useCallback(() => {
+    if (!contextMenu) return;
+    const node: SitemapNodeType = {
+      id: generateId(),
+      project_id: projectId,
+      parent_id: null,
+      title: 'New Page',
+      url_slug: '/new-page',
+      description: null,
+      icon: null,
+      color: lastUsedColor ?? '#EE661D',
+      status: 'draft',
+      position_x: contextMenu.flowX - 110,
+      position_y: contextMenu.flowY - 30,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    addNode(node);
+    setSelectedNode(node.id);
+    setContextMenu(null);
+  }, [contextMenu, projectId, addNode, setSelectedNode]);
+
+  useEffect(() => {
+    if (!contextMenu) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setContextMenu(null); };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [contextMenu]);
+
 
   return (
     <div ref={containerRef} className="w-full h-full relative" style={{ background: '#f1f5f9' }}>
@@ -442,6 +494,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
         onNodeClick={handleNodeClick}
         onNodeDragStop={onNodeDragStop}
         onPaneClick={handlePaneClick}
+        onPaneContextMenu={onPaneContextMenu}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         defaultViewport={{ x: 40, y: 40, zoom: 1 }}
@@ -453,6 +506,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
         defaultEdgeOptions={{ type: 'custom' }}
       >
         <Background color="#cbd5e1" gap={24} size={1} />
+        <ContextBridge screenToFlowRef={screenToFlowRef} />
         <CustomControls />
         <MiniMap
           pannable
@@ -483,6 +537,24 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
           />
         )}
       </ReactFlow>
+
+      {contextMenu && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setContextMenu(null)} />
+          <div
+            className="fixed z-50 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg py-1.5 min-w-[170px]"
+            style={{ top: contextMenu.screenY + 4, left: contextMenu.screenX + 4 }}
+          >
+            <button
+              onClick={handleContextAddPage}
+              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-orange-950/20 hover:text-accent transition-colors"
+            >
+              <Plus className="w-3.5 h-3.5 text-accent flex-shrink-0" />
+              Add Page here
+            </button>
+          </div>
+        </>
+      )}
 
       {storeNodes.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

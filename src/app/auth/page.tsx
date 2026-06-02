@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Mail, CheckCircle } from 'lucide-react';
+import { Loader2, Mail, Lock, CheckCircle } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { LogoMark } from '@/components/ui/logo-mark';
 
@@ -239,16 +239,19 @@ export default function AuthPage() {
                       </button>
                     )}
                   </div>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder={mode === 'signup' ? 'Min. 6 characters' : '••••••••'}
-                    required
-                    minLength={mode === 'signup' ? 6 : undefined}
-                    autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
-                    className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FD6920]/30 focus:border-[#FD6920] text-gray-900 placeholder-gray-400"
-                  />
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder={mode === 'signup' ? 'Min. 6 characters' : '••••••••'}
+                      required
+                      minLength={mode === 'signup' ? 6 : undefined}
+                      autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+                      className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FD6920]/30 focus:border-[#FD6920] text-gray-900 placeholder-gray-400"
+                    />
+                  </div>
                 </div>
 
                 <button

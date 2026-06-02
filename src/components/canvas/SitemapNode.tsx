@@ -75,7 +75,7 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
           type="target"
           position={Position.Top}
           isConnectable={isConnectable}
-          className="!w-2 !h-2 !bg-gray-400 !border-white !transition-opacity !duration-150"
+          className="!w-3.5 !h-3.5 !bg-gray-400 !border-2 !border-white !transition-opacity !duration-150"
           style={{ opacity: hovered ? 1 : 0 }}
         />
 
@@ -174,7 +174,7 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
           type="source"
           position={Position.Bottom}
           isConnectable={isConnectable}
-          className="!w-2 !h-2 !bg-gray-400 !border-white !transition-opacity !duration-150"
+          className="!w-3.5 !h-3.5 !bg-gray-400 !border-2 !border-white !transition-opacity !duration-150"
           style={{ opacity: hovered ? 1 : 0 }}
         />
       </div>
