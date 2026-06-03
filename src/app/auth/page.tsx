@@ -62,34 +62,45 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen flex">
       {/* ── Left panel ── */}
-      <div className="relative hidden lg:flex lg:w-[58%] flex-col overflow-hidden"
-        style={{
-          backgroundColor: '#ee5522',
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 1500'%3E%3Cdefs%3E%3CradialGradient id='a' gradientUnits='objectBoundingBox'%3E%3Cstop offset='0' stop-color='%23FB3'/%3E%3Cstop offset='1' stop-color='%23ee5522'/%3E%3C/radialGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='0' y1='750' x2='1550' y2='750'%3E%3Cstop offset='0' stop-color='%23f7882b'/%3E%3Cstop offset='1' stop-color='%23ee5522'/%3E%3C/linearGradient%3E%3Cpath id='s' fill='url(%23b)' d='M1549.2 51.6c-5.4 99.1-20.2 197.6-44.2 293.6c-24.1 96-57.4 189.4-99.3 278.6c-41.9 89.2-92.4 174.1-150.3 253.3c-58 79.2-123.4 152.6-195.1 219c-71.7 66.4-149.6 125.8-232.2 177.2c-82.7 51.4-170.1 94.7-260.7 129.1c-90.6 34.4-184.4 60-279.5 76.3C192.6 1495 96.1 1502 0 1500c96.1-2.1 191.8-13.3 285.4-33.6c93.6-20.2 185-49.5 272.5-87.2c87.6-37.7 171.3-83.8 249.6-137.3c78.4-53.5 151.5-114.5 217.9-181.7c66.5-67.2 126.4-140.7 178.6-218.9c52.3-78.3 96.9-161.4 133-247.9c36.1-86.5 63.8-176.2 82.6-267.6c18.8-91.4 28.6-184.4 29.6-277.4c0.3-27.6 23.2-48.7 50.8-48.4s49.5 21.8 49.2 49.5c0 0.7 0 1.3-0.1 2L1549.2 51.6z'/%3E%3Cg id='g'%3E%3Cuse href='%23s' transform='scale(0.12) rotate(60)'/%3E%3Cuse href='%23s' transform='scale(0.2) rotate(10)'/%3E%3Cuse href='%23s' transform='scale(0.25) rotate(40)'/%3E%3Cuse href='%23s' transform='scale(0.3) rotate(-20)'/%3E%3Cuse href='%23s' transform='scale(0.4) rotate(-30)'/%3E%3Cuse href='%23s' transform='scale(0.5) rotate(20)'/%3E%3Cuse href='%23s' transform='scale(0.6) rotate(60)'/%3E%3Cuse href='%23s' transform='scale(0.7) rotate(10)'/%3E%3Cuse href='%23s' transform='scale(0.835) rotate(-40)'/%3E%3Cuse href='%23s' transform='scale(0.9) rotate(40)'/%3E%3Cuse href='%23s' transform='scale(1.05) rotate(25)'/%3E%3Cuse href='%23s' transform='scale(1.2) rotate(8)'/%3E%3Cuse href='%23s' transform='scale(1.333) rotate(-60)'/%3E%3Cuse href='%23s' transform='scale(1.45) rotate(-30)'/%3E%3Cuse href='%23s' transform='scale(1.6) rotate(10)'/%3E%3C/g%3E%3C/defs%3E%3Cg transform='rotate(0 0 0)'%3E%3Cg transform='rotate(0 0 0)'%3E%3Ccircle fill='url(%23a)' r='3000'/%3E%3Cg opacity='0.5'%3E%3Ccircle fill='url(%23a)' r='2000'/%3E%3Ccircle fill='url(%23a)' r='1800'/%3E%3Ccircle fill='url(%23a)' r='1700'/%3E%3Ccircle fill='url(%23a)' r='1651'/%3E%3Ccircle fill='url(%23a)' r='1450'/%3E%3Ccircle fill='url(%23a)' r='1250'/%3E%3Ccircle fill='url(%23a)' r='1175'/%3E%3Ccircle fill='url(%23a)' r='900'/%3E%3Ccircle fill='url(%23a)' r='750'/%3E%3Ccircle fill='url(%23a)' r='500'/%3E%3Ccircle fill='url(%23a)' r='380'/%3E%3Ccircle fill='url(%23a)' r='250'/%3E%3C/g%3E%3Cg transform='rotate(0 0 0)'%3E%3Cuse href='%23g' transform='rotate(10)'/%3E%3Cuse href='%23g' transform='rotate(120)'/%3E%3Cuse href='%23g' transform='rotate(240)'/%3E%3C/g%3E%3Ccircle fill-opacity='0.1' fill='url(%23a)' r='3000'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          backgroundAttachment: 'fixed',
-          backgroundSize: 'cover',
-        }}
-      >
+      <div className="relative hidden lg:flex lg:w-[58%] flex-col overflow-hidden bg-[#EE661D]">
         {/* Logo top-left */}
-        <div className="absolute top-8 left-8 flex items-center gap-2.5 z-10">
-          <LogoMark size={32} className="rounded-lg" />
-          <span className="text-white font-bold text-lg tracking-tight">SiteNest</span>
+        <div className="absolute top-12 left-12 flex items-center gap-2.5 z-10">
+          <LogoMark size={44} className="rounded-lg" />
+          <span className="text-white font-bold text-[20px] tracking-tight">SiteNest</span>
         </div>
 
+        {/* Hero graphic — right half cropped by panel edge */}
+        <div className="absolute inset-0 pointer-events-none">
+          <svg
+            viewBox="0 0 48 48"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: '50%',
+              height: '100%',
+              width: 'auto',
+              transform: 'translate(50%, -50%)',
+            }}
+          >
+            <path d="M39.5849 30.6633C39.7449 30.941 39.7884 31.2708 39.7058 31.5805C39.6232 31.8901 39.4213 32.1545 39.1442 32.3156L24.6058 40.7963C24.4205 40.9044 24.2099 40.9613 23.9955 40.9613C23.781 40.9613 23.5704 40.9044 23.3851 40.7963L8.84668 32.3156C8.57362 32.1515 8.37618 31.8865 8.2971 31.5779C8.21802 31.2693 8.26367 30.9419 8.42416 30.6667C8.58465 30.3916 8.84707 30.1907 9.15461 30.1075C9.46214 30.0244 9.79004 30.0658 10.0673 30.2226L24 38.3475L37.9327 30.2226C38.2104 30.0626 38.5402 30.0192 38.8498 30.1018C39.1595 30.1844 39.4238 30.3863 39.5849 30.6633ZM37.9327 22.9534L24 31.0783L10.0673 22.9534C9.79145 22.8161 9.47361 22.789 9.1785 22.8777C8.88339 22.9664 8.63317 23.1643 8.47879 23.431C8.3244 23.6977 8.27745 24.0132 8.34748 24.3133C8.41752 24.6134 8.59928 24.8755 8.85577 25.0463L23.3942 33.5271C23.5795 33.6351 23.7901 33.6921 24.0045 33.6921C24.219 33.6921 24.4296 33.6351 24.6149 33.5271L39.1533 25.0463C39.293 24.9673 39.4155 24.8614 39.5139 24.7346C39.6122 24.6079 39.6844 24.4629 39.7263 24.308C39.7682 24.1531 39.7788 23.9915 39.7577 23.8324C39.7366 23.6734 39.6841 23.5201 39.6033 23.3815C39.5225 23.2429 39.4149 23.1218 39.2869 23.0251C39.1588 22.9284 39.0129 22.8581 38.8575 22.8183C38.7021 22.7784 38.5403 22.7699 38.3815 22.7931C38.2228 22.8163 38.0702 22.8708 37.9327 22.9534ZM8.25 16.7306C8.25048 16.5184 8.30669 16.3101 8.413 16.1264C8.51931 15.9428 8.672 15.7903 8.85577 15.6842L23.3942 7.20341C23.5795 7.09538 23.7901 7.03846 24.0045 7.03846C24.219 7.03846 24.4296 7.09538 24.6149 7.20341L39.1533 15.6842C39.3362 15.7909 39.4879 15.9437 39.5934 16.1273C39.6988 16.3109 39.7543 16.5189 39.7543 16.7306C39.7543 16.9424 39.6988 17.1504 39.5934 17.334C39.4879 17.5176 39.3362 17.6704 39.1533 17.7771L24.6149 26.2579C24.4296 26.3659 24.219 26.4228 24.0045 26.4228C23.7901 26.4228 23.5795 26.3659 23.3942 26.2579L8.85577 17.7771C8.672 17.671 8.51931 17.5185 8.413 17.3349C8.30669 17.1512 8.25048 16.9429 8.25 16.7306ZM11.8664 16.7306L24 23.8091L36.1336 16.7306L24 9.65224L11.8664 16.7306Z" fill="white" fillOpacity="0.15"/>
+          </svg>
+        </div>
 
         {/* Tagline — vertically centered */}
         <div className="absolute inset-0 flex items-center z-10 pointer-events-none">
-          <div className="px-8">
-            <span className="text-white/60 leading-none select-none" style={{ fontSize: '10rem' }}>&ldquo;</span>
-            <p className="text-white font-medium leading-snug -mt-8" style={{ fontSize: '24px' }}>
+          <div className="px-12">
+            <span className="text-white/[0.15] leading-none select-none -ml-3" style={{ fontSize: '10rem' }}>&ldquo;</span>
+            <p className="text-white font-semibold leading-snug -mt-6" style={{ fontSize: '25.6px' }}>
               Every great website starts<br />with a clear plan.
             </p>
-            <p className="text-white/60 text-sm mt-2">— Build yours visually</p>
+            <p className="text-white/60 text-sm mt-2" style={{ fontWeight: 500 }}>— Build yours visually</p>
           </div>
         </div>
 
         {/* Copyright */}
-        <div className="absolute bottom-6 left-8 z-10">
+        <div className="absolute bottom-12 left-12 z-10">
           <p className="text-white/40 text-xs">© {new Date().getFullYear()} SiteNest. All rights reserved.</p>
         </div>
       </div>
