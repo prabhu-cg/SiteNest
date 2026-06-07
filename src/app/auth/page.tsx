@@ -230,6 +230,7 @@ export default function AuthPage() {
                       placeholder="you@example.com"
                       required
                       autoComplete="email"
+                      tabIndex={1}
                       className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FD6920]/30 focus:border-[#FD6920] text-gray-900 placeholder-gray-400"
                     />
                   </div>
@@ -242,6 +243,7 @@ export default function AuthPage() {
                       <button
                         type="button"
                         onClick={() => switchMode('forgot')}
+                        tabIndex={4}
                         className="text-xs text-[#FD6920] hover:underline"
                       >
                         Forgot password?
@@ -258,6 +260,7 @@ export default function AuthPage() {
                       required
                       minLength={mode === 'signup' ? 6 : undefined}
                       autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+                      tabIndex={2}
                       className="w-full pl-9 pr-9 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FD6920]/30 focus:border-[#FD6920] text-gray-900 placeholder-gray-400"
                     />
                     <Tooltip content={showPassword ? 'Hide password' : 'Show password'} side="top">
@@ -277,6 +280,7 @@ export default function AuthPage() {
                 <button
                   type="submit"
                   disabled={submitting}
+                  tabIndex={3}
                   className="w-full py-2 mt-1 bg-[#FD6920] hover:bg-[#e85e18] text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
