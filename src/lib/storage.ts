@@ -142,9 +142,10 @@ export async function getProfile(): Promise<UserProfile | null> {
 
 export async function updateProfile(updates: { name?: string; avatar_url?: string | null }): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return;
-  await supabase
+  if (!user) throw new Error('Not signed in');
+  const { error } = await supabase
     .from('users')
     .update({ ...updates, updated_at: new Date().toISOString() })
     .eq('auth_id', user.id);
+  if (error) throw new Error(error.message);
 }

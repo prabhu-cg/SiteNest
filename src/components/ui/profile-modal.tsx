@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Loader2, X, Check } from 'lucide-react';
+import { AlertCircle, Loader2, X, Check } from 'lucide-react';
 import { Avatar } from './avatar';
 import { Button } from './button';
 import { cn } from '@/lib/utils';
@@ -34,12 +34,23 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
   const [displayName, setDisplayName] = useState(name ?? '');
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(avatarUrl);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const handleSave = async () => {
     setSaving(true);
+    setSaveError(null);
     try {
       await onSave({ name: displayName.trim(), avatar_url: selectedAvatar });
       onClose();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Something went wrong';
+      setSaveError(
+        msg.toLowerCase().includes('not signed in')
+          ? 'You must be signed in to save changes.'
+          : msg.toLowerCase().includes('network') || msg.toLowerCase().includes('fetch')
+            ? 'Network error — check your connection and try again.'
+            : 'Failed to save. Please try again.',
+      );
     } finally {
       setSaving(false);
     }
@@ -78,7 +89,7 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
             <input
               type="text"
               value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
+              onChange={(e) => { setDisplayName(e.target.value); setSaveError(null); }}
               placeholder="Your name"
               className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#FD6920]/30 focus:border-[#FD6920] text-gray-900 dark:text-gray-100 placeholder-gray-400"
             />
@@ -94,7 +105,7 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
               {/* Option 0 — Initials */}
               <button
                 type="button"
-                onClick={() => setSelectedAvatar(null)}
+                onClick={() => { setSelectedAvatar(null); setSaveError(null); }}
                 className={cn(
                   'relative flex-1 flex flex-col items-center gap-1.5 rounded-xl p-1.5 transition-all border-2',
                   selectedAvatar === null
@@ -120,7 +131,7 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
                   <button
                     key={id}
                     type="button"
-                    onClick={() => setSelectedAvatar(url)}
+                    onClick={() => { setSelectedAvatar(url); setSaveError(null); }}
                     className={cn(
                       'relative flex-1 flex flex-col items-center gap-1.5 rounded-xl p-1.5 transition-all border-2',
                       isSelected
@@ -151,8 +162,16 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
           </div>
         </div>
 
+        {/* Save error */}
+        {saveError && (
+          <div className="mt-4 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/30 px-3 py-2.5">
+            <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-px" />
+            <p className="text-sm text-red-600 dark:text-red-400">{saveError}</p>
+          </div>
+        )}
+
         {/* Actions */}
-        <div className="flex gap-2 justify-end mt-5">
+        <div className="flex gap-2 justify-end mt-4">
           <Button variant="outline" size="sm" onClick={onClose}>Cancel</Button>
           <Button size="sm" onClick={handleSave} disabled={saving} className="gap-1.5">
             {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
