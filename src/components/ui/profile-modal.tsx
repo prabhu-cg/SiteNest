@@ -7,11 +7,15 @@ import { Button } from './button';
 import { cn } from '@/lib/utils';
 
 const AVATAR_STYLES = [
-  { id: 'adventurer',     label: 'Adventurer' },
-  { id: 'lorelei',        label: 'Lorelei'    },
-  { id: 'bottts-neutral', label: 'Robot'      },
-  { id: 'fun-emoji',      label: 'Emoji'      },
-  { id: 'micah',          label: 'Micah'      },
+  { id: 'adventurer',      label: 'Adventurer' },
+  { id: 'lorelei',         label: 'Lorelei'    },
+  { id: 'bottts-neutral',  label: 'Robot'      },
+  { id: 'fun-emoji',       label: 'Emoji'      },
+  { id: 'micah',           label: 'Micah'      },
+  { id: 'avataaars',       label: 'Avataaars'  },
+  { id: 'open-peeps',      label: 'Peeps'      },
+  { id: 'croodles-neutral', label: 'Croodles'  },
+  { id: 'pixel-art',       label: 'Pixel Art'  },
 ] as const;
 
 function dicebearUrl(style: string, seed: string): string {
@@ -45,7 +49,7 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
     <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]" />
       <div
-        className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-sm mx-4 p-6"
+        className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-md mx-4 p-6"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -85,7 +89,7 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
             <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
               Choose Avatar
             </label>
-            <div className="flex items-center justify-between gap-2">
+            <div className="grid grid-cols-5 gap-2">
 
               {/* Option 0 — Initials */}
               <button
