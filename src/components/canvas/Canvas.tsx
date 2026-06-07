@@ -2,7 +2,7 @@
 import type React from 'react';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import ReactFlow, {
   Node,
   Edge,
@@ -129,7 +129,7 @@ function ExportController({
   containerRef: React.RefObject<HTMLDivElement | null>;
   title: string;
 }) {
-  const { getNodes, setViewport } = useReactFlow();
+  const { getNodes, getViewport, setViewport } = useReactFlow();
 
   useEffect(() => {
     exportRef.current = async () => {
@@ -138,6 +138,9 @@ function ExportController({
 
       const allNodes = getNodes();
       if (allNodes.length === 0) return;
+
+      // Save current viewport so we can restore it silently after export
+      const savedViewport = getViewport();
 
       // Read actual node sizes from DOM — store values are often stale
       const nodeEls = container.querySelectorAll<HTMLElement>('.react-flow__node');
@@ -156,53 +159,66 @@ function ExportController({
         maxY = Math.max(maxY, node.position.y + h);
       });
 
-      // Tight padding around the content bounding box
-      const PAD = 40;
+      const PAD = 48;
       const contentW = maxX - minX + PAD * 2;
       const contentH = maxY - minY + PAD * 2;
 
       const cw = container.offsetWidth;
       const ch = container.offsetHeight;
-      // Fit content into container, capped at 1.5× zoom so text stays legible
-      const zoom = Math.min(cw / contentW, ch / contentH, 1.5);
+      // Never zoom in above 1.0 — zooming in causes CSS transform rendering
+      // artifacts (text clipping) in html-to-image's SVG foreignObject path.
+      const zoom = Math.min(cw / contentW, ch / contentH, 1.0);
       const x = (cw - contentW * zoom) / 2 - (minX - PAD) * zoom;
       const y = (ch - contentH * zoom) / 2 - (minY - PAD) * zoom;
 
       setViewport({ x, y, zoom }, { duration: 0 });
-      // Wait for React Flow to apply the viewport and for any repaints
-      await new Promise((r) => setTimeout(r, 350));
+      // Give React Flow one frame to apply the new viewport, plus a repaint tick
+      await new Promise((r) => setTimeout(r, 400));
 
-      const SCALE = 2;
-      const full = await html2canvas(container, {
-        backgroundColor: '#f1f5f9',
-        scale: SCALE,
-        useCORS: true,
-        logging: false,
-        ignoreElements: (el) =>
-          el.hasAttribute('data-export-ignore') ||
-          el.classList.contains('react-flow__minimap') ||
-          el.classList.contains('react-flow__attribution') ||
-          el.classList.contains('react-flow__handle'),
-      });
+      try {
+        const PIXEL_RATIO = 2;
+        const dataUrl = await toPng(container, {
+          pixelRatio: PIXEL_RATIO,
+          backgroundColor: '#f1f5f9',
+          filter: (el) => {
+            if (!(el instanceof Element)) return true;
+            if (el.hasAttribute('data-export-ignore')) return false;
+            const cls = el.classList;
+            if (cls.contains('react-flow__minimap')) return false;
+            if (cls.contains('react-flow__attribution')) return false;
+            if (cls.contains('react-flow__handle')) return false;
+            return true;
+          },
+        });
 
-      // Crop away the surrounding empty canvas — keep only the content bounding box
-      const cropLeft = Math.round(((cw - contentW * zoom) / 2) * SCALE);
-      const cropTop  = Math.round(((ch - contentH * zoom) / 2) * SCALE);
-      const cropW    = Math.min(Math.round(contentW * zoom * SCALE), full.width  - cropLeft);
-      const cropH    = Math.min(Math.round(contentH * zoom * SCALE), full.height - cropTop);
+        // Load rendered image and crop to the content bounding box,
+        // removing the surrounding empty canvas area
+        const img = await new Promise<HTMLImageElement>((resolve) => {
+          const i = new Image();
+          i.onload = () => resolve(i);
+          i.src = dataUrl;
+        });
 
-      const out = document.createElement('canvas');
-      out.width  = cropW;
-      out.height = cropH;
-      const ctx = out.getContext('2d')!;
-      ctx.drawImage(full, cropLeft, cropTop, cropW, cropH, 0, 0, cropW, cropH);
+        const cropLeft = Math.round(((cw - contentW * zoom) / 2) * PIXEL_RATIO);
+        const cropTop  = Math.round(((ch - contentH * zoom) / 2) * PIXEL_RATIO);
+        const cropW    = Math.min(Math.round(contentW * zoom * PIXEL_RATIO), img.width  - cropLeft);
+        const cropH    = Math.min(Math.round(contentH * zoom * PIXEL_RATIO), img.height - cropTop);
 
-      const a = document.createElement('a');
-      a.href = out.toDataURL('image/png');
-      a.download = `${(title || 'sitemap').toLowerCase().replace(/\s+/g, '-')}.png`;
-      a.click();
+        const out = document.createElement('canvas');
+        out.width  = cropW;
+        out.height = cropH;
+        out.getContext('2d')!.drawImage(img, cropLeft, cropTop, cropW, cropH, 0, 0, cropW, cropH);
+
+        const a = document.createElement('a');
+        a.href = out.toDataURL('image/png');
+        a.download = `${(title || 'sitemap').toLowerCase().replace(/\s+/g, '-')}.png`;
+        a.click();
+      } finally {
+        // Restore the user's original viewport — no visible jump
+        setViewport(savedViewport, { duration: 0 });
+      }
     };
-  }, [exportRef, containerRef, getNodes, setViewport, title]);
+  }, [exportRef, containerRef, getNodes, getViewport, setViewport, title]);
 
   return null;
 }
