@@ -139,49 +139,66 @@ function ExportController({
       const allNodes = getNodes();
       if (allNodes.length === 0) return;
 
-      // Read actual DOM heights — node.height from getNodes() is often stale
-      // for nodes whose height changed after wireframe blocks were added
+      // Read actual node sizes from DOM — store values are often stale
       const nodeEls = container.querySelectorAll<HTMLElement>('.react-flow__node');
-      const domHeights = new Map<string, number>();
+      const domSizes = new Map<string, { w: number; h: number }>();
       nodeEls.forEach((el) => {
         const id = el.getAttribute('data-id');
-        if (id) domHeights.set(id, el.offsetHeight);
+        if (id) domSizes.set(id, { w: el.offsetWidth, h: el.offsetHeight });
       });
 
       let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
       allNodes.forEach((node) => {
-        const w = node.width ?? 220;
-        const h = domHeights.get(node.id) ?? node.height ?? 300;
+        const { w = 220, h = 120 } = domSizes.get(node.id) ?? {};
         minX = Math.min(minX, node.position.x);
         minY = Math.min(minY, node.position.y);
         maxX = Math.max(maxX, node.position.x + w);
         maxY = Math.max(maxY, node.position.y + h);
       });
 
-      const PAD = 56;
+      // Tight padding around the content bounding box
+      const PAD = 40;
       const contentW = maxX - minX + PAD * 2;
       const contentH = maxY - minY + PAD * 2;
+
       const cw = container.offsetWidth;
       const ch = container.offsetHeight;
+      // Fit content into container, capped at 1.5× zoom so text stays legible
       const zoom = Math.min(cw / contentW, ch / contentH, 1.5);
       const x = (cw - contentW * zoom) / 2 - (minX - PAD) * zoom;
       const y = (ch - contentH * zoom) / 2 - (minY - PAD) * zoom;
 
       setViewport({ x, y, zoom }, { duration: 0 });
-      await new Promise((r) => setTimeout(r, 300));
+      // Wait for React Flow to apply the viewport and for any repaints
+      await new Promise((r) => setTimeout(r, 350));
 
-      const canvas = await html2canvas(container, {
-        backgroundColor: '#ffffff',
-        scale: 2,
+      const SCALE = 2;
+      const full = await html2canvas(container, {
+        backgroundColor: '#f1f5f9',
+        scale: SCALE,
         useCORS: true,
+        logging: false,
         ignoreElements: (el) =>
           el.hasAttribute('data-export-ignore') ||
           el.classList.contains('react-flow__minimap') ||
-          el.classList.contains('react-flow__attribution'),
+          el.classList.contains('react-flow__attribution') ||
+          el.classList.contains('react-flow__handle'),
       });
 
+      // Crop away the surrounding empty canvas — keep only the content bounding box
+      const cropLeft = Math.round(((cw - contentW * zoom) / 2) * SCALE);
+      const cropTop  = Math.round(((ch - contentH * zoom) / 2) * SCALE);
+      const cropW    = Math.min(Math.round(contentW * zoom * SCALE), full.width  - cropLeft);
+      const cropH    = Math.min(Math.round(contentH * zoom * SCALE), full.height - cropTop);
+
+      const out = document.createElement('canvas');
+      out.width  = cropW;
+      out.height = cropH;
+      const ctx = out.getContext('2d')!;
+      ctx.drawImage(full, cropLeft, cropTop, cropW, cropH, 0, 0, cropW, cropH);
+
       const a = document.createElement('a');
-      a.href = canvas.toDataURL('image/png');
+      a.href = out.toDataURL('image/png');
       a.download = `${(title || 'sitemap').toLowerCase().replace(/\s+/g, '-')}.png`;
       a.click();
     };
