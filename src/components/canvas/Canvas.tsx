@@ -26,6 +26,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import { Trash2, ZoomIn, ZoomOut, Scan, Lock, Unlock, Plus } from 'lucide-react';
 import { Tooltip } from '@/components/ui/tooltip';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { computeHierarchicalLayout, computeRadialLayout, type LayoutDirection } from '@/lib/layout';
 import { useCanvasStore } from '@/store/canvasStore';
 import { generateId } from '@/lib/utils';
@@ -283,6 +284,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
     selectedNodeId,
     addEdge: addEdgeToStore,
     deleteEdge: deleteEdgeFromStore,
+    deleteNode,
     updateNode,
     addNode,
     setSelectedNode,
@@ -297,6 +299,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
   const [edges, setEdges] = useEdgesState([]);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [contextMenu, setContextMenu] = useState<{ screenX: number; screenY: number; flowX: number; flowY: number } | null>(null);
+  const [confirmDeleteNodeOpen, setConfirmDeleteNodeOpen] = useState(false);
 
   // Sync store → React Flow nodes. Store is the position source of truth;
   // drag positions are persisted to the store on onNodeDragStop so they stay in sync.
@@ -341,6 +344,27 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
   }, [selectedEdgeId, handleEdgeDelete]);
+
+  // Keyboard delete for selected node — opens confirm dialog
+  useEffect(() => {
+    if (!selectedNodeId) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key !== 'Delete' && e.key !== 'Backspace') return;
+      const t = e.target as HTMLElement;
+      if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable) return;
+      setConfirmDeleteNodeOpen(true);
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [selectedNodeId]);
+
+  const handleConfirmDeleteNode = useCallback(() => {
+    if (selectedNodeId) {
+      deleteNode(selectedNodeId);
+      setSelectedNode(null as any);
+    }
+    setConfirmDeleteNodeOpen(false);
+  }, [selectedNodeId, deleteNode, setSelectedNode]);
 
   // Sync store → React Flow edges; selected state owned by Canvas, not RF
   useEffect(() => {
@@ -466,6 +490,15 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
 
 
   return (
+    <>
+    <ConfirmDialog
+      open={confirmDeleteNodeOpen}
+      title="Delete page?"
+      message="This will remove the page and all its connections. This cannot be undone."
+      confirmLabel="Delete"
+      onConfirm={handleConfirmDeleteNode}
+      onCancel={() => setConfirmDeleteNodeOpen(false)}
+    />
     <div ref={containerRef} className="w-full h-full relative" style={{ background: '#f1f5f9' }}>
       {/* SVG arrow marker definitions — referenced by CustomEdge via url(#id) */}
       <svg style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }} aria-hidden>
@@ -504,6 +537,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
         zoomOnPinch
         panOnScroll={false}
         defaultEdgeOptions={{ type: 'custom' }}
+        deleteKeyCode={null}
       >
         <Background color="#cbd5e1" gap={24} size={1} />
         <ContextBridge screenToFlowRef={screenToFlowRef} />
@@ -570,5 +604,6 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
         </div>
       )}
     </div>
+    </>
   );
 }

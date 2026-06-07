@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Mail, Lock, CheckCircle } from 'lucide-react';
+import { Loader2, Mail, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { LogoMark } from '@/components/ui/logo-mark';
+import { Tooltip } from '@/components/ui/tooltip';
 
 type Mode = 'signin' | 'signup' | 'forgot';
 
@@ -18,12 +19,13 @@ export default function AuthPage() {
   const [submitting, setSubmitting] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (!authLoading && user) router.replace('/');
   }, [user, authLoading, router]);
 
-  const switchMode = (m: Mode) => { setMode(m); setError(null); setConfirmed(false); setResetSent(false); };
+  const switchMode = (m: Mode) => { setMode(m); setError(null); setConfirmed(false); setResetSent(false); setShowPassword(false); };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -249,15 +251,26 @@ export default function AuthPage() {
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                     <input
-                      type="password"
+                      type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder={mode === 'signup' ? 'Min. 6 characters' : '••••••••'}
                       required
                       minLength={mode === 'signup' ? 6 : undefined}
                       autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
-                      className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FD6920]/30 focus:border-[#FD6920] text-gray-900 placeholder-gray-400"
+                      className="w-full pl-9 pr-9 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FD6920]/30 focus:border-[#FD6920] text-gray-900 placeholder-gray-400"
                     />
+                    <Tooltip content={showPassword ? 'Hide password' : 'Show password'} side="top">
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        tabIndex={-1}
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      >
+                        {showPassword ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                      </button>
+                    </Tooltip>
                   </div>
                 </div>
 
