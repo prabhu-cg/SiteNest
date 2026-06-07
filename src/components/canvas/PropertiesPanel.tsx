@@ -5,7 +5,7 @@ import { useCanvasStore } from '@/store/canvasStore';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { COLOR_OPTIONS, STATUS_OPTIONS } from '@/lib/utils';
+import { COLOR_OPTIONS, STATUS_OPTIONS, toSlug } from '@/lib/utils';
 import { BLOCK_REGISTRY } from '@/components/wireframe/blocks';
 import { GripVertical, Trash2, Expand } from 'lucide-react';
 import { Tooltip } from '@/components/ui/tooltip';
@@ -162,7 +162,14 @@ export default function PropertiesPanel({ projectId: _projectId }: PropertiesPan
               key={`title-${selectedNode.id}`}
               placeholder="Enter page title"
               defaultValue={selectedNode.title}
-              onChange={(e) => updateNode(selectedNode.id, { title: e.target.value })}
+              onChange={(e) => {
+                const newTitle = e.target.value;
+                const isAutoSlug = !selectedNode.url_slug || selectedNode.url_slug === toSlug(selectedNode.title);
+                updateNode(selectedNode.id, {
+                  title: newTitle,
+                  ...(isAutoSlug ? { url_slug: toSlug(newTitle) } : {}),
+                });
+              }}
               className="mt-1.5 h-8 text-sm"
             />
           </div>
@@ -179,9 +186,8 @@ export default function PropertiesPanel({ projectId: _projectId }: PropertiesPan
             </div>
             <Input
               id="url_slug"
-              key={`slug-${selectedNode.id}`}
               placeholder="/about"
-              defaultValue={selectedNode.url_slug || ''}
+              value={selectedNode.url_slug ?? ''}
               onChange={(e) => updateNode(selectedNode.id, { url_slug: e.target.value })}
               className="h-8 text-sm"
             />

@@ -1,9 +1,11 @@
 import { create } from 'zustand';
 import { supabase } from '@/lib/supabase';
+import { getProfile, updateProfile as updateProfileInDB, type UserProfile } from '@/lib/storage';
 import type { User } from '@supabase/supabase-js';
 
 interface AuthState {
   user: User | null;
+  profile: UserProfile | null;
   isLoading: boolean;
   error: string | null;
   setUser: (user: User | null) => void;
@@ -14,10 +16,13 @@ interface AuthState {
   signOut: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   updatePassword: (password: string) => Promise<void>;
+  loadProfile: () => Promise<void>;
+  saveProfile: (updates: { name?: string; avatar_url?: string | null }) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
+  profile: null,
   isLoading: true,
   error: null,
 
@@ -59,5 +64,17 @@ export const useAuthStore = create<AuthState>((set) => ({
     const { error } = await supabase.auth.updateUser({ password });
     set({ isLoading: false, error: error ? error.message : null });
     if (error) throw error;
+  },
+
+  loadProfile: async () => {
+    const profile = await getProfile();
+    set({ profile });
+  },
+
+  saveProfile: async (updates) => {
+    await updateProfileInDB(updates);
+    set((state) => ({
+      profile: state.profile ? { ...state.profile, ...updates } : null,
+    }));
   },
 }));

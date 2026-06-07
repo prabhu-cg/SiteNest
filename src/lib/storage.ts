@@ -115,3 +115,36 @@ export async function saveProject(id: string, title: string, data: ProjectData):
 export async function deleteProject(id: string): Promise<void> {
   await supabase.from('projects').delete().eq('id', id);
 }
+
+export async function renameProject(id: string, title: string): Promise<void> {
+  await supabase
+    .from('projects')
+    .update({ title, updated_at: new Date().toISOString() })
+    .eq('id', id);
+}
+
+export interface UserProfile {
+  id: string;
+  name: string | null;
+  avatar_url: string | null;
+}
+
+export async function getProfile(): Promise<UserProfile | null> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+  const { data } = await supabase
+    .from('users')
+    .select('id, name, avatar_url')
+    .eq('auth_id', user.id)
+    .single();
+  return data ?? null;
+}
+
+export async function updateProfile(updates: { name?: string; avatar_url?: string | null }): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  await supabase
+    .from('users')
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq('auth_id', user.id);
+}

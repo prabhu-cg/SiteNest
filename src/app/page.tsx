@@ -3,14 +3,16 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Plus, FolderOpen, Trash2, Clock, Loader2 } from 'lucide-react';
-import { getProjectList, deleteProject, saveProject, type ProjectMeta } from '@/lib/storage';
+import { Plus, FolderOpen, Trash2, Clock, Loader2, Pencil, LogOut, User } from 'lucide-react';
+import { getProjectList, deleteProject, saveProject, renameProject, type ProjectMeta } from '@/lib/storage';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { AboutButton } from '@/components/ui/about-modal';
 import { generateId } from '@/lib/utils';
 import { Tooltip } from '@/components/ui/tooltip';
 import { useAuthStore } from '@/store/authStore';
 import { LogoMark } from '@/components/ui/logo-mark';
+import { Avatar } from '@/components/ui/avatar';
+import { ProfileModal } from '@/components/ui/profile-modal';
 
 function formatLastEdited(iso: string): string {
   const d = new Date(iso);
@@ -28,10 +30,18 @@ function formatLastEdited(iso: string): string {
 
 export default function Home() {
   const router = useRouter();
-  const { user, isLoading: authLoading, signOut } = useAuthStore();
+  const { user, isLoading: authLoading, signOut, profile, saveProfile } = useAuthStore();
   const [projects, setProjects] = useState<ProjectMeta[]>([]);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const pendingProject = projects.find((p) => p.id === pendingDeleteId);
+
+  // Rename state
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [renameDraft, setRenameDraft] = useState('');
+
+  // Profile dropdown + modal
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
 
   // Auth guard
   useEffect(() => {
@@ -73,6 +83,23 @@ export default function Home() {
     setPendingDeleteId(null);
   };
 
+  const startRename = (e: React.MouseEvent, project: ProjectMeta) => {
+    e.stopPropagation();
+    setRenameDraft(project.title);
+    setRenamingId(project.id);
+  };
+
+  const commitRename = async () => {
+    if (!renamingId) return;
+    const trimmed = renameDraft.trim() || 'Untitled Project';
+    const current = projects.find((p) => p.id === renamingId);
+    if (current && trimmed !== current.title) {
+      renameProject(renamingId, trimmed).catch(() => {});
+      setProjects((prev) => prev.map((p) => p.id === renamingId ? { ...p, title: trimmed } : p));
+    }
+    setRenamingId(null);
+  };
+
   return (
     <>
     <ConfirmDialog
@@ -83,6 +110,15 @@ export default function Home() {
       onConfirm={confirmDelete}
       onCancel={() => setPendingDeleteId(null)}
     />
+    {profileModalOpen && (
+      <ProfileModal
+        name={profile?.name ?? null}
+        email={user.email ?? ''}
+        avatarUrl={profile?.avatar_url ?? null}
+        onSave={saveProfile}
+        onClose={() => setProfileModalOpen(false)}
+      />
+    )}
     <div className="min-h-screen bg-gradient-to-br from-[#FFF9EB] to-white dark:from-gray-950 dark:to-gray-900">
       {/* Nav */}
       <nav className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-6 py-3 flex items-center justify-between">
@@ -91,11 +127,52 @@ export default function Home() {
           <span className="text-lg font-bold text-gray-900 dark:text-white">SiteNest</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-400 hidden sm:block">{user.email}</span>
           <AboutButton variant="text" />
-          <Button variant="ghost" size="sm" className="text-sm text-gray-500" onClick={() => signOut().then(() => router.replace('/auth'))}>
-            Sign out
-          </Button>
+          {/* Profile dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setProfileOpen((v) => !v)}
+              className="flex items-center gap-2 rounded-full focus:outline-none"
+              aria-label="Profile menu"
+            >
+              <Avatar
+                name={profile?.name ?? null}
+                email={user.email ?? ''}
+                avatarUrl={profile?.avatar_url ?? null}
+                size={32}
+                className="ring-2 ring-white dark:ring-gray-950 hover:ring-accent/40 transition-all"
+              />
+            </button>
+            {profileOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
+                <div className="absolute right-0 top-10 z-50 w-52 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg py-1.5">
+                  <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-800 mb-1">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+                      {profile?.name || user.email}
+                    </p>
+                    {profile?.name && (
+                      <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => { setProfileOpen(false); setProfileModalOpen(true); }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-orange-950/20 hover:text-accent transition-colors"
+                  >
+                    <User className="w-3.5 h-3.5 flex-shrink-0" />
+                    Edit Profile
+                  </button>
+                  <button
+                    onClick={() => signOut().then(() => router.replace('/auth'))}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-950/20 hover:text-red-500 transition-colors"
+                  >
+                    <LogOut className="w-3.5 h-3.5 flex-shrink-0" />
+                    Sign out
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -126,12 +203,27 @@ export default function Home() {
             {projects.map((project) => (
               <div
                 key={project.id}
-                onClick={() => router.push(`/editor/${project.id}`)}
+                onClick={() => renamingId !== project.id && router.push(`/editor/${project.id}`)}
                 className="group relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 cursor-pointer hover:border-accent hover:shadow-md transition-all"
               >
-                <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-1 truncate">
-                  {project.title}
-                </h3>
+                {renamingId === project.id ? (
+                  <input
+                    autoFocus
+                    value={renameDraft}
+                    onChange={(e) => setRenameDraft(e.target.value)}
+                    onBlur={commitRename}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') commitRename();
+                      if (e.key === 'Escape') setRenamingId(null);
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-full text-sm font-semibold text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 border border-accent rounded px-1.5 py-0.5 mb-1 focus:outline-none focus:ring-2 focus:ring-accent/30"
+                  />
+                ) : (
+                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-1 truncate">
+                    {project.title}
+                  </h3>
+                )}
                 <p className="text-xs text-gray-400 mb-4">
                   {project.nodeCount} page{project.nodeCount !== 1 ? 's' : ''}
                 </p>
@@ -141,14 +233,24 @@ export default function Home() {
                     <Clock className="w-3 h-3" />
                     Edited {formatLastEdited(project.updatedAt)}
                   </span>
-                  <Tooltip content="Delete project" side="left">
-                    <button
-                      onClick={(e) => handleDeleteClick(e, project.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-50 dark:hover:bg-red-950 text-gray-400 hover:text-red-500 transition-all"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </Tooltip>
+                  <div className="flex items-center gap-1">
+                    <Tooltip content="Rename" side="left">
+                      <button
+                        onClick={(e) => startRename(e, project)}
+                        className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 transition-all"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                    </Tooltip>
+                    <Tooltip content="Delete project" side="left">
+                      <button
+                        onClick={(e) => handleDeleteClick(e, project.id)}
+                        className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-50 dark:hover:bg-red-950 text-gray-400 hover:text-red-500 transition-all"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </Tooltip>
+                  </div>
                 </div>
               </div>
             ))}

@@ -38,6 +38,17 @@ export function generateId(): string {
   return crypto.randomUUID();
 }
 
+export function toSlug(title: string): string {
+  const slug = title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+  return '/' + (slug || 'page');
+}
+
 export const ICONS = [
   'home',
   'package',

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Canvas from '@/components/canvas/Canvas';
 import Sidebar from '@/components/canvas/Sidebar';
@@ -8,7 +8,7 @@ import PropertiesPanel from '@/components/canvas/PropertiesPanel';
 import Toolbar from '@/components/canvas/Toolbar';
 import { useCanvasStore } from '@/store/canvasStore';
 import { useAuthStore } from '@/store/authStore';
-import { generateId } from '@/lib/utils';
+import { generateId, toSlug } from '@/lib/utils';
 import { saveProject, loadProject, getProjectList } from '@/lib/storage';
 import WireframeModal from '@/components/wireframe/WireframeModal';
 import type { SitemapNode } from '@/types';
@@ -55,18 +55,6 @@ export default function EditorPage() {
   useEffect(() => {
     if (!authLoading && !user) router.replace('/auth');
   }, [user, authLoading, router]);
-
-  // Keyboard shortcuts for undo/redo
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      const mod = e.metaKey || e.ctrlKey;
-      if (!mod) return;
-      if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
-      if ((e.key === 'z' && e.shiftKey) || e.key === 'y') { e.preventDefault(); redo(); }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [undo, redo]);
 
   // Load project from Supabase on mount (waits for auth)
   useEffect(() => {
@@ -116,13 +104,13 @@ export default function EditorPage() {
     markDirty();
   };
 
-  const handleAddNode = () => {
+  const handleAddNode = useCallback(() => {
     const newNode: SitemapNode = {
       id: generateId(),
       project_id: projectId,
       parent_id: null,
       title: 'New Page',
-      url_slug: '/new-page',
+      url_slug: toSlug('New Page'),
       description: null,
       icon: null,
       color: lastUsedColor ?? '#EE661D',
@@ -134,7 +122,24 @@ export default function EditorPage() {
     };
     addNode(newNode);
     setSelectedNode(newNode.id);
-  };
+  }, [projectId, lastUsedColor, addNode, setSelectedNode]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod) {
+        if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
+        if ((e.key === 'z' && e.shiftKey) || e.key === 'y') { e.preventDefault(); redo(); }
+        return;
+      }
+      const t = e.target as HTMLElement;
+      if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable) return;
+      if (e.key === 'n') { e.preventDefault(); handleAddNode(); }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [undo, redo, handleAddNode]);
 
   if (authLoading || !user || isLoading) {
     return (

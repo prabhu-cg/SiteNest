@@ -54,10 +54,12 @@ export default function Sidebar({ projectId: _projectId, onAddNode }: SidebarPro
     <div className="w-56 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 flex flex-col flex-shrink-0">
       {/* Add Page */}
       <div className="p-3 border-b border-gray-100 dark:border-gray-800">
-        <Button onClick={onAddNode} className="w-full font-semibold" size="sm">
-          <Plus className="w-3.5 h-3.5 mr-1.5" />
-          Add Page
-        </Button>
+        <Tooltip content="Add Page (N)" side="right">
+          <Button onClick={onAddNode} className="w-full font-semibold" size="sm">
+            <Plus className="w-3.5 h-3.5 mr-1.5" />
+            Add Page
+          </Button>
+        </Tooltip>
         <p className="text-xs text-gray-400 mt-2 text-center">Creates a new node on the canvas</p>
       </div>
 

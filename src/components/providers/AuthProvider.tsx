@@ -5,18 +5,20 @@ import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/store/authStore';
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { setUser, setLoading } = useAuthStore();
+  const { setUser, setLoading, loadProfile } = useAuthStore();
 
   useEffect(() => {
     // Restore existing session on mount
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user ?? null);
+      if (data.session?.user) loadProfile();
     });
 
     // Keep store in sync with Supabase auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
+      if (session?.user) loadProfile();
     });
 
     return () => subscription.unsubscribe();
