@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { X, Plus, Trash2, GripVertical, Search, Check, Loader2, Download } from 'lucide-react';
+import { X, Plus, Trash2, GripVertical, Search, Check, Loader2, Download, XCircle } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { Tooltip } from '@/components/ui/tooltip';
 import { BLOCK_REGISTRY, BLOCK_CATEGORIES } from './blocks';
@@ -206,6 +206,14 @@ export default function WireframeModal({ pageTitle, blocks: initialBlocks, onClo
                   onChange={(e) => setPaletteQuery(e.target.value)}
                   className="flex-1 bg-transparent text-xs text-gray-700 dark:text-gray-300 placeholder-gray-400 outline-none"
                 />
+                {paletteQuery && (
+                  <button
+                    onClick={() => setPaletteQuery('')}
+                    className="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  >
+                    <XCircle className="w-3 h-3" />
+                  </button>
+                )}
               </div>
               {/* Category pills */}
               {!paletteQuery && (

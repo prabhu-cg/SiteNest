@@ -29,6 +29,8 @@ export type WireframeBlockType =
   | 'sidebar-nav'
   | 'breadcrumb'
   | 'tabs'
+  | 'pagination'
+  | 'stepper'
   // Hero
   | 'hero-split'
   | 'hero-centered'
@@ -40,10 +42,16 @@ export type WireframeBlockType =
   | 'image-text'
   | 'feature-list'
   | 'testimonial'
+  | 'team-grid'
+  | 'faq'
+  | 'logo-bar'
+  | 'timeline'
+  | 'process-steps'
   // Media
   | 'image-gallery'
   | 'image-full'
   | 'video-embed'
+  | 'audio-player'
   // Forms
   | 'form'
   | 'newsletter'
@@ -51,6 +59,13 @@ export type WireframeBlockType =
   // Layout
   | 'two-column'
   | 'three-column'
+  | 'blog-layout'
+  | 'rail-layout'
+  | 'left-rail'
+  | 'right-rail'
+  | 'search-results'
+  | 'profile-page'
+  | 'error-404'
   | 'pricing'
   | 'divider'
   // Data
@@ -58,6 +73,8 @@ export type WireframeBlockType =
   | 'stats'
   | 'chart-placeholder'
   | 'map-placeholder'
+  | 'comparison-table'
+  | 'kanban'
   // Footer
   | 'footer-simple'
   | 'footer-multicolumn'
