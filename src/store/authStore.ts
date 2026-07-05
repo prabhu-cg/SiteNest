@@ -33,7 +33,13 @@ export const useAuthStore = create<AuthState>((set) => ({
   signIn: async (email, password) => {
     set({ isLoading: true, error: null });
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) { set({ isLoading: false, error: error.message }); throw error; }
+    if (error) {
+      const msg = error.message === 'Failed to fetch'
+        ? 'Unable to reach the server. If you\'re using Microsoft Edge, try disabling Enhanced Tracking Prevention for this site (Edge Settings → Privacy → Tracking prevention → Basic), or try a different browser.'
+        : error.message;
+      set({ isLoading: false, error: msg });
+      throw error;
+    }
     set({ user: data.user, isLoading: false });
   },
 
