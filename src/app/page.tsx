@@ -13,6 +13,8 @@ import { useAuthStore } from '@/store/authStore';
 import { LogoMark } from '@/components/ui/logo-mark';
 import { Avatar } from '@/components/ui/avatar';
 import { ProfileModal } from '@/components/ui/profile-modal';
+import { DesktopOnlyGate } from '@/components/ui/desktop-only-gate';
+import LandingPage from '@/components/marketing/LandingPage';
 
 function formatLastEdited(iso: string): string {
   const d = new Date(iso);
@@ -43,22 +45,21 @@ export default function Home() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
 
-  // Auth guard
-  useEffect(() => {
-    if (!authLoading && !user) router.replace('/auth');
-  }, [user, authLoading, router]);
-
   useEffect(() => {
     if (!user) return;
     getProjectList().then(setProjects);
   }, [user]);
 
-  if (authLoading || !user) {
+  if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-5 h-5 animate-spin text-accent" />
       </div>
     );
+  }
+
+  if (!user) {
+    return <LandingPage />;
   }
 
   const handleNewProject = async () => {
@@ -120,6 +121,7 @@ export default function Home() {
       />
     )}
     <div className="min-h-screen bg-gradient-to-br from-[#FFF9EB] to-white dark:from-gray-950 dark:to-gray-900">
+      <DesktopOnlyGate />
       {/* Nav */}
       <nav className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">

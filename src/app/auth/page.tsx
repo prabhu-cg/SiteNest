@@ -1,19 +1,34 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, Mail, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { LogoMark } from '@/components/ui/logo-mark';
 import { Tooltip } from '@/components/ui/tooltip';
+import { DesktopOnlyGate } from '@/components/ui/desktop-only-gate';
 
 type Mode = 'signin' | 'signup' | 'forgot';
 
 export default function AuthPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#FFF9EB]">
+        <Loader2 className="w-5 h-5 animate-spin text-[#FD6920]" />
+      </div>
+    }>
+      <AuthPageInner />
+    </Suspense>
+  );
+}
+
+function AuthPageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, isLoading: authLoading, signIn, signUp, forgotPassword, error, setError } = useAuthStore();
 
-  const [mode, setMode] = useState<Mode>('signin');
+  const [mode, setMode] = useState<Mode>(searchParams.get('mode') === 'signup' ? 'signup' : 'signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -63,13 +78,14 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen flex">
+      <DesktopOnlyGate />
       {/* ── Left panel ── */}
       <div className="relative hidden lg:flex lg:w-[58%] flex-col overflow-hidden bg-[#EE661D]">
         {/* Logo top-left */}
-        <div className="absolute top-12 left-12 flex items-center gap-2.5 z-10">
+        <Link href="/" className="absolute top-12 left-12 flex items-center gap-2.5 z-10">
           <LogoMark size={44} className="rounded-lg" />
           <span className="text-white font-bold text-[20px] tracking-tight">SiteNest</span>
-        </div>
+        </Link>
 
         {/* Hero graphic — right half cropped by panel edge */}
         <div className="absolute inset-0 pointer-events-none">
@@ -110,11 +126,11 @@ export default function AuthPage() {
       {/* ── Right panel ── */}
       <div className="flex-1 bg-[#FFF9EB] flex flex-col items-center justify-center px-8 py-12">
         {/* Logo + wordmark */}
-        <div className="flex flex-col items-center mb-8">
+        <Link href="/" className="flex flex-col items-center mb-8">
           <LogoMark size={52} className="mb-3 rounded-xl shadow-sm" />
           <h1 className="text-2xl font-bold text-gray-900">SiteNest</h1>
           <p className="text-sm text-gray-500 mt-1">Visual sitemap builder</p>
-        </div>
+        </Link>
 
         {/* Card */}
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-2xl shadow-sm p-6">

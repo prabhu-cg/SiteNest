@@ -16,7 +16,7 @@ const TECH_STACK = [
 ];
 
 interface AboutButtonProps {
-  variant?: 'icon' | 'text';
+  variant?: 'icon' | 'text' | 'plain';
 }
 
 export function AboutButton({ variant = 'icon' }: AboutButtonProps) {
@@ -24,7 +24,14 @@ export function AboutButton({ variant = 'icon' }: AboutButtonProps) {
 
   return (
     <>
-      {variant === 'text' ? (
+      {variant === 'plain' ? (
+        <button
+          onClick={() => setOpen(true)}
+          className="text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
+        >
+          About
+        </button>
+      ) : variant === 'text' ? (
         <button
           onClick={() => setOpen(true)}
           className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
@@ -94,16 +101,8 @@ export function AboutButton({ variant = 'icon' }: AboutButtonProps) {
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-3 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <div className="px-6 py-3 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800">
               <span className="text-[11px] text-gray-400">Made with ♥ for the web</span>
-              <a
-                href="https://github.com/prabhu-cg/SiteNest"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[11px] font-medium text-accent hover:underline"
-              >
-                View on GitHub →
-              </a>
             </div>
           </div>
         </div>

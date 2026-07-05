@@ -11,6 +11,7 @@ import { useAuthStore } from '@/store/authStore';
 import { generateId, toSlug } from '@/lib/utils';
 import { saveProject, loadProject, getProjectList } from '@/lib/storage';
 import WireframeModal from '@/components/wireframe/WireframeModal';
+import { DesktopOnlyGate } from '@/components/ui/desktop-only-gate';
 import type { SitemapNode } from '@/types';
 import type { LayoutDirection } from '@/lib/layout';
 import { Loader2 } from 'lucide-react';
@@ -151,6 +152,7 @@ export default function EditorPage() {
 
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-gray-950">
+      <DesktopOnlyGate />
       {wireframeNode && (
         <WireframeModal
           pageTitle={wireframeNode.title}
