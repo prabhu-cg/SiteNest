@@ -39,7 +39,7 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
   const [wfHovered, setWfHovered] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const accentColor = data.color || '#EE661D';
+  const accentColor = data.color || '#C74504';
   const statusStyle = STATUS_STYLES[data.status] ?? STATUS_STYLES.draft;
   const blocks = data.wireframe ?? [];
 

@@ -17,7 +17,7 @@ export default function TableBlock() {
           <rect x="32" y={y + 38} width="736" height="1" fill="#f1f5f9" />
           {[56, 224, 392, 560, 688].map((x, col) => (
             <rect key={col} x={x} y={y + 46} width={col === 4 ? 56 : 100} height="9" rx="3"
-              fill={col === 4 ? '#EE661D' : col === 0 ? '#64748b' : '#e2e8f0'} opacity={col === 4 ? 0.6 : 1} />
+              fill={col === 4 ? '#C74504' : col === 0 ? '#64748b' : '#e2e8f0'} opacity={col === 4 ? 0.6 : 1} />
           ))}
         </g>
       ))}

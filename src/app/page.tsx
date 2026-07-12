@@ -120,7 +120,7 @@ export default function Home() {
         onClose={() => setProfileModalOpen(false)}
       />
     )}
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF9EB] to-white dark:from-gray-950 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#FFFAEF] to-white dark:from-gray-950 dark:to-gray-900">
       <DesktopOnlyGate />
       {/* Nav */}
       <nav className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-6 py-3 flex items-center justify-between">

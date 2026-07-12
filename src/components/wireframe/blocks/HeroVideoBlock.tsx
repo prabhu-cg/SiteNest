@@ -14,7 +14,7 @@ export default function HeroVideoBlock() {
       <rect x="180" y="152" width="440" height="22" rx="4" fill="#ffffff99" />
       <rect x="240" y="182" width="320" height="14" rx="3" fill="#ffffff66" />
       {/* CTA */}
-      <rect x="300" y="216" width="200" height="36" rx="6" fill="#EE661D" />
+      <rect x="300" y="216" width="200" height="36" rx="6" fill="#C74504" />
     </svg>
   );
 }

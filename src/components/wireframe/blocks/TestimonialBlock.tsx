@@ -16,7 +16,7 @@ export default function TestimonialBlock() {
       {[0, 1, 2, 3, 4].map((i) => (
         <polygon key={i}
           points={`${280 + i * 22},138 ${284 + i * 22},148 ${294 + i * 22},148 ${286 + i * 22},154 ${289 + i * 22},164 ${280 + i * 22},158 ${271 + i * 22},164 ${274 + i * 22},154 ${266 + i * 22},148 ${276 + i * 22},148`}
-          fill="#EE661D" opacity="0.8"
+          fill="#C74504" opacity="0.8"
         />
       ))}
     </svg>

@@ -91,7 +91,7 @@ export default function Sidebar({ projectId: _projectId, onAddNode }: SidebarPro
                   {/* Color circle */}
                   <span
                     className="w-2.5 h-2.5 rounded-full flex-shrink-0 border border-gray-200 mt-0.5"
-                    style={{ backgroundColor: node.color || '#EE661D' }}
+                    style={{ backgroundColor: node.color || '#C74504' }}
                   />
 
                   {/* Page info */}

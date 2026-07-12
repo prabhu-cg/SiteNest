@@ -24,13 +24,13 @@ export default function PricingBlock() {
           {/* Features */}
           {[164, 186, 208, 230, 252].map((y, j) => (
             <g key={j}>
-              <circle cx={x + 30} cy={y + 5} r="4" fill={featured ? '#EE661D' : '#e2e8f0'} />
+              <circle cx={x + 30} cy={y + 5} r="4" fill={featured ? '#C74504' : '#e2e8f0'} />
               <rect x={x + 44} y={y} width={featured ? 140 : 130} height="9" rx="3" fill={featured ? '#ffffffaa' : '#e2e8f0'} />
             </g>
           ))}
           {/* CTA */}
           <rect x={x + 20} y="284" width="184" height="28" rx="6"
-            fill={featured ? '#EE661D' : '#f1f5f9'}
+            fill={featured ? '#C74504' : '#f1f5f9'}
             stroke={featured ? 'none' : '#e2e8f0'} strokeWidth="1" />
         </g>
       ))}

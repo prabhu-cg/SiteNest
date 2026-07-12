@@ -63,7 +63,7 @@ function CustomEdge({
         path={edgePath}
         markerEnd={selected ? 'url(#sn-arrow-accent)' : 'url(#sn-arrow)'}
         style={{
-          stroke: selected ? '#EE661D' : '#c0cad4',
+          stroke: selected ? '#C74504' : '#c0cad4',
           strokeWidth: selected ? 2.5 : 1.5,
           filter: selected ? 'drop-shadow(0 0 3px rgba(238,102,29,0.35))' : undefined,
           transition: 'stroke 0.15s ease, stroke-width 0.15s ease, filter 0.15s ease',
@@ -502,7 +502,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
       url_slug: '/new-page',
       description: null,
       icon: null,
-      color: lastUsedColor ?? '#EE661D',
+      color: lastUsedColor ?? '#C74504',
       status: 'draft',
       position_x: contextMenu.flowX - 110,
       position_y: contextMenu.flowY - 30,
@@ -542,7 +542,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
           </marker>
           <marker id="sn-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5"
             markerWidth="5" markerHeight="5" orient="auto">
-            <path d="M0,1 L9,5 L0,9 Z" fill="#EE661D" />
+            <path d="M0,1 L9,5 L0,9 Z" fill="#C74504" />
           </marker>
         </defs>
       </svg>

@@ -7,8 +7,8 @@ export default function VideoEmbedBlock() {
       {/* Progress bar area */}
       <rect x="40" y="198" width="720" height="22" rx="0" fill="#0f172a" />
       <rect x="56" y="206" width="560" height="4" rx="2" fill="#334155" />
-      <rect x="56" y="206" width="180" height="4" rx="2" fill="#EE661D" opacity="0.8" />
-      <circle cx="236" cy="208" r="5" fill="#EE661D" />
+      <rect x="56" y="206" width="180" height="4" rx="2" fill="#C74504" opacity="0.8" />
+      <circle cx="236" cy="208" r="5" fill="#C74504" />
       {/* Play button */}
       <circle cx="400" cy="105" r="32" fill="#ffffff22" stroke="#ffffff44" strokeWidth="1.5" />
       <polygon points="390,90 390,120 422,105" fill="#ffffffcc" />

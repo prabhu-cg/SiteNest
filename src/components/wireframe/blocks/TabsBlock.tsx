@@ -13,7 +13,7 @@ export default function TabsBlock() {
       ].map((tab, i) => (
         <g key={i}>
           <rect x={tab.x} y="20" width={tab.w} height="12" rx="3" fill={tab.active ? '#334155' : '#cbd5e1'} />
-          {tab.active && <rect x={tab.x} y="54" width={tab.w} height="2" rx="1" fill="#EE661D" />}
+          {tab.active && <rect x={tab.x} y="54" width={tab.w} height="2" rx="1" fill="#C74504" />}
         </g>
       ))}
     </svg>

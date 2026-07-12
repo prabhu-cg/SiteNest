@@ -147,7 +147,7 @@ const FAQS = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FFF9EB] to-white dark:from-gray-950 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-b from-[#FFFAEF] to-white dark:from-gray-950 dark:to-gray-900">
       {/* Nav */}
       <nav className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm sticky top-0 z-20 px-6 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">

@@ -114,7 +114,7 @@ export default function EditorPage() {
       url_slug: toSlug('New Page'),
       description: null,
       icon: null,
-      color: lastUsedColor ?? '#EE661D',
+      color: lastUsedColor ?? '#C74504',
       status: 'draft',
       position_x: 100 + Math.random() * 300,
       position_y: 100 + Math.random() * 300,

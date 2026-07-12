@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 
-const PALETTE = ['#EE661D', '#3B82F6', '#7C3AED', '#10B981', '#EC4899', '#F59E0B', '#0EA5E9', '#64748B'];
+const PALETTE = ['#C74504', '#3B82F6', '#7C3AED', '#10B981', '#EC4899', '#F59E0B', '#0EA5E9', '#64748B'];
 
 function pickColor(seed: string): string {
   let h = 0;

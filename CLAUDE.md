@@ -9,8 +9,8 @@
 - shadcn/ui + Tailwind for premium UI
 
 **Brand Colors:**
-- Accent: #EE661D (Orange)
-- Secondary: #FFF9EB (Cream)
+- Accent: #C74504 (Orange)
+- Secondary: #FFFAEF (Cream)
 - Primary: #FFFFFF (White)
 
 ## Architecture

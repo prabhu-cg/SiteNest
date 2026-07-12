@@ -9,7 +9,7 @@ export default function CtaBannerBlock() {
       <rect x="160" y="44" width="360" height="22" rx="4" fill="#ffffff99" />
       <rect x="200" y="74" width="280" height="14" rx="3" fill="#ffffff55" />
       {/* Buttons */}
-      <rect x="200" y="108" width="140" height="36" rx="6" fill="#EE661D" />
+      <rect x="200" y="108" width="140" height="36" rx="6" fill="#C74504" />
       <rect x="356" y="108" width="140" height="36" rx="6" fill="#ffffff22" stroke="#ffffff33" strokeWidth="1.5" />
     </svg>
   );

@@ -32,7 +32,7 @@ export const useCanvasStore = create<ExtendedStore>((set) => ({
   error: null,
   isDirty: false,
   lastAction: '',
-  lastUsedColor: '#EE661D',
+  lastUsedColor: '#C74504',
   past: [],
   future: [],
 

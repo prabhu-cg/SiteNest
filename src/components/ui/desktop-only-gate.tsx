@@ -2,7 +2,7 @@ import { LogoMark } from '@/components/ui/logo-mark';
 
 export function DesktopOnlyGate() {
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#FFF9EB] px-8 text-center lg:hidden">
+    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#FFFAEF] px-8 text-center lg:hidden">
       <LogoMark size={56} className="mb-6 shadow-lg rounded-2xl" />
       <h1 className="text-xl font-bold text-gray-900 mb-2">SiteNest is built for desktop</h1>
       <p className="text-sm text-gray-500 max-w-xs leading-relaxed">

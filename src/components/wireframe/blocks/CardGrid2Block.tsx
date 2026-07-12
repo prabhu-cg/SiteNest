@@ -17,7 +17,7 @@ export default function CardGrid2Block() {
           <rect x={x + 16} y="184" width="160" height="12" rx="3" fill="#94a3b8" />
           <rect x={x + 16} y="204" width="280" height="8" rx="3" fill="#e2e8f0" />
           <rect x={x + 16} y="220" width="240" height="8" rx="3" fill="#e2e8f0" />
-          <rect x={x + 16} y="240" width="72" height="8" rx="3" fill="#EE661D" opacity="0.7" />
+          <rect x={x + 16} y="240" width="72" height="8" rx="3" fill="#C74504" opacity="0.7" />
         </g>
       ))}
     </svg>

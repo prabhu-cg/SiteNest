@@ -15,11 +15,11 @@ export default function MapPlaceholderBlock() {
       <path d="M200,0 Q240,120 200,240" fill="none" stroke="#c8d8c8" strokeWidth="8" />
       <path d="M200,0 Q240,120 200,240" fill="none" stroke="#dce8dc" strokeWidth="5" />
       {/* Map pin */}
-      <circle cx="400" cy="110" r="20" fill="#EE661D" opacity="0.9" />
+      <circle cx="400" cy="110" r="20" fill="#C74504" opacity="0.9" />
       <circle cx="400" cy="110" r="8" fill="#ffffff" />
-      <line x1="400" y1="130" x2="400" y2="146" stroke="#EE661D" strokeWidth="2.5" />
+      <line x1="400" y1="130" x2="400" y2="146" stroke="#C74504" strokeWidth="2.5" />
       {/* Pulse ring */}
-      <circle cx="400" cy="110" r="32" fill="none" stroke="#EE661D" strokeWidth="1.5" opacity="0.4" />
+      <circle cx="400" cy="110" r="32" fill="none" stroke="#C74504" strokeWidth="1.5" opacity="0.4" />
     </svg>
   );
 }

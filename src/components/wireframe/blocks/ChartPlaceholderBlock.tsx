@@ -15,10 +15,10 @@ export default function ChartPlaceholderBlock() {
       {/* Bars */}
       {[
         { x: 104, h: 60, fill: '#94a3b8' },
-        { x: 188, h: 100, fill: '#EE661D' },
+        { x: 188, h: 100, fill: '#C74504' },
         { x: 272, h: 80, fill: '#94a3b8' },
         { x: 356, h: 120, fill: '#94a3b8' },
-        { x: 440, h: 90, fill: '#EE661D' },
+        { x: 440, h: 90, fill: '#C74504' },
         { x: 524, h: 140, fill: '#94a3b8' },
         { x: 608, h: 70, fill: '#94a3b8' },
         { x: 692, h: 110, fill: '#94a3b8' },
@@ -31,7 +31,7 @@ export default function ChartPlaceholderBlock() {
       {/* Legend */}
       <rect x="40" y="210" width="12" height="12" rx="2" fill="#94a3b8" />
       <rect x="60" y="214" width="60" height="8" rx="2" fill="#e2e8f0" />
-      <rect x="140" y="210" width="12" height="12" rx="2" fill="#EE661D" opacity="0.7" />
+      <rect x="140" y="210" width="12" height="12" rx="2" fill="#C74504" opacity="0.7" />
       <rect x="160" y="214" width="60" height="8" rx="2" fill="#e2e8f0" />
     </svg>
   );

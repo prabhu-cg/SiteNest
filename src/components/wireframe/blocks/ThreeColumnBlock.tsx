@@ -15,7 +15,7 @@ export default function ThreeColumnBlock() {
           <rect x={x} y="142" width="192" height="8" rx="3" fill="#e2e8f0" />
           <rect x={x} y="158" width="216" height="8" rx="3" fill="#e2e8f0" />
           {/* Link */}
-          <rect x={x} y="180" width="80" height="8" rx="3" fill="#EE661D" opacity="0.7" />
+          <rect x={x} y="180" width="80" height="8" rx="3" fill="#C74504" opacity="0.7" />
         </g>
       ))}
     </svg>

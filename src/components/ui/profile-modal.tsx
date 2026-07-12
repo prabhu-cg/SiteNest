@@ -91,7 +91,7 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
               value={displayName}
               onChange={(e) => { setDisplayName(e.target.value); setSaveError(null); }}
               placeholder="Your name"
-              className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#FD6920]/30 focus:border-[#FD6920] text-gray-900 dark:text-gray-100 placeholder-gray-400"
+              className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#C74504]/30 focus:border-[#C74504] text-gray-900 dark:text-gray-100 placeholder-gray-400"
             />
           </div>
 
@@ -109,7 +109,7 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
                 className={cn(
                   'relative flex-1 flex flex-col items-center gap-1.5 rounded-xl p-1.5 transition-all border-2',
                   selectedAvatar === null
-                    ? 'border-[#EE661D] bg-orange-50 dark:bg-orange-950/20'
+                    ? 'border-[#C74504] bg-orange-50 dark:bg-orange-950/20'
                     : 'border-transparent hover:border-gray-200 dark:hover:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                 )}
                 title="Use initials"
@@ -117,7 +117,7 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
                 <Avatar name={displayName || null} email={email} avatarUrl={null} size={44} />
                 <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium leading-none">Initials</span>
                 {selectedAvatar === null && (
-                  <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-[#EE661D] rounded-full flex items-center justify-center">
+                  <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-[#C74504] rounded-full flex items-center justify-center">
                     <Check className="w-2 h-2 text-white" strokeWidth={3} />
                   </span>
                 )}
@@ -135,7 +135,7 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
                     className={cn(
                       'relative flex-1 flex flex-col items-center gap-1.5 rounded-xl p-1.5 transition-all border-2',
                       isSelected
-                        ? 'border-[#EE661D] bg-orange-50 dark:bg-orange-950/20'
+                        ? 'border-[#C74504] bg-orange-50 dark:bg-orange-950/20'
                         : 'border-transparent hover:border-gray-200 dark:hover:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                     )}
                     title={label}
@@ -150,7 +150,7 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
                     />
                     <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium leading-none">{label}</span>
                     {isSelected && (
-                      <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-[#EE661D] rounded-full flex items-center justify-center">
+                      <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-[#C74504] rounded-full flex items-center justify-center">
                         <Check className="w-2 h-2 text-white" strokeWidth={3} />
                       </span>
                     )}
