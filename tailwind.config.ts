@@ -38,7 +38,8 @@ const config: Config = {
           900: "#501C02",
         },
         secondary: {
-          DEFAULT: "#F1F5F9",
+          DEFAULT: "var(--secondary)",
+          foreground: "var(--secondary-foreground)",
           50: "#F8FAFC",
           100: "#F1F5F9",
           200: "#E2E8F0",
@@ -50,6 +51,41 @@ const config: Config = {
           DEFAULT: "#FFFFFF",
           50: "#FFFFFF",
           100: "#FFFFFF",
+        },
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        card: {
+          DEFAULT: "var(--card)",
+          foreground: "var(--card-foreground)",
+        },
+        popover: {
+          DEFAULT: "var(--popover)",
+          foreground: "var(--popover-foreground)",
+        },
+        muted: {
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
+        },
+        destructive: {
+          DEFAULT: "var(--destructive)",
+          foreground: "var(--destructive-foreground)",
+        },
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
+        chart: {
+          "1": "var(--chart-1)",
+          "2": "var(--chart-2)",
+          "3": "var(--chart-3)",
+          "4": "var(--chart-4)",
+          "5": "var(--chart-5)",
+        },
+        sidebar: {
+          DEFAULT: "var(--sidebar)",
+          foreground: "var(--sidebar-foreground)",
+          border: "var(--sidebar-border)",
+          accent: "var(--sidebar-accent)",
+          "accent-foreground": "var(--sidebar-accent-foreground)",
         },
       },
       fontFamily: {

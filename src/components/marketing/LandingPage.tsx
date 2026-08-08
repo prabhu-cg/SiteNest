@@ -147,18 +147,21 @@ const FAQS = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FFFAEF] to-white dark:from-gray-950 dark:to-gray-900">
+    <div className="min-h-screen bg-background">
       {/* Nav */}
-      <nav className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm sticky top-0 z-20 px-6 py-3">
+      <nav className="border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-20 px-6 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <LogoMark size={28} />
-            <span className="text-lg font-bold text-gray-900 dark:text-white">SiteNest</span>
+            <div className="flex flex-col leading-none">
+              <span className="text-base font-bold tracking-tight text-foreground">SiteNest</span>
+              <span className="mt-0.5 text-[11px] font-semibold text-muted-foreground">Visual sitemap builder</span>
+            </div>
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
             <Link
               href="/auth"
-              className="px-2 sm:px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors whitespace-nowrap"
+              className="px-2 sm:px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
             >
               Sign in
             </Link>
@@ -173,53 +176,56 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
-        <span className="inline-block px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-semibold mb-6">
-          Visual sitemap builder
-        </span>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
-          Plan your site.<br />Visually. Ship with confidence.
-        </h1>
-        <p className="mt-6 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          SiteNest turns a blank page into a clear plan. Drag pages onto an infinite canvas, connect them,
-          sketch wireframes, and export a sitemap your whole team can follow.
-        </p>
-        <div className="mt-8 flex items-center justify-center gap-3 flex-wrap">
-          <Link
-            href="/auth?mode=signup"
-            className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-accent hover:bg-accent/90 rounded-lg transition-colors shadow-sm"
-          >
-            Get started free
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-          <Link
-            href="/auth"
-            className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-accent hover:text-accent rounded-lg transition-colors"
-          >
-            Sign in
-          </Link>
-        </div>
-        <p className="mt-4 text-xs text-gray-400">Free to start · No credit card needed</p>
-      </section>
-
-      {/* Stats */}
-      <section className="max-w-4xl mx-auto px-6 pb-20">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {STATS.map((stat) => (
-            <div
-              key={stat.label}
-              className="text-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl py-6 px-3"
+      {/* Hero + stats band */}
+      <div className="bg-[#FFF9EB] dark:bg-gray-950">
+        {/* Hero */}
+        <section className="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
+          <span className="inline-block px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-semibold mb-6">
+            Visual sitemap builder
+          </span>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
+            Plan your site.<br />Visually. Ship with confidence.
+          </h1>
+          <p className="mt-6 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            SiteNest turns a blank page into a clear plan. Drag pages onto an infinite canvas, connect them,
+            sketch wireframes, and export a sitemap your whole team can follow.
+          </p>
+          <div className="mt-8 flex items-center justify-center gap-3 flex-wrap">
+            <Link
+              href="/auth?mode=signup"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-accent hover:bg-accent/90 rounded-lg transition-colors shadow-sm"
             >
-              <p className="text-2xl font-extrabold text-accent">{stat.value}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+              Get started free
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/auth"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-accent hover:text-accent rounded-lg transition-colors"
+            >
+              Sign in
+            </Link>
+          </div>
+          <p className="mt-4 text-xs text-gray-400">Free to start · No credit card needed</p>
+        </section>
+
+        {/* Stats */}
+        <section className="max-w-4xl mx-auto px-6 pb-20">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {STATS.map((stat) => (
+              <div
+                key={stat.label}
+                className="text-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl py-6 px-3"
+              >
+                <p className="text-2xl font-extrabold text-accent">{stat.value}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
 
       {/* Screenshot */}
-      <section className="max-w-5xl mx-auto px-6 pb-20">
+      <section className="bg-background max-w-5xl mx-auto px-6 pt-20 pb-20">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white">A peek at the canvas</h2>
           <p className="mt-3 text-gray-500 dark:text-gray-400">This is what building a sitemap in SiteNest actually looks like.</p>
@@ -266,7 +272,7 @@ export default function LandingPage() {
       </section>
 
       {/* How it works */}
-      <section className="bg-white dark:bg-gray-900/50 border-y border-gray-200 dark:border-gray-800 py-20">
+      <section className="bg-[#FFF9EB] dark:bg-gray-900/50 border-y border-gray-200 dark:border-gray-800 py-20">
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">How it works</h2>
@@ -342,26 +348,31 @@ export default function LandingPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="max-w-3xl mx-auto px-6 pb-24 text-center">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Ready to plan your next site?</h2>
-        <p className="text-gray-500 dark:text-gray-400 mb-8">Free to start. No credit card needed.</p>
-        <Link
-          href="/auth?mode=signup"
-          className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-accent hover:bg-accent/90 rounded-lg transition-colors shadow-sm"
-        >
-          Get started free
-          <ArrowRight className="w-4 h-4" />
-        </Link>
+      <section className="bg-accent py-20">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Ready to plan your next site?</h2>
+          <p className="mt-4 text-lg text-white/80">Free to start. No credit card needed.</p>
+          <Link
+            href="/auth?mode=signup"
+            className="mt-8 inline-flex items-center gap-2 px-8 py-3 text-base font-semibold text-foreground bg-secondary hover:bg-secondary/90 rounded-md transition-colors"
+          >
+            Get started free
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 dark:border-gray-800">
+      <footer className="border-t border-border bg-background">
         <div className="max-w-6xl mx-auto flex flex-col items-center gap-4 px-6 py-12 sm:flex-row sm:justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <LogoMark size={20} />
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">SiteNest</span>
+          <Link href="/" className="flex items-center gap-3">
+            <LogoMark size={28} />
+            <div className="flex flex-col leading-none">
+              <span className="text-sm font-bold tracking-tight text-foreground">SiteNest</span>
+              <span className="mt-0.5 text-[10px] font-semibold text-muted-foreground">Visual sitemap builder</span>
+            </div>
           </Link>
-          <p className="text-sm text-gray-400">© {new Date().getFullYear()} SiteNest. Plan your site, visually.</p>
+          <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} SiteNest. Visual sitemap builder.</p>
           <div className="flex items-center gap-5">
             <AboutButton variant="plain" />
             <LegalModalButton label="Privacy" title="Privacy Policy" updated={LAST_UPDATED} sections={PRIVACY_SECTIONS} />

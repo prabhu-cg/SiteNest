@@ -22,7 +22,7 @@ export function LegalModalButton({ label, title, updated, sections }: LegalModal
     <>
       <button
         onClick={() => setOpen(true)}
-        className="text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
+        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
       >
         {label}
       </button>
