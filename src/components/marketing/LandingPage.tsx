@@ -11,6 +11,7 @@ import {
   Moon,
   ArrowRight,
   Check,
+  ChevronDown,
 } from 'lucide-react';
 import { LogoMark } from '@/components/ui/logo-mark';
 import { AboutButton } from '@/components/ui/about-modal';
@@ -154,7 +155,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <LogoMark size={28} />
             <div className="flex flex-col leading-none">
-              <span className="text-base font-bold tracking-tight text-foreground">SiteNest</span>
+              <span className="text-base font-bold tracking-tight text-foreground">Site<span className="text-accent">Nest</span></span>
               <span className="mt-0.5 text-[11px] font-semibold text-muted-foreground">Visual sitemap builder</span>
             </div>
           </div>
@@ -326,24 +327,23 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="max-w-3xl mx-auto px-6 py-20">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Frequently asked questions</h2>
-          <p className="mt-3 text-gray-500 dark:text-gray-400">Everything else you might be wondering about.</p>
-        </div>
-        <div className="space-y-3">
-          {FAQS.map(({ question, answer }) => (
-            <details
-              key={question}
-              className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-5 py-4 open:shadow-sm"
-            >
-              <summary className="flex items-center justify-between cursor-pointer list-none font-semibold text-sm text-gray-900 dark:text-white">
-                {question}
-                <span className="ml-4 text-gray-400 transition-transform group-open:rotate-45 text-lg leading-none">+</span>
-              </summary>
-              <p className="mt-3 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{answer}</p>
-            </details>
-          ))}
+      <section className="bg-[#FFF9EB] dark:bg-gray-900/50 border-y border-gray-200 dark:border-gray-800 py-20">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Frequently asked questions</h2>
+            <p className="mt-3 text-gray-500 dark:text-gray-400">Everything else you might be wondering about.</p>
+          </div>
+          <div className="divide-y divide-border rounded-2xl border border-border bg-white dark:bg-gray-900">
+            {FAQS.map(({ question, answer }) => (
+              <details key={question} className="group">
+                <summary className="flex w-full items-center justify-between gap-4 p-5 text-left cursor-pointer list-none font-medium text-sm text-gray-900 dark:text-white">
+                  {question}
+                  <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+                </summary>
+                <p className="px-5 pb-5 -mt-1 text-sm text-muted-foreground leading-relaxed">{answer}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -368,7 +368,7 @@ export default function LandingPage() {
           <Link href="/" className="flex items-center gap-3">
             <LogoMark size={28} />
             <div className="flex flex-col leading-none">
-              <span className="text-sm font-bold tracking-tight text-foreground">SiteNest</span>
+              <span className="text-sm font-bold tracking-tight text-foreground">Site<span className="text-accent">Nest</span></span>
               <span className="mt-0.5 text-[10px] font-semibold text-muted-foreground">Visual sitemap builder</span>
             </div>
           </Link>

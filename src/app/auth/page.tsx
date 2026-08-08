@@ -128,7 +128,7 @@ function AuthPageInner() {
         {/* Logo + wordmark */}
         <Link href="/" className="flex flex-col items-center mb-8">
           <LogoMark size={52} className="mb-3 rounded-xl shadow-sm" />
-          <h1 className="text-2xl font-bold text-gray-900">SiteNest</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Site<span className="text-accent">Nest</span></h1>
           <p className="text-sm text-gray-500 mt-1">Visual sitemap builder</p>
         </Link>
 
