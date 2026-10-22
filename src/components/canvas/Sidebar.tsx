@@ -15,7 +15,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ projectId: _projectId, onAddNode }: SidebarProps) {
-  const { nodes, selectedNodeId, setSelectedNode, deleteNode, addNode } = useCanvasStore();
+  const { nodes, selectedNodeId, setSelectedNode, deleteNode, addNode, readOnly, setFocusNodeId } = useCanvasStore();
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   const handleDelete = (id: string) => {
@@ -53,6 +53,14 @@ export default function Sidebar({ projectId: _projectId, onAddNode }: SidebarPro
     />
     <div className="w-56 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 flex flex-col flex-shrink-0">
       {/* Add Page */}
+      {readOnly ? (
+        <div className="p-3 border-b border-gray-100 dark:border-gray-800">
+          <p className="text-xs font-semibold text-gray-800 dark:text-gray-200">Reference sample</p>
+          <p className="text-xs text-gray-500 mt-1 leading-snug">
+            Explore freely: pan, zoom, open Flow, or press Present. Editing is switched off here.
+          </p>
+        </div>
+      ) : (
       <div className="p-3 border-b border-gray-100 dark:border-gray-800">
         <Tooltip content="Add Page (N)" side="right">
           <Button onClick={onAddNode} className="w-full font-semibold" size="sm">
@@ -62,6 +70,7 @@ export default function Sidebar({ projectId: _projectId, onAddNode }: SidebarPro
         </Tooltip>
         <p className="text-xs text-gray-400 mt-2 text-center">Creates a new node on the canvas</p>
       </div>
+      )}
 
       {/* Label */}
       <div className="px-3 pt-3 pb-1">
@@ -81,7 +90,7 @@ export default function Sidebar({ projectId: _projectId, onAddNode }: SidebarPro
               return (
                 <div
                   key={node.id}
-                  onClick={() => setSelectedNode(node.id)}
+                  onClick={() => { setSelectedNode(node.id); if (readOnly) setFocusNodeId(node.id); }}
                   className={`group flex items-start gap-2 px-2 py-2 rounded-md cursor-pointer transition-all border ${
                     isSelected
                       ? 'border-accent bg-orange-50 dark:bg-orange-950/20'
@@ -107,7 +116,7 @@ export default function Sidebar({ projectId: _projectId, onAddNode }: SidebarPro
                   </div>
 
                   {/* Actions — only visible on hover of the selected item */}
-                  <div className={`gap-0.5 ${isSelected ? 'hidden group-hover:flex' : 'hidden'}`}>
+                  <div className={`gap-0.5 ${isSelected && !readOnly ? 'hidden group-hover:flex' : 'hidden'}`}>
                     <Tooltip content="Duplicate">
                       <button
                         onClick={(e) => { e.stopPropagation(); handleDuplicate(node); }}

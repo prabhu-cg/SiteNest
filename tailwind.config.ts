@@ -1,13 +1,23 @@
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
+import colors from "tailwindcss/colors";
 const { default: flattenColorPalette } = require("tailwindcss/lib/util/flattenColorPalette");
+
+// Lets `bg-primary/60`, `ring-ring/50` etc. work on CSS-variable colors (Tailwind v3 can't parse var())
+const token =
+  (name: string) =>
+  (({ opacityValue }: { opacityValue?: string }) =>
+    opacityValue === undefined
+      ? `var(${name})`
+      : `color-mix(in srgb, var(${name}) calc(${opacityValue} * 100%), transparent)`) as unknown as string;
 
 function addVariablesForColors({ addBase, e, theme }: any) {
   let allColors = flattenColorPalette(theme("colors"));
   let newVars: Record<string, string> = {};
 
   Object.entries(allColors).forEach(([key, val]) => {
-    newVars[`--${e(key)}`] = val as string;
+    // Token entries are functions (see `token`) and are defined in globals.css instead
+    if (typeof val === "string") newVars[`--${e(key)}`] = val;
   });
   addBase({
     ":root": newVars,
@@ -24,6 +34,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Warm neutrals: every existing gray-* utility now reads as Assessly's stone/parchment ramp
+        gray: colors.stone,
         accent: {
           DEFAULT: "#C74504",
           50: "#FCF4F0",
@@ -38,8 +50,8 @@ const config: Config = {
           900: "#501C02",
         },
         secondary: {
-          DEFAULT: "var(--secondary)",
-          foreground: "var(--secondary-foreground)",
+          DEFAULT: token("--secondary"),
+          foreground: token("--secondary-foreground"),
           50: "#F8FAFC",
           100: "#F1F5F9",
           200: "#E2E8F0",
@@ -48,31 +60,42 @@ const config: Config = {
           500: "#64748B",
         },
         primary: {
-          DEFAULT: "#FFFFFF",
-          50: "#FFFFFF",
-          100: "#FFFFFF",
+          DEFAULT: token("--primary"),
+          foreground: token("--primary-foreground"),
+          hover: token("--primary-hover"),
+          soft: token("--primary-soft"),
+          text: token("--primary-text"),
         },
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        surface: {
+          DEFAULT: token("--surface"),
+          raised: token("--surface-raised"),
+        },
+        "border-strong": token("--border-strong"),
+        success: { DEFAULT: token("--success"), soft: token("--success-soft") },
+        warning: { DEFAULT: token("--warning"), soft: token("--warning-soft") },
+        info: { DEFAULT: token("--info"), soft: token("--info-soft") },
+        background: token("--background"),
+        foreground: token("--foreground"),
         card: {
-          DEFAULT: "var(--card)",
-          foreground: "var(--card-foreground)",
+          DEFAULT: token("--card"),
+          foreground: token("--card-foreground"),
         },
         popover: {
-          DEFAULT: "var(--popover)",
-          foreground: "var(--popover-foreground)",
+          DEFAULT: token("--popover"),
+          foreground: token("--popover-foreground"),
         },
         muted: {
-          DEFAULT: "var(--muted)",
-          foreground: "var(--muted-foreground)",
+          DEFAULT: token("--muted"),
+          foreground: token("--muted-foreground"),
         },
         destructive: {
-          DEFAULT: "var(--destructive)",
-          foreground: "var(--destructive-foreground)",
+          DEFAULT: token("--destructive"),
+          foreground: token("--destructive-foreground"),
+          soft: token("--destructive-soft"),
         },
-        border: "var(--border)",
-        input: "var(--input)",
-        ring: "var(--ring)",
+        border: token("--border"),
+        input: token("--input"),
+        ring: token("--ring"),
         chart: {
           "1": "var(--chart-1)",
           "2": "var(--chart-2)",
@@ -81,11 +104,11 @@ const config: Config = {
           "5": "var(--chart-5)",
         },
         sidebar: {
-          DEFAULT: "var(--sidebar)",
-          foreground: "var(--sidebar-foreground)",
-          border: "var(--sidebar-border)",
-          accent: "var(--sidebar-accent)",
-          "accent-foreground": "var(--sidebar-accent-foreground)",
+          DEFAULT: token("--sidebar"),
+          foreground: token("--sidebar-foreground"),
+          border: token("--sidebar-border"),
+          accent: token("--sidebar-accent"),
+          "accent-foreground": token("--sidebar-accent-foreground"),
         },
       },
       fontFamily: {
@@ -95,8 +118,11 @@ const config: Config = {
         lg: "0.5rem",
         md: "0.375rem",
         sm: "0.25rem",
+        card: "16px",
       },
       boxShadow: {
+        card: "0 1px 2px 0 #1010140a, 0 1px 3px 0 #1010140f",
+        raised: "0 2px 4px -1px #1010140f, 0 8px 24px -6px #1010141f",
         sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
         DEFAULT: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
         md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",

@@ -1,11 +1,13 @@
 'use client';
 
 import { Suspense, useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, Mail, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
-import { LogoMark } from '@/components/ui/logo-mark';
+import AuthShell from '@/components/auth/AuthShell';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Tooltip } from '@/components/ui/tooltip';
 import { DesktopOnlyGate } from '@/components/ui/desktop-only-gate';
 
@@ -14,8 +16,8 @@ type Mode = 'signin' | 'signup' | 'forgot';
 export default function AuthPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-[#FFFAEF]">
-        <Loader2 className="w-5 h-5 animate-spin text-[#C74504]" />
+      <div className="min-h-screen flex items-center justify-center bg-surface">
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
       </div>
     }>
       <AuthPageInner />
@@ -70,157 +72,108 @@ function AuthPageInner() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FFFAEF]">
-        <Loader2 className="w-5 h-5 animate-spin text-[#C74504]" />
+      <div className="min-h-screen flex items-center justify-center bg-surface">
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
       </div>
     );
   }
 
+  const errorBox = error && (
+    <div role="alert" className="p-3 bg-destructive-soft border border-destructive/30 text-destructive rounded-lg text-xs">
+      {error}
+    </div>
+  );
+
   return (
-    <div className="min-h-screen flex">
+    <>
       <DesktopOnlyGate />
-      {/* ── Left panel ── */}
-      <div className="relative hidden lg:flex lg:w-[58%] flex-col overflow-hidden bg-[#C74504]">
-        {/* Logo top-left */}
-        <Link href="/" className="absolute top-12 left-12 flex items-center gap-2.5 z-10">
-          <LogoMark size={44} className="rounded-lg" />
-          <span className="text-white font-bold text-[20px] tracking-tight">SiteNest</span>
-        </Link>
-
-        {/* Hero graphic — right half cropped by panel edge */}
-        <div className="absolute inset-0 pointer-events-none">
-          <svg
-            viewBox="0 0 48 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{
-              position: 'absolute',
-              right: 0,
-              top: '50%',
-              height: '100%',
-              width: 'auto',
-              transform: 'translate(50%, -50%)',
-            }}
-          >
-            <path d="M39.5849 30.6633C39.7449 30.941 39.7884 31.2708 39.7058 31.5805C39.6232 31.8901 39.4213 32.1545 39.1442 32.3156L24.6058 40.7963C24.4205 40.9044 24.2099 40.9613 23.9955 40.9613C23.781 40.9613 23.5704 40.9044 23.3851 40.7963L8.84668 32.3156C8.57362 32.1515 8.37618 31.8865 8.2971 31.5779C8.21802 31.2693 8.26367 30.9419 8.42416 30.6667C8.58465 30.3916 8.84707 30.1907 9.15461 30.1075C9.46214 30.0244 9.79004 30.0658 10.0673 30.2226L24 38.3475L37.9327 30.2226C38.2104 30.0626 38.5402 30.0192 38.8498 30.1018C39.1595 30.1844 39.4238 30.3863 39.5849 30.6633ZM37.9327 22.9534L24 31.0783L10.0673 22.9534C9.79145 22.8161 9.47361 22.789 9.1785 22.8777C8.88339 22.9664 8.63317 23.1643 8.47879 23.431C8.3244 23.6977 8.27745 24.0132 8.34748 24.3133C8.41752 24.6134 8.59928 24.8755 8.85577 25.0463L23.3942 33.5271C23.5795 33.6351 23.7901 33.6921 24.0045 33.6921C24.219 33.6921 24.4296 33.6351 24.6149 33.5271L39.1533 25.0463C39.293 24.9673 39.4155 24.8614 39.5139 24.7346C39.6122 24.6079 39.6844 24.4629 39.7263 24.308C39.7682 24.1531 39.7788 23.9915 39.7577 23.8324C39.7366 23.6734 39.6841 23.5201 39.6033 23.3815C39.5225 23.2429 39.4149 23.1218 39.2869 23.0251C39.1588 22.9284 39.0129 22.8581 38.8575 22.8183C38.7021 22.7784 38.5403 22.7699 38.3815 22.7931C38.2228 22.8163 38.0702 22.8708 37.9327 22.9534ZM8.25 16.7306C8.25048 16.5184 8.30669 16.3101 8.413 16.1264C8.51931 15.9428 8.672 15.7903 8.85577 15.6842L23.3942 7.20341C23.5795 7.09538 23.7901 7.03846 24.0045 7.03846C24.219 7.03846 24.4296 7.09538 24.6149 7.20341L39.1533 15.6842C39.3362 15.7909 39.4879 15.9437 39.5934 16.1273C39.6988 16.3109 39.7543 16.5189 39.7543 16.7306C39.7543 16.9424 39.6988 17.1504 39.5934 17.334C39.4879 17.5176 39.3362 17.6704 39.1533 17.7771L24.6149 26.2579C24.4296 26.3659 24.219 26.4228 24.0045 26.4228C23.7901 26.4228 23.5795 26.3659 23.3942 26.2579L8.85577 17.7771C8.672 17.671 8.51931 17.5185 8.413 17.3349C8.30669 17.1512 8.25048 16.9429 8.25 16.7306ZM11.8664 16.7306L24 23.8091L36.1336 16.7306L24 9.65224L11.8664 16.7306Z" fill="white" fillOpacity="0.15"/>
-          </svg>
-        </div>
-
-        {/* Tagline — vertically centered */}
-        <div className="absolute inset-0 flex items-center z-10 pointer-events-none">
-          <div className="px-12">
-            <span className="text-white/[0.15] leading-none select-none -ml-3" style={{ fontSize: '10rem' }}>&ldquo;</span>
-            <p className="text-white font-semibold leading-snug -mt-6" style={{ fontSize: '25.6px' }}>
-              Every great website starts<br />with a clear plan.
-            </p>
-            <p className="text-white/60 text-sm mt-2" style={{ fontWeight: 500 }}>— Build yours visually</p>
-          </div>
-        </div>
-
-        {/* Copyright */}
-        <div className="absolute bottom-12 left-12 z-10">
-          <p className="text-white/40 text-xs">© {new Date().getFullYear()} SiteNest. All rights reserved.</p>
-        </div>
-      </div>
-
-      {/* ── Right panel ── */}
-      <div className="flex-1 bg-[#FFFAEF] flex flex-col items-center justify-center px-8 py-12">
-        {/* Logo + wordmark */}
-        <Link href="/" className="flex flex-col items-center mb-8">
-          <LogoMark size={52} className="mb-3 rounded-xl shadow-sm" />
-          <h1 className="text-2xl font-bold text-gray-900">Site<span className="text-accent">Nest</span></h1>
-          <p className="text-sm text-gray-500 mt-1">Visual sitemap builder</p>
-        </Link>
-
-        {/* Card */}
-        <div className="w-full max-w-sm bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
+      <AuthShell>
+        <div className="rounded-2xl border border-border bg-card p-7 shadow-card">
           {confirmed ? (
             <div className="text-center py-4">
-              <CheckCircle className="w-10 h-10 text-green-500 mx-auto mb-3" />
-              <h2 className="text-base font-semibold text-gray-900 mb-1">Check your email</h2>
-              <p className="text-sm text-gray-500">
+              <CheckCircle className="w-10 h-10 text-success mx-auto mb-3" />
+              <h2 className="text-lg font-semibold mb-1">Check your email</h2>
+              <p className="text-sm text-muted-foreground">
                 We sent a confirmation link to{' '}
-                <span className="font-medium text-gray-700">{email}</span>.
+                <span className="font-medium text-foreground">{email}</span>.
                 Click it to activate your account.
               </p>
-              <button
-                onClick={() => { setConfirmed(false); setMode('signin'); }}
-                className="mt-5 text-sm text-[#C74504] hover:underline"
-              >
+              <Button variant="link" onClick={() => { setConfirmed(false); setMode('signin'); }} className="mt-4">
                 Back to sign in
-              </button>
+              </Button>
             </div>
           ) : resetSent ? (
             <div className="text-center py-4">
-              <CheckCircle className="w-10 h-10 text-green-500 mx-auto mb-3" />
-              <h2 className="text-base font-semibold text-gray-900 mb-1">Reset link sent</h2>
-              <p className="text-sm text-gray-500">
+              <CheckCircle className="w-10 h-10 text-success mx-auto mb-3" />
+              <h2 className="text-lg font-semibold mb-1">Reset link sent</h2>
+              <p className="text-sm text-muted-foreground">
                 We sent a password reset link to{' '}
-                <span className="font-medium text-gray-700">{email}</span>.
+                <span className="font-medium text-foreground">{email}</span>.
                 Check your inbox and follow the link.
               </p>
-              <button
-                onClick={() => switchMode('signin')}
-                className="mt-5 text-sm text-[#C74504] hover:underline"
-              >
+              <Button variant="link" onClick={() => switchMode('signin')} className="mt-4">
                 Back to sign in
-              </button>
+              </Button>
             </div>
           ) : mode === 'forgot' ? (
             <>
               <button
                 onClick={() => switchMode('signin')}
-                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 mb-4 transition-colors"
+                className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground mb-4 transition-colors"
               >
                 ← Back to sign in
               </button>
-              <h2 className="text-sm font-semibold text-gray-900 mb-1">Forgot your password?</h2>
-              <p className="text-xs text-gray-500 mb-4">Enter your email and we&apos;ll send you a reset link.</p>
+              <div className="mb-5">
+                <h2 className="text-lg font-semibold">Forgot your password?</h2>
+                <p className="text-sm text-muted-foreground mt-1">Enter your email and we&apos;ll send you a reset link.</p>
+              </div>
 
-              <form onSubmit={handleSubmit} className="space-y-3">
-                {error && (
-                  <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs">
-                    {error}
-                  </div>
-                )}
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {errorBox}
+                <div className="space-y-1.5">
+                  <Label htmlFor="email">Email address</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                    <input
+                    <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    <Input
+                      id="email"
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
                       required
                       autoComplete="email"
-                      className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C74504]/30 focus:border-[#C74504] text-gray-900 placeholder-gray-400"
+                      className="pl-8"
                     />
                   </div>
                 </div>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full py-2 mt-1 bg-[#C74504] hover:bg-[#b53f04] text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                <Button type="submit" className="w-full" disabled={submitting}>
+                  {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                   Send reset link
-                </button>
+                </Button>
               </form>
             </>
           ) : (
             <>
-              {/* Mode tabs */}
-              <div className="flex rounded-lg bg-gray-100 p-0.5 mb-5">
+              <div className="mb-5">
+                <h2 className="text-lg font-semibold">{mode === 'signin' ? 'Welcome back' : 'Create your account'}</h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {mode === 'signin' ? 'Sign in to open your sitemaps' : 'Start planning your next site, free'}
+                </p>
+              </div>
+
+              <div role="tablist" aria-label="Sign in or sign up" className="flex rounded-lg border border-border bg-card p-1 mb-5">
                 {(['signin', 'signup'] as const).map((m) => (
                   <button
                     key={m}
+                    type="button"
+                    role="tab"
+                    aria-selected={mode === m}
                     onClick={() => switchMode(m)}
                     className={[
-                      'flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors',
+                      'flex-1 py-1.5 text-sm font-medium rounded-md transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50',
                       mode === m
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-500 hover:text-gray-700',
+                        ? 'bg-primary-soft text-primary-text'
+                        : 'text-muted-foreground hover:text-foreground',
                     ].join(' ')}
                   >
                     {m === 'signin' ? 'Sign in' : 'Sign up'}
@@ -228,18 +181,15 @@ function AuthPageInner() {
                 ))}
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-3">
-                {error && (
-                  <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs">
-                    {error}
-                  </div>
-                )}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {errorBox}
 
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="email">Email address</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                    <input
+                    <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    <Input
+                      id="email"
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -247,28 +197,29 @@ function AuthPageInner() {
                       required
                       autoComplete="email"
                       tabIndex={1}
-                      className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C74504]/30 focus:border-[#C74504] text-gray-900 placeholder-gray-400"
+                      className="pl-8"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block text-xs font-medium text-gray-700">Password</label>
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">Password</Label>
                     {mode === 'signin' && (
                       <button
                         type="button"
                         onClick={() => switchMode('forgot')}
                         tabIndex={4}
-                        className="text-xs text-[#C74504] hover:underline"
+                        className="text-xs font-medium text-primary-text hover:underline"
                       >
                         Forgot password?
                       </button>
                     )}
                   </div>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                    <input
+                    <Lock className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    <Input
+                      id="password"
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -277,36 +228,33 @@ function AuthPageInner() {
                       minLength={mode === 'signup' ? 6 : undefined}
                       autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
                       tabIndex={2}
-                      className="w-full pl-9 pr-9 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C74504]/30 focus:border-[#C74504] text-gray-900 placeholder-gray-400"
+                      className="pl-8 pr-9"
                     />
-                    <Tooltip content={showPassword ? 'Hide password' : 'Show password'} side="top">
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword((v) => !v)}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                        tabIndex={-1}
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
-                      >
-                        {showPassword ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-                      </button>
-                    </Tooltip>
+                    <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex">
+                      <Tooltip content={showPassword ? 'Hide password' : 'Show password'} side="top">
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((v) => !v)}
+                          className="text-muted-foreground hover:text-foreground transition-colors"
+                          tabIndex={-1}
+                          aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        >
+                          {showPassword ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                        </button>
+                      </Tooltip>
+                    </div>
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  tabIndex={3}
-                  className="w-full py-2 mt-1 bg-[#C74504] hover:bg-[#b53f04] text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                <Button type="submit" className="w-full mt-1" disabled={submitting} tabIndex={3}>
+                  {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                   {mode === 'signin' ? 'Sign in' : 'Create account'}
-                </button>
+                </Button>
               </form>
             </>
           )}
         </div>
-      </div>
-    </div>
+      </AuthShell>
+    </>
   );
 }

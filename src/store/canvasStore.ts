@@ -12,6 +12,18 @@ type ExtendedStore = CanvasStore & {
   setLastUsedColor: (c: string) => void;
   wireframeNodeId: string | null;
   setWireframeNodeId: (id: string | null) => void;
+  /** Built-in sample: every mutating action below becomes a no-op */
+  /** One-shot request for the canvas to pan to a page (set by the sidebar in read-only mode) */
+  focusNodeId: string | null;
+  setFocusNodeId: (id: string | null) => void;
+  readOnly: boolean;
+  setReadOnly: (readOnly: boolean) => void;
+  flowPanelOpen: boolean;
+  setFlowPanelOpen: (open: boolean) => void;
+  flowHighlightIds: string[];
+  setFlowHighlightIds: (ids: string[]) => void;
+  presenting: boolean;
+  setPresenting: (presenting: boolean) => void;
   past: Snapshot[];
   future: Snapshot[];
   undo: () => void;
@@ -23,7 +35,7 @@ function pushHistory(past: Snapshot[], nodes: SitemapNode[], edges: Edge[]): Sna
   return next.length > MAX_HISTORY ? next.slice(next.length - MAX_HISTORY) : next;
 }
 
-export const useCanvasStore = create<ExtendedStore>((set) => ({
+export const useCanvasStore = create<ExtendedStore>((set, get) => ({
   projectId: null,
   nodes: [],
   edges: [],
@@ -37,8 +49,21 @@ export const useCanvasStore = create<ExtendedStore>((set) => ({
   future: [],
 
   setLastUsedColor: (color) => set({ lastUsedColor: color }),
-  setWireframeNodeId: (id) => set({ wireframeNodeId: id }),
+  // The wireframe editor edits; in a read-only project, "open" previews the page instead
+  setWireframeNodeId: (id) =>
+    get().readOnly && id ? set({ selectedNodeId: id, presenting: true }) : set({ wireframeNodeId: id }),
   wireframeNodeId: null,
+
+  focusNodeId: null,
+  setFocusNodeId: (id) => set({ focusNodeId: id }),
+  readOnly: false,
+  setReadOnly: (readOnly) => set({ readOnly }),
+  flowPanelOpen: false,
+  setFlowPanelOpen: (open) => set({ flowPanelOpen: open, ...(open ? {} : { flowHighlightIds: [] }) }),
+  flowHighlightIds: [],
+  setFlowHighlightIds: (ids) => set({ flowHighlightIds: ids }),
+  presenting: false,
+  setPresenting: (presenting) => set({ presenting }),
 
   setProjectId: (id) => set({ projectId: id }),
 
@@ -47,7 +72,7 @@ export const useCanvasStore = create<ExtendedStore>((set) => ({
   setEdges: (edges) => set({ edges, isDirty: true }),
 
   addNode: (node) =>
-    set((state) => ({
+    get().readOnly ? undefined : set((state) => ({
       past: pushHistory(state.past, state.nodes, state.edges),
       future: [],
       nodes: state.nodes.some((n) => n.id === node.id) ? state.nodes : [...state.nodes, node],
@@ -56,7 +81,7 @@ export const useCanvasStore = create<ExtendedStore>((set) => ({
     })),
 
   updateNode: (id, updates) =>
-    set((state) => {
+    get().readOnly ? undefined : set((state) => {
       const isPositionOnly = Object.keys(updates).every((k) => POSITION_KEYS.has(k));
       let lastAction = state.lastAction;
       let past = state.past;
@@ -84,10 +109,17 @@ export const useCanvasStore = create<ExtendedStore>((set) => ({
     }),
 
   deleteNode: (id) =>
-    set((state) => ({
+    get().readOnly ? undefined : set((state) => ({
       past: pushHistory(state.past, state.nodes, state.edges),
       future: [],
-      nodes: state.nodes.filter((node) => node.id !== id),
+      // Drop block links that pointed at the deleted page so none dangle
+      nodes: state.nodes
+        .filter((node) => node.id !== id)
+        .map((node) =>
+          node.wireframe?.some((b) => b.linkTo === id)
+            ? { ...node, wireframe: node.wireframe.map((b) => (b.linkTo === id ? { ...b, linkTo: null } : b)) }
+            : node
+        ),
       edges: state.edges.filter(
         (edge) => edge.source_node_id !== id && edge.target_node_id !== id
       ),
@@ -96,7 +128,7 @@ export const useCanvasStore = create<ExtendedStore>((set) => ({
     })),
 
   addEdge: (edge) =>
-    set((state) => ({
+    get().readOnly ? undefined : set((state) => ({
       past: pushHistory(state.past, state.nodes, state.edges),
       future: [],
       edges: [...state.edges, edge],
@@ -105,7 +137,7 @@ export const useCanvasStore = create<ExtendedStore>((set) => ({
     })),
 
   deleteEdge: (id) =>
-    set((state) => ({
+    get().readOnly ? undefined : set((state) => ({
       past: pushHistory(state.past, state.nodes, state.edges),
       future: [],
       edges: state.edges.filter((edge) => edge.id !== id),
@@ -114,7 +146,7 @@ export const useCanvasStore = create<ExtendedStore>((set) => ({
     })),
 
   undo: () =>
-    set((state) => {
+    get().readOnly ? undefined : set((state) => {
       if (state.past.length === 0) return {};
       const previous = state.past[state.past.length - 1];
       return {
@@ -128,7 +160,7 @@ export const useCanvasStore = create<ExtendedStore>((set) => ({
     }),
 
   redo: () =>
-    set((state) => {
+    get().readOnly ? undefined : set((state) => {
       if (state.future.length === 0) return {};
       const next = state.future[0];
       return {

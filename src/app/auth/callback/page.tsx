@@ -48,20 +48,20 @@ function CallbackHandler() {
         <XCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
         <h2 className="text-base font-semibold text-gray-900 mb-1">Link expired or invalid</h2>
         <p className="text-sm text-gray-500 mb-5">{error}</p>
-        <a href="/auth" className="text-sm text-[#C74504] hover:underline">
+        <a href="/auth" className="text-sm text-primary hover:underline">
           Back to sign in
         </a>
       </div>
     );
   }
 
-  return <Loader2 className="w-5 h-5 animate-spin text-[#C74504]" />;
+  return <Loader2 className="w-5 h-5 animate-spin text-primary" />;
 }
 
 export default function AuthCallbackPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FFFAEF]">
-      <Suspense fallback={<Loader2 className="w-5 h-5 animate-spin text-[#C74504]" />}>
+    <div className="min-h-screen flex items-center justify-center bg-surface">
+      <Suspense fallback={<Loader2 className="w-5 h-5 animate-spin text-primary" />}>
         <CallbackHandler />
       </Suspense>
     </div>

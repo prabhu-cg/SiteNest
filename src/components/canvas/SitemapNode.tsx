@@ -1,13 +1,13 @@
 'use client';
 import type React from 'react';
 
-import { memo, useState, useCallback, useRef } from 'react';
-import { Handle, Position } from 'reactflow';
+import { memo, useState, useCallback, useRef, useEffect } from 'react';
+import { Handle, Position, useUpdateNodeInternals } from 'reactflow';
 import { cn } from '@/lib/utils';
 import { useCanvasStore } from '@/store/canvasStore';
 import { BLOCK_REGISTRY } from '@/components/wireframe/blocks';
 import WireframeBlockPicker from '@/components/wireframe/WireframeBlockPicker';
-import { Plus, Trash2, Expand } from 'lucide-react';
+import { Plus, Trash2, Expand, Link2 } from 'lucide-react';
 import { generateId } from '@/lib/utils';
 import type { WireframeBlock, WireframeBlockType } from '@/types';
 
@@ -17,6 +17,11 @@ interface SitemapNodeData {
   status: string;
   color?: string;
   wireframe?: WireframeBlock[];
+  /** blockId → title of the page that block links to */
+  linkTitles?: Record<string, string>;
+  /** Fewest clicks from Home; only set while the Flow panel is open */
+  clickDepth?: number;
+  flagged?: boolean;
 }
 
 interface SitemapNodeProps {
@@ -33,15 +38,20 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProps) => {
-  const { updateNode, setWireframeNodeId } = useCanvasStore();
+  const { updateNode, setWireframeNodeId, readOnly } = useCanvasStore();
   const [pickerAnchor, setPickerAnchor] = useState<{ top: number; right: number } | null>(null);
   const [hovered, setHovered] = useState(false);
   const [wfHovered, setWfHovered] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const updateNodeInternals = useUpdateNodeInternals();
 
   const accentColor = data.color || '#C74504';
   const statusStyle = STATUS_STYLES[data.status] ?? STATUS_STYLES.draft;
   const blocks = data.wireframe ?? [];
+
+  // Block handles move as rows are added/removed/reordered — tell React Flow to re-measure
+  const blockIds = blocks.map((b) => b.id).join(',');
+  useEffect(() => { updateNodeInternals(id); }, [id, blockIds, updateNodeInternals]);
 
   const openPicker = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -71,12 +81,31 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
         className={cn('relative rounded-xl shadow-sm transition-all duration-150', selected || hovered ? 'shadow-md' : '')}
         style={{ width: 220 }}
       >
+        {data.flagged && <div className="absolute -inset-1.5 rounded-2xl ring-2 ring-red-500/70 pointer-events-none" />}
+
+        {data.clickDepth !== undefined && (
+          <div className="absolute -top-2.5 left-3 z-10 px-1.5 py-px rounded-full bg-gray-900 text-white text-[9px] font-bold tabular-nums shadow-sm">
+            {data.clickDepth === 0 ? 'Home' : `${data.clickDepth} click${data.clickDepth === 1 ? '' : 's'}`}
+          </div>
+        )}
+
+        {/* Incoming block links land here */}
         <Handle
+          id="link-in"
+          type="target"
+          position={Position.Left}
+          isConnectable={isConnectable}
+          className="!w-3 !h-3 !bg-white !border-2 !border-accent !transition-opacity !duration-150"
+          style={{ opacity: hovered || selected ? 1 : 0.35, top: 20 }}
+        />
+
+        <Handle
+          id="in"
           type="target"
           position={Position.Top}
           isConnectable={isConnectable}
-          className="!w-3.5 !h-3.5 !bg-gray-400 !border-2 !border-white !transition-opacity !duration-150"
-          style={{ opacity: hovered ? 1 : 0 }}
+          className="!w-4 !h-4 !bg-accent !border-2 !border-white !shadow-sm !transition-opacity !duration-150"
+          style={{ opacity: hovered || selected ? 1 : 0.35 }}
         />
 
         <div
@@ -103,7 +132,12 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
               <div className={cn('inline-flex text-xs px-2 py-0.5 rounded-full font-medium', statusStyle)}>
                 {data.status.charAt(0).toUpperCase() + data.status.slice(1)}
               </div>
-              <button
+              {readOnly ? (
+                blocks.length > 0 && (
+                  <span className="text-[10px] text-muted-foreground tabular-nums">{blocks.length} block{blocks.length !== 1 ? 's' : ''}</span>
+                )
+              ) : (
+                <button
                 onClick={openPicker}
                 className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-accent transition-colors px-1.5 py-0.5 rounded-full border border-gray-200 dark:border-gray-700 hover:border-accent"
               >
@@ -115,6 +149,7 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
                   </span>
                 )}
               </button>
+              )}
             </div>
           </div>
 
@@ -129,10 +164,11 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
                 const meta = BLOCK_REGISTRY.find((b) => b.type === block.type);
                 if (!meta) return null;
                 const isLast = index === blocks.length - 1;
+                const linkTitle = data.linkTitles?.[block.id];
                 return (
                   <div
                     key={block.id}
-                    className={`group/block flex items-center gap-2 px-3 py-1.5 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors ${!isLast ? 'border-b border-gray-50 dark:border-gray-800' : ''}`}
+                    className={`group/block relative flex items-center gap-2 pl-3 pr-7 py-1.5 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors ${!isLast ? 'border-b border-gray-50 dark:border-gray-800' : ''}`}
                   >
                     {/* Index */}
                     <span className="text-[9px] font-bold tabular-nums text-gray-300 dark:text-gray-600 w-3 flex-shrink-0 select-none">
@@ -142,13 +178,29 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
                     <span className="text-[11px] font-medium text-gray-600 dark:text-gray-400 flex-1 truncate select-none leading-normal">
                       {meta.label}
                     </span>
+                    {linkTitle && (
+                      <span className="flex items-center gap-0.5 max-w-[60px] text-[9px] font-semibold text-accent flex-shrink-0" title={`Links to ${linkTitle}`}>
+                        <Link2 className="w-2.5 h-2.5 flex-shrink-0" />
+                        <span className="truncate">{linkTitle}</span>
+                      </span>
+                    )}
                     {/* Remove */}
-                    <button
+                    {!readOnly && <button
                       onClick={(e) => { e.stopPropagation(); removeBlock(block.id); }}
                       className="opacity-0 group-hover/block:opacity-100 p-0.5 rounded hover:bg-red-50 dark:hover:bg-red-950 text-gray-300 hover:text-red-500 transition-all flex-shrink-0"
                     >
                       <Trash2 className="w-2.5 h-2.5" />
-                    </button>
+                    </button>}
+                    {/* Drag from here onto another page to link this block to it */}
+                    <Handle
+                      id={`block-${block.id}`}
+                      type="source"
+                      position={Position.Right}
+                      isConnectable={isConnectable}
+                      title="Drag to a page to link this block"
+                      className={cn('!w-2.5 !h-2.5 !border-2 !border-white !transition-all', linkTitle ? '!bg-accent' : '!bg-gray-300 hover:!bg-accent hover:!scale-125')}
+                      style={{ right: 8, left: 'auto', top: '50%', transform: 'translateY(-50%)', zIndex: 20 }}
+                    />
                   </div>
                 );
               })}
@@ -162,7 +214,7 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
                 >
                   <div className="flex items-center gap-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 shadow-sm">
                     <Expand className="w-3 h-3 text-accent" />
-                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">Open editor</span>
+                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">{readOnly ? 'Preview page' : 'Open editor'}</span>
                   </div>
                 </div>
               )}
@@ -171,11 +223,12 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
         </div>
 
         <Handle
+          id="out"
           type="source"
           position={Position.Bottom}
           isConnectable={isConnectable}
-          className="!w-3.5 !h-3.5 !bg-gray-400 !border-2 !border-white !transition-opacity !duration-150"
-          style={{ opacity: hovered ? 1 : 0 }}
+          className="!w-4 !h-4 !bg-accent !border-2 !border-white !shadow-sm !transition-opacity !duration-150"
+          style={{ opacity: hovered || selected ? 1 : 0.35 }}
         />
       </div>
 

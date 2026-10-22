@@ -31,6 +31,7 @@ export type WireframeBlockType =
   | 'tabs'
   | 'pagination'
   | 'stepper'
+  | 'announcement-bar'
   // Hero
   | 'hero-split'
   | 'hero-centered'
@@ -47,6 +48,8 @@ export type WireframeBlockType =
   | 'logo-bar'
   | 'timeline'
   | 'process-steps'
+  | 'product-grid'
+  | 'reviews'
   // Media
   | 'image-gallery'
   | 'image-full'
@@ -56,6 +59,8 @@ export type WireframeBlockType =
   | 'form'
   | 'newsletter'
   | 'contact-bar'
+  | 'login-form'
+  | 'checkout'
   // Layout
   | 'two-column'
   | 'three-column'
@@ -67,6 +72,8 @@ export type WireframeBlockType =
   | 'profile-page'
   | 'error-404'
   | 'pricing'
+  | 'product-detail'
+  | 'empty-state'
   | 'divider'
   // Data
   | 'table'
@@ -75,6 +82,7 @@ export type WireframeBlockType =
   | 'map-placeholder'
   | 'comparison-table'
   | 'kanban'
+  | 'calendar'
   // Footer
   | 'footer-simple'
   | 'footer-multicolumn'
@@ -83,6 +91,8 @@ export type WireframeBlockType =
 export interface WireframeBlock {
   id: string;
   type: WireframeBlockType;
+  /** Id of the page this block navigates to (e.g. a CTA linking to Pricing) */
+  linkTo?: string | null;
 }
 
 // Sitemap Node types

@@ -6,10 +6,13 @@ import Canvas from '@/components/canvas/Canvas';
 import Sidebar from '@/components/canvas/Sidebar';
 import PropertiesPanel from '@/components/canvas/PropertiesPanel';
 import Toolbar from '@/components/canvas/Toolbar';
+import FlowPanel from '@/components/canvas/FlowPanel';
+import PresentMode from '@/components/canvas/PresentMode';
 import { useCanvasStore } from '@/store/canvasStore';
 import { useAuthStore } from '@/store/authStore';
 import { generateId, toSlug } from '@/lib/utils';
 import { saveProject, loadProject, getProjectList } from '@/lib/storage';
+import { SAMPLE_PROJECT_ID, SAMPLE_PROJECT_TITLE, buildSampleProject } from '@/lib/sampleProject';
 import WireframeModal from '@/components/wireframe/WireframeModal';
 import { DesktopOnlyGate } from '@/components/ui/desktop-only-gate';
 import type { SitemapNode } from '@/types';
@@ -22,10 +25,13 @@ export default function EditorPage() {
   const router = useRouter();
   const { user, isLoading: authLoading } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
-  const [projectTitle, setProjectTitle] = useState('Untitled Project');
+  const isSample = projectId === SAMPLE_PROJECT_ID;
+  const [projectTitle, setProjectTitle] = useState(isSample ? SAMPLE_PROJECT_TITLE : 'Untitled Project');
 
   const {
     setProjectId,
+    setReadOnly,
+    readOnly,
     addNode,
     setSelectedNode,
     setNodes,
@@ -33,12 +39,16 @@ export default function EditorPage() {
     updateNode,
     nodes,
     edges,
+    selectedNodeId,
     isDirty,
     markClean,
     markDirty,
     lastUsedColor,
     wireframeNodeId,
     setWireframeNodeId,
+    flowPanelOpen,
+    presenting,
+    setPresenting,
     undo,
     redo,
     past,
@@ -52,14 +62,30 @@ export default function EditorPage() {
   const handleAutoLayout = (direction: LayoutDirection) => layoutRef.current?.(direction);
   const handleExport = () => exportRef.current?.();
 
-  // Auth guard
+  // Auth guard (the built-in sample is public and read-only)
   useEffect(() => {
-    if (!authLoading && !user) router.replace('/auth');
-  }, [user, authLoading, router]);
+    if (!authLoading && !user && !isSample) router.replace('/auth');
+  }, [user, authLoading, router, isSample]);
+
+  // Built-in sample: load from code, never from or to the database
+  useEffect(() => {
+    if (!isSample) return;
+    const sample = buildSampleProject();
+    setProjectId(SAMPLE_PROJECT_ID);
+    setNodes(sample.nodes);
+    setEdges(sample.edges);
+    setSelectedNode(null);
+    setReadOnly(true);
+    markClean();
+    setIsLoading(false);
+    return () => { setReadOnly(false); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSample]);
 
   // Load project from Supabase on mount (waits for auth)
   useEffect(() => {
-    if (!user) return;
+    if (isSample || !user) return;
+    setReadOnly(false);
     setProjectId(projectId);
     let cancelled = false;
 
@@ -91,21 +117,23 @@ export default function EditorPage() {
 
   // Auto-save to Supabase whenever nodes/edges change
   useEffect(() => {
-    if (!isDirty || isLoading) return;
+    if (isSample || readOnly || !isDirty || isLoading) return;
     const timer = setTimeout(() => {
       saveProject(projectId, projectTitle, { nodes, edges })
         .then(() => markClean())
         .catch(() => { /* silently swallow save errors */ });
     }, 800);
     return () => clearTimeout(timer);
-  }, [nodes, edges, isDirty, isLoading, projectId, projectTitle, markClean]);
+  }, [nodes, edges, isDirty, isLoading, projectId, projectTitle, markClean, isSample, readOnly]);
 
   const handleTitleChange = (title: string) => {
+    if (isSample) return;
     setProjectTitle(title);
     markDirty();
   };
 
   const handleAddNode = useCallback(() => {
+    if (isSample) return;
     const newNode: SitemapNode = {
       id: generateId(),
       project_id: projectId,
@@ -123,11 +151,12 @@ export default function EditorPage() {
     };
     addNode(newNode);
     setSelectedNode(newNode.id);
-  }, [projectId, lastUsedColor, addNode, setSelectedNode]);
+  }, [projectId, lastUsedColor, addNode, setSelectedNode, isSample]);
 
   // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (presenting) return;
       const mod = e.metaKey || e.ctrlKey;
       if (mod) {
         if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
@@ -140,9 +169,9 @@ export default function EditorPage() {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [undo, redo, handleAddNode]);
+  }, [undo, redo, handleAddNode, presenting]);
 
-  if (authLoading || !user || isLoading) {
+  if ((!isSample && (authLoading || !user)) || isLoading) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
         <Loader2 className="w-5 h-5 animate-spin text-accent" />
@@ -153,6 +182,14 @@ export default function EditorPage() {
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-gray-950">
       <DesktopOnlyGate />
+      {presenting && (
+        <PresentMode
+          nodes={nodes}
+          edges={edges}
+          startId={selectedNodeId}
+          onExit={() => setPresenting(false)}
+        />
+      )}
       {wireframeNode && (
         <WireframeModal
           pageTitle={wireframeNode.title}
@@ -179,7 +216,7 @@ export default function EditorPage() {
         <div className="flex-1">
           <Canvas projectId={projectId} projectTitle={projectTitle} onNodeSelect={setSelectedNode} layoutRef={layoutRef} exportRef={exportRef} />
         </div>
-        <PropertiesPanel projectId={projectId} />
+        {flowPanelOpen ? <FlowPanel /> : <PropertiesPanel projectId={projectId} />}
       </div>
     </div>
   );

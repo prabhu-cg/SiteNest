@@ -1,7 +1,7 @@
 'use client';
 import type React from 'react';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toPng } from 'html-to-image';
 import ReactFlow, {
   Node,
@@ -24,12 +24,13 @@ import ReactFlow, {
   getSmoothStepPath,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { Trash2, ZoomIn, ZoomOut, Scan, Lock, Unlock, Plus } from 'lucide-react';
+import { Trash2, ZoomIn, ZoomOut, Scan, Lock, Unlock, Plus, Unlink } from 'lucide-react';
 import { Tooltip } from '@/components/ui/tooltip';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { computeHierarchicalLayout, computeRadialLayout, type LayoutDirection } from '@/lib/layout';
 import { useCanvasStore } from '@/store/canvasStore';
 import { generateId } from '@/lib/utils';
+import { analyzeFlow } from '@/lib/flow';
 import SitemapNode from './SitemapNode';
 import type { SitemapNode as SitemapNodeType, Edge as StoreEdge } from '@/types';
 
@@ -63,14 +64,14 @@ function CustomEdge({
         path={edgePath}
         markerEnd={selected ? 'url(#sn-arrow-accent)' : 'url(#sn-arrow)'}
         style={{
-          stroke: selected ? '#C74504' : '#c0cad4',
+          stroke: selected ? '#C74504' : '#bfb5a1',
           strokeWidth: selected ? 2.5 : 1.5,
           filter: selected ? 'drop-shadow(0 0 3px rgba(238,102,29,0.35))' : undefined,
           transition: 'stroke 0.15s ease, stroke-width 0.15s ease, filter 0.15s ease',
         }}
       />
 
-      {selected && (
+      {selected && !data?.readOnly && (
         <EdgeLabelRenderer>
           <div
             className="nodrag nopan"
@@ -86,6 +87,55 @@ function CustomEdge({
             >
               <Trash2 className="w-3 h-3" />
               Delete
+            </button>
+          </div>
+        </EdgeLabelRenderer>
+      )}
+    </>
+  );
+}
+
+// Block → page link: dashed accent orthogonal line, visually distinct from sitemap structure edges
+function LinkEdge({
+  id,
+  sourceX, sourceY, targetX, targetY,
+  sourcePosition, targetPosition,
+  selected,
+  data,
+}: EdgeProps) {
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
+    sourceX, sourceY, sourcePosition,
+    targetX, targetY, targetPosition,
+    borderRadius: 10,
+  });
+
+  return (
+    <>
+      <path d={edgePath} fill="none" stroke="transparent" strokeWidth={18} className="react-flow__edge-interaction" />
+      <BaseEdge
+        path={edgePath}
+        markerEnd="url(#sn-arrow-accent)"
+        style={{
+          stroke: '#C74504',
+          strokeWidth: selected || data?.emphasis === 'on' ? 2.5 : 1.5,
+          strokeDasharray: '6 4',
+          // Dense maps: links dim unless they touch the selected page
+          opacity: selected || data?.emphasis === 'on' ? 1 : data?.emphasis === 'off' ? 0.12 : 0.55,
+          transition: 'opacity 0.15s ease',
+        }}
+      />
+      {selected && !data?.readOnly && (
+        <EdgeLabelRenderer>
+          <div
+            className="nodrag nopan"
+            style={{ position: 'absolute', transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`, pointerEvents: 'all' }}
+          >
+            <button
+              onClick={() => data?.onDelete?.(id)}
+              className="flex items-center gap-1 bg-white dark:bg-gray-900 border border-red-200 dark:border-red-800 text-red-500 rounded-full px-2 py-1 shadow-md text-[11px] font-semibold hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
+            >
+              <Unlink className="w-3 h-3" />
+              Remove link
             </button>
           </div>
         </EdgeLabelRenderer>
@@ -179,7 +229,7 @@ function ExportController({
         const PIXEL_RATIO = 2;
         const dataUrl = await toPng(container, {
           pixelRatio: PIXEL_RATIO,
-          backgroundColor: '#f1f5f9',
+          backgroundColor: '#f4f2ea',
           filter: (el) => {
             if (!(el instanceof Element)) return true;
             if (el.hasAttribute('data-export-ignore')) return false;
@@ -223,6 +273,43 @@ function ExportController({
   return null;
 }
 
+// Pans/zooms to the pages a Flow finding points at
+function FocusController({ ids }: { ids: string[] }) {
+  const { fitView } = useReactFlow();
+  const key = ids.join(',');
+  useEffect(() => {
+    if (ids.length === 0) return;
+    fitView({ nodes: ids.map((id) => ({ id })), padding: 0.6, maxZoom: 1, duration: 400 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, fitView]);
+  return null;
+}
+
+// Frames the given pages once, after React Flow has measured them (used to open big read-only maps)
+function IntroFrame({ ids }: { ids: string[] }) {
+  const { fitView } = useReactFlow();
+  const done = useRef(false);
+  useEffect(() => {
+    if (done.current || ids.length === 0) return;
+    done.current = true;
+    const t = setTimeout(() => fitView({ nodes: ids.map((id) => ({ id })), padding: 0.1, maxZoom: 1, duration: 0 }), 300);
+    return () => { clearTimeout(t); done.current = false; };
+  }, [ids, fitView]);
+  return null;
+}
+
+// Pans to the page the sidebar asked for (read-only samples are too large to find pages by eye)
+function FocusRequest() {
+  const { fitView } = useReactFlow();
+  const focusNodeId = useCanvasStore((s) => s.focusNodeId);
+  useEffect(() => {
+    if (!focusNodeId) return;
+    fitView({ nodes: [{ id: focusNodeId }], padding: 1.2, maxZoom: 0.9, duration: 400 });
+    useCanvasStore.getState().setFocusNodeId(null);
+  }, [focusNodeId, fitView]);
+  return null;
+}
+
 function ContextBridge({
   screenToFlowRef,
 }: {
@@ -254,7 +341,7 @@ const controlsSelector = (s: any) => ({
   maxZoomReached: s.transform[2] >= s.maxZoom,
 });
 
-function CustomControls() {
+function CustomControls({ readOnly = false }: { readOnly?: boolean }) {
   const { zoomIn, zoomOut, fitView } = useReactFlow();
   const store = useStoreApi();
   const { isInteractive, minZoomReached, maxZoomReached } = useStore(controlsSelector);
@@ -286,11 +373,13 @@ function CustomControls() {
           <Scan className="w-3.5 h-3.5" />
         </button>
       </Tooltip>
-      <Tooltip content={isInteractive ? 'Lock canvas' : 'Unlock canvas'} side="right">
-        <button className={btnClass} onClick={toggleInteractivity} aria-label="toggle interactivity">
-          {isInteractive ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
-        </button>
-      </Tooltip>
+      {!readOnly && (
+        <Tooltip content={isInteractive ? 'Lock canvas' : 'Unlock canvas'} side="right">
+          <button className={btnClass} onClick={toggleInteractivity} aria-label="toggle interactivity">
+            {isInteractive ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
+          </button>
+        </Tooltip>
+      )}
     </Panel>
   );
 }
@@ -298,7 +387,7 @@ function CustomControls() {
 // ─── Stable type maps ────────────────────────────────────────────────────────
 
 const nodeTypes: NodeTypes = { sitemap: SitemapNode };
-const edgeTypes: EdgeTypes = { custom: CustomEdge };
+const edgeTypes: EdgeTypes = { custom: CustomEdge, link: LinkEdge };
 
 // ─── Canvas ──────────────────────────────────────────────────────────────────
 
@@ -322,6 +411,9 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
     addNode,
     setSelectedNode,
     lastUsedColor,
+    flowPanelOpen,
+    flowHighlightIds,
+    readOnly,
   } = useCanvasStore();
 
   const edgeUpdateSuccessful = useRef(false);
@@ -336,7 +428,26 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
 
   // Sync store → React Flow nodes. Store is the position source of truth;
   // drag positions are persisted to the store on onNodeDragStop so they stay in sync.
+  // A big read-only map opens framed on its root and first few sections, where text is still legible
+  const introNodes = readOnly
+    ? (() => {
+        const hasParent = new Set(storeEdges.map((e) => e.target_node_id));
+        const roots = storeNodes.filter((n) => !hasParent.has(n.id)).map((n) => n.id);
+        const sections = storeNodes
+          .filter((n) => storeEdges.some((e) => roots.includes(e.source_node_id) && e.target_node_id === n.id))
+          .sort((a, b) => (a.position_x ?? 0) - (b.position_x ?? 0))
+          .slice(0, 3)
+          .map((n) => n.id);
+        return [...roots, ...sections].map((id) => ({ id }));
+      })()
+    : undefined;
+  // Stable identity so the framing runs once per project, not on every store change
+  const introKey = useMemo(() => introNodes?.map((n) => n.id) ?? [], [introNodes?.map((n) => n.id).join(',')]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const flowDepth = flowPanelOpen ? analyzeFlow(storeNodes, storeEdges).depth : null;
+
   useEffect(() => {
+    const titleById = new Map(storeNodes.map((n) => [n.id, n.title]));
     setNodes(
       storeNodes.map((node) => ({
         id: node.id,
@@ -348,26 +459,53 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
           icon: node.icon,
           color: node.color,
           wireframe: node.wireframe,
+          linkTitles: Object.fromEntries(
+            (node.wireframe ?? [])
+              .filter((b) => b.linkTo && titleById.has(b.linkTo))
+              .map((b) => [b.id, titleById.get(b.linkTo!)])
+          ),
+          clickDepth: flowDepth?.get(node.id),
+          flagged: flowHighlightIds.includes(node.id),
         },
         position: { x: node.position_x ?? 100, y: node.position_y ?? 100 },
         type: 'sitemap',
         selected: node.id === selectedNodeId,
       } as Node))
     );
-  }, [storeNodes, selectedNodeId, setNodes]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storeNodes, storeEdges, selectedNodeId, setNodes, flowPanelOpen, flowHighlightIds]);
 
-  // Edge delete handler — owns both store delete and local selection clear
+  // Point a block at a page (or clear it with null)
+  const setBlockLink = useCallback(
+    (nodeId: string, blockId: string, targetId: string | null) => {
+      const node = storeNodes.find((n) => n.id === nodeId);
+      if (!node?.wireframe) return;
+      updateNode(nodeId, {
+        wireframe: node.wireframe.map((b) => (b.id === blockId ? { ...b, linkTo: targetId } : b)),
+      });
+    },
+    [storeNodes, updateNode]
+  );
+
+  // Edge delete handler — owns both store delete and local selection clear.
+  // Block links are derived edges (id "link-<blockId>"), so removing one clears the block's linkTo.
   const handleEdgeDelete = useCallback(
     (edgeId: string) => {
-      deleteEdgeFromStore(edgeId);
+      if (edgeId.startsWith('link-')) {
+        const blockId = edgeId.slice('link-'.length);
+        const owner = storeNodes.find((n) => n.wireframe?.some((b) => b.id === blockId));
+        if (owner) setBlockLink(owner.id, blockId, null);
+      } else {
+        deleteEdgeFromStore(edgeId);
+      }
       setSelectedEdgeId(null);
     },
-    [deleteEdgeFromStore]
+    [storeNodes, setBlockLink, deleteEdgeFromStore]
   );
 
   // Keyboard delete for selected edge
   useEffect(() => {
-    if (!selectedEdgeId) return;
+    if (!selectedEdgeId || readOnly) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key !== 'Delete' && e.key !== 'Backspace') return;
       const t = e.target as HTMLElement;
@@ -376,20 +514,21 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [selectedEdgeId, handleEdgeDelete]);
+  }, [selectedEdgeId, handleEdgeDelete, readOnly]);
 
   // Keyboard delete for selected node — opens confirm dialog
   useEffect(() => {
-    if (!selectedNodeId) return;
+    if (!selectedNodeId || readOnly) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key !== 'Delete' && e.key !== 'Backspace') return;
+      if (useCanvasStore.getState().presenting) return;
       const t = e.target as HTMLElement;
       if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable) return;
       setConfirmDeleteNodeOpen(true);
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [selectedNodeId]);
+  }, [selectedNodeId, readOnly]);
 
   const handleConfirmDeleteNode = useCallback(() => {
     if (selectedNodeId) {
@@ -401,17 +540,38 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
 
   // Sync store → React Flow edges; selected state owned by Canvas, not RF
   useEffect(() => {
-    setEdges(
-      storeEdges.map((edge) => ({
-        id: edge.id,
-        source: edge.source_node_id,
-        target: edge.target_node_id,
-        type: 'custom',
-        selected: edge.id === selectedEdgeId,
-        data: { onDelete: handleEdgeDelete },
-      })) as Edge[]
+    const nodeIds = new Set(storeNodes.map((n) => n.id));
+    const structureEdges = storeEdges.map((edge) => ({
+      id: edge.id,
+      source: edge.source_node_id,
+      target: edge.target_node_id,
+      sourceHandle: 'out',
+      targetHandle: 'in',
+      type: 'custom',
+      selected: edge.id === selectedEdgeId,
+      data: { onDelete: handleEdgeDelete, readOnly },
+    }));
+    const linkEdges = storeNodes.flatMap((node) =>
+      (node.wireframe ?? [])
+        .filter((b) => b.linkTo && nodeIds.has(b.linkTo))
+        .map((b) => ({
+          id: `link-${b.id}`,
+          source: node.id,
+          sourceHandle: `block-${b.id}`,
+          target: b.linkTo!,
+          targetHandle: 'link-in',
+          type: 'link',
+          updatable: false,
+          selected: `link-${b.id}` === selectedEdgeId,
+          data: {
+            onDelete: handleEdgeDelete,
+            readOnly,
+            emphasis: selectedNodeId ? (node.id === selectedNodeId || b.linkTo === selectedNodeId ? 'on' : 'off') : 'idle',
+          },
+        }))
     );
-  }, [storeEdges, setEdges, selectedEdgeId, handleEdgeDelete]);
+    setEdges([...structureEdges, ...linkEdges] as Edge[]);
+  }, [storeNodes, storeEdges, setEdges, selectedEdgeId, handleEdgeDelete, readOnly, selectedNodeId]);
 
   const onNodeDragStop = useCallback(
     (_event: React.MouseEvent, node: Node) => {
@@ -422,6 +582,14 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
 
   const onConnect = useCallback(
     (connection: Connection) => {
+      const { source, target, sourceHandle } = connection;
+      if (!source || !target || source === target) return;
+      if (sourceHandle?.startsWith('block-')) {
+        setBlockLink(source, sourceHandle.slice('block-'.length), target);
+        return;
+      }
+      // DB enforces UNIQUE (source, target) — skip duplicates up front
+      if (storeEdges.some((e) => e.source_node_id === source && e.target_node_id === target)) return;
       addEdgeToStore({
         id: generateId(),
         source_node_id: connection.source || '',
@@ -430,8 +598,14 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
         created_at: new Date().toISOString(),
       });
     },
-    [projectId, addEdgeToStore]
+    [projectId, storeEdges, addEdgeToStore, setBlockLink]
   );
+
+  // Block handles may only land on a page's link-in handle; structure handles only on in/out
+  const isValidConnection = useCallback((c: Connection) => {
+    const fromBlock = c.sourceHandle?.startsWith('block-') ?? false;
+    return fromBlock ? c.targetHandle === 'link-in' : c.targetHandle !== 'link-in';
+  }, []);
 
   const onEdgeUpdateStart = useCallback((event: React.MouseEvent) => {
     edgeUpdateSuccessful.current = false;
@@ -440,6 +614,9 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
 
   const onEdgeUpdate = useCallback(
     (oldEdge: Edge, newConnection: Connection) => {
+      const { source, target } = newConnection;
+      if (!source || !target || source === target) return;
+      if (storeEdges.some((e) => e.id !== oldEdge.id && e.source_node_id === source && e.target_node_id === target)) return;
       edgeUpdateSuccessful.current = true;
       deleteEdgeFromStore(oldEdge.id);
       addEdgeToStore({
@@ -450,7 +627,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
         created_at: new Date().toISOString(),
       });
     },
-    [projectId, deleteEdgeFromStore, addEdgeToStore]
+    [projectId, storeEdges, deleteEdgeFromStore, addEdgeToStore]
   );
 
   const onEdgeUpdateEnd = useCallback(
@@ -488,9 +665,10 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
 
   const onPaneContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
+    if (readOnly) return;
     const flowPos = screenToFlowRef.current?.({ x: e.clientX, y: e.clientY }) ?? { x: e.clientX, y: e.clientY };
     setContextMenu({ screenX: e.clientX, screenY: e.clientY, flowX: flowPos.x, flowY: flowPos.y });
-  }, []);
+  }, [readOnly]);
 
   const handleContextAddPage = useCallback(() => {
     if (!contextMenu) return;
@@ -532,13 +710,13 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
       onConfirm={handleConfirmDeleteNode}
       onCancel={() => setConfirmDeleteNodeOpen(false)}
     />
-    <div ref={containerRef} className="w-full h-full relative" style={{ background: '#f1f5f9' }}>
+    <div ref={containerRef} className="w-full h-full relative" style={{ background: '#f4f2ea' }}>
       {/* SVG arrow marker definitions — referenced by CustomEdge via url(#id) */}
       <svg style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }} aria-hidden>
         <defs>
           <marker id="sn-arrow" viewBox="0 0 10 10" refX="9" refY="5"
             markerWidth="5" markerHeight="5" orient="auto">
-            <path d="M0,1 L9,5 L0,9 Z" fill="#c0cad4" />
+            <path d="M0,1 L9,5 L0,9 Z" fill="#bfb5a1" />
           </marker>
           <marker id="sn-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5"
             markerWidth="5" markerHeight="5" orient="auto">
@@ -552,6 +730,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
         edges={edges}
         onNodesChange={onNodesChange}
         onConnect={onConnect}
+        isValidConnection={isValidConnection}
         onEdgeUpdateStart={onEdgeUpdateStart}
         onEdgeUpdate={onEdgeUpdate}
         onEdgeUpdateEnd={onEdgeUpdateEnd}
@@ -571,18 +750,26 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
         panOnScroll={false}
         defaultEdgeOptions={{ type: 'custom' }}
         deleteKeyCode={null}
+        connectOnClick={!readOnly}
+        nodesDraggable={!readOnly}
+        nodesConnectable={!readOnly}
+        edgesUpdatable={!readOnly}
+        connectionRadius={36}
       >
-        <Background color="#cbd5e1" gap={24} size={1} />
+        <Background color="#d6c7ab" gap={24} size={1} />
         <ContextBridge screenToFlowRef={screenToFlowRef} />
-        <CustomControls />
+        <FocusController ids={flowHighlightIds} />
+        <FocusRequest />
+        {introNodes && <IntroFrame ids={introKey} />}
+        <CustomControls readOnly={readOnly} />
         <MiniMap
           pannable
-          nodeColor={(node) => node.data?.color ?? '#cbd5e1'}
+          nodeColor={(node) => node.data?.color ?? '#d6c7ab'}
           nodeStrokeColor="transparent"
           nodeStrokeWidth={0}
           nodeBorderRadius={4}
           maskColor="rgba(15,23,42,0.12)"
-          style={{ backgroundColor: '#e8edf2', borderRadius: 8, border: '1px solid #d1d8df' }}
+          style={{ backgroundColor: '#ece7d9', borderRadius: 8, border: '1px solid #e8ddc8' }}
           nodeComponent={({ x, y, color }) => (
             <rect x={x} y={y} width={220} height={60} rx={4} fill={color as string} />
           )}

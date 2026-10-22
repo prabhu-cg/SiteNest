@@ -1,5 +1,6 @@
 import dagre from 'dagre';
 import type { SitemapNode, Edge } from '@/types';
+import { collectLinks } from '@/lib/flow';
 
 export type LayoutDirection = 'TB' | 'LR' | 'Radial';
 
@@ -15,6 +16,101 @@ function nodeHeight(node: SitemapNode): number {
   const blockCount = node.wireframe?.length ?? 0;
   if (blockCount > 0) h += BLOCK_SECTION_PAD + blockCount * BLOCK_ROW_HEIGHT;
   return h;
+}
+
+
+const SIBLING_GAP = 40; // matches dagre nodesep
+
+/** Sources before targets among siblings; unlinked siblings keep their order, cycles fall back to it */
+function orderByLinks(ids: string[], links: Array<[string, string]>): string[] {
+  const inGroup = new Set(ids);
+  const indegree = new Map(ids.map((id) => [id, 0]));
+  const outgoing = new Map(ids.map((id) => [id, [] as string[]]));
+  for (const [from, to] of links) {
+    if (from === to || !inGroup.has(from) || !inGroup.has(to)) continue;
+    outgoing.get(from)!.push(to);
+    indegree.set(to, indegree.get(to)! + 1);
+  }
+  const remaining = [...ids];
+  const ordered: string[] = [];
+  while (remaining.length > 0) {
+    const next = remaining.find((id) => indegree.get(id) === 0) ?? remaining[0];
+    remaining.splice(remaining.indexOf(next), 1);
+    ordered.push(next);
+    outgoing.get(next)!.forEach((to) => indegree.set(to, indegree.get(to)! - 1));
+  }
+  return ordered;
+}
+
+/**
+ * Re-orders siblings so block links read in one direction (source left of / above target),
+ * which keeps the orthogonal link lines short and uncrossed. Each sibling's subtree moves with it.
+ */
+function alignSiblingsToLinks(
+  nodes: SitemapNode[],
+  edges: Edge[],
+  centers: Map<string, { x: number; y: number }>,
+  direction: LayoutDirection
+) {
+  const links = collectLinks(nodes).map((l): [string, string] => [l.from, l.to]);
+  if (links.length === 0) return;
+
+  const cross = direction === 'LR' ? 'y' : 'x';
+  const rank = direction === 'LR' ? 'x' : 'y';
+  const byId = new Map(nodes.map((n) => [n.id, n]));
+  const size = (id: string) => (direction === 'LR' ? nodeHeight(byId.get(id)!) : NODE_WIDTH);
+
+  const parentOf = new Map<string, string>();
+  const childrenOf = new Map<string, string[]>();
+  edges.forEach((e) => {
+    if (parentOf.has(e.target_node_id)) return;
+    parentOf.set(e.target_node_id, e.source_node_id);
+    childrenOf.set(e.source_node_id, [...(childrenOf.get(e.source_node_id) ?? []), e.target_node_id]);
+  });
+
+  const shiftSubtree = (id: string, delta: number, seen = new Set<string>()) => {
+    if (seen.has(id)) return;
+    seen.add(id);
+    centers.get(id)![cross] += delta;
+    (childrenOf.get(id) ?? []).forEach((child) => shiftSubtree(child, delta, seen));
+  };
+
+  const groups = new Map<string, string[]>();
+  nodes.forEach((n) => {
+    const key = `${parentOf.get(n.id) ?? ''}|${Math.round(centers.get(n.id)![rank])}`;
+    groups.set(key, [...(groups.get(key) ?? []), n.id]);
+  });
+
+  // Top-down, so a parent's move is settled before its children are re-ordered
+  const ordered = [...groups.values()].sort((a, b) => centers.get(a[0])![rank] - centers.get(b[0])![rank]);
+  for (const group of ordered) {
+    if (group.length < 2) continue;
+    const current = [...group].sort((a, b) => centers.get(a)![cross] - centers.get(b)![cross]);
+    const next = orderByLinks(current, links);
+    if (next.every((id, i) => id === current[i])) continue;
+
+    const slots = current.map((id) => centers.get(id)![cross]);
+    const deltas = next.map((id, i) => slots[i] - centers.get(id)![cross]);
+    next.forEach((id, i) => shiftSubtree(id, deltas[i]));
+
+    // Unequal node sizes (left-to-right layout) can overlap after a swap — push apart in order
+    let edge = -Infinity;
+    next.forEach((id) => {
+      const start = centers.get(id)![cross] - size(id) / 2;
+      if (start < edge + SIBLING_GAP) shiftSubtree(id, edge + SIBLING_GAP - start);
+      edge = centers.get(id)![cross] + size(id) / 2;
+    });
+  }
+
+  // Reordering siblings can leave their parent off to one side: re-centre each over its children, bottom-up
+  [...nodes]
+    .sort((a, b) => centers.get(b.id)![rank] - centers.get(a.id)![rank])
+    .forEach((n) => {
+      const kids = childrenOf.get(n.id);
+      if (!kids?.length) return;
+      const at = kids.map((k) => centers.get(k)![cross]);
+      centers.get(n.id)![cross] = (Math.min(...at) + Math.max(...at)) / 2;
+    });
 }
 
 export function computeRadialLayout(
@@ -104,8 +200,14 @@ export function computeHierarchicalLayout(
 
   dagre.layout(g);
 
+  const centers = new Map(nodes.map((n) => {
+    const { x, y } = g.node(n.id);
+    return [n.id, { x, y }] as const;
+  }));
+  alignSiblingsToLinks(nodes, edges, centers, direction);
+
   return nodes.map((node) => {
-    const pos = g.node(node.id);
+    const pos = centers.get(node.id)!;
     const h = nodeHeight(node);
     return {
       id: node.id,

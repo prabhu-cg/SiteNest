@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation';
 import { useCanvasStore } from '@/store/canvasStore';
 import {
   Download, Undo2, Redo2, Moon, Sun,
-  ChevronDown, ChevronLeft, Check, Loader2,
+  ChevronDown, ChevronLeft, Check, Loader2, Play, GitBranch,
 } from 'lucide-react';
 import type { LayoutDirection } from '@/lib/layout';
 import { useTheme } from 'next-themes';
 import { Tooltip } from '@/components/ui/tooltip';
 import { AboutButton } from '@/components/ui/about-modal';
 import { LogoMark } from '@/components/ui/logo-mark';
+import ShareMenu from '@/components/canvas/ShareMenu';
 
 interface ToolbarProps {
   projectId: string;
@@ -116,7 +117,7 @@ function SaveStatus() {
 }
 
 export default function Toolbar({
-  projectId: _projectId,
+  projectId,
   projectTitle = 'Untitled Project',
   onTitleChange,
   onExport,
@@ -127,6 +128,7 @@ export default function Toolbar({
   canRedo = false,
 }: ToolbarProps) {
   const router = useRouter();
+  const { flowPanelOpen, setFlowPanelOpen, setPresenting, readOnly } = useCanvasStore();
   const { theme, setTheme } = useTheme();
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState(projectTitle);
@@ -162,7 +164,12 @@ export default function Toolbar({
       <div className="w-px h-4 bg-gray-200 dark:bg-gray-700" />
 
       {/* Editable project title */}
-      {editingTitle ? (
+      {readOnly ? (
+        <span className="flex items-center gap-2">
+          <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 truncate max-w-[200px] px-1">{projectTitle}</span>
+          <span className="px-2 py-0.5 rounded-full bg-primary-soft text-primary-text text-[10px] font-bold uppercase tracking-wide">Sample · read-only</span>
+        </span>
+      ) : editingTitle ? (
         <input
           ref={titleInputRef}
           value={titleDraft}
@@ -185,6 +192,8 @@ export default function Toolbar({
 
       <div className="w-px h-4 bg-gray-200 dark:bg-gray-700" />
 
+      {!readOnly && (
+        <>
       {/* Undo / Redo */}
       <Tooltip content="Undo (⌘Z)" side="bottom">
         <button
@@ -205,13 +214,38 @@ export default function Toolbar({
         </button>
       </Tooltip>
 
+        </>
+      )}
+
       {/* Auto Layout */}
-      {onAutoLayout && (
+      {onAutoLayout && !readOnly && (
         <>
           <div className="w-px h-4 bg-gray-200 dark:bg-gray-700" />
           <AutoLayoutMenu onAutoLayout={onAutoLayout} />
         </>
       )}
+
+      <div className="w-px h-4 bg-gray-200 dark:bg-gray-700" />
+
+      {/* Flow analysis + present */}
+      <Tooltip content="Find orphan pages, dead ends & deep pages" side="bottom">
+        <button
+          onClick={() => setFlowPanelOpen(!flowPanelOpen)}
+          className={`flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium border rounded-md transition-colors ${flowPanelOpen ? 'text-accent border-accent bg-accent/5' : 'text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+        >
+          <GitBranch className="w-3 h-3" />
+          Flow
+        </button>
+      </Tooltip>
+      <Tooltip content="Click through your sitemap like a visitor" side="bottom">
+        <button
+          onClick={() => setPresenting(true)}
+          className="flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        >
+          <Play className="w-3 h-3" />
+          Present
+        </button>
+      </Tooltip>
 
       <div className="flex-1" />
 
@@ -236,9 +270,11 @@ export default function Toolbar({
 
       <div className="w-px h-4 bg-gray-200 dark:bg-gray-700" />
 
+      {!readOnly && <ShareMenu projectId={projectId} />}
+
       <button
         onClick={() => onExport?.()}
-        className="flex items-center gap-1.5 px-3 h-7 text-xs font-semibold text-white bg-accent hover:bg-accent/90 rounded-md transition-colors"
+        className="ml-1 flex items-center gap-1.5 px-3 h-7 text-xs font-semibold text-white bg-accent hover:bg-accent/90 rounded-md transition-colors"
       >
         <Download className="w-3 h-3" />
         Export

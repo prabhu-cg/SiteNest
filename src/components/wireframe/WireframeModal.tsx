@@ -94,9 +94,10 @@ export default function WireframeModal({ pageTitle, blocks: initialBlocks, onClo
       const slug = pageTitle.toLowerCase().replace(/\s+/g, '-') || 'wireframe';
       const pad = 32;
       const canvas = await html2canvas(el, {
-        backgroundColor: '#f1f5f9',
+        backgroundColor: '#f4f2ea',
         scale: 2,
         useCORS: true,
+        ignoreElements: (el) => el.hasAttribute('data-export-ignore'),
         // Expand capture area to add padding around the blocks
         x: -pad,
         y: -pad,
@@ -274,7 +275,7 @@ export default function WireframeModal({ pageTitle, blocks: initialBlocks, onClo
 
           {/* Right: Canvas */}
           <div className="flex-1 flex flex-col min-w-0">
-            <div ref={scrollRef} className="thin-scroll flex-1 overflow-y-auto bg-[#f1f5f9] dark:bg-gray-900 p-6">
+            <div ref={scrollRef} className="thin-scroll flex-1 overflow-y-auto bg-[#f4f2ea] dark:bg-gray-900 p-6">
               {blocks.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center">
                   <div className="w-16 h-16 rounded-2xl bg-white border-2 border-dashed border-gray-300 flex items-center justify-center mb-4">
@@ -284,14 +285,20 @@ export default function WireframeModal({ pageTitle, blocks: initialBlocks, onClo
                   <p className="text-xs text-gray-400 mt-1">Pick blocks from the panel on the left</p>
                 </div>
               ) : (
-                <div ref={exportRef} className="max-w-3xl mx-auto space-y-1">
+                <div className="max-w-[56rem] mx-auto pl-32">
+                <div ref={exportRef} className="space-y-1">
                   {blocks.map((block, index) => {
                     const meta = BLOCK_REGISTRY.find((b) => b.type === block.type);
                     if (!meta) return null;
                     const Component = meta.component;
                     return (
+                      <div key={block.id} className="relative">
+                        {/* Name lives in the gutter, outside the block, and is skipped by PNG export */}
+                        <div data-export-ignore className="absolute right-full top-0 mr-3 w-28 pt-1 text-right pointer-events-none select-none">
+                          <span className="text-[10px] font-bold tabular-nums text-gray-300 dark:text-gray-600 mr-1.5">{index + 1}</span>
+                          <span className="text-[11px] font-medium text-gray-500 dark:text-gray-400 leading-tight">{meta.label}</span>
+                        </div>
                       <div
-                        key={block.id}
                         draggable
                         onDragStart={() => handleDragStart(index)}
                         onDragOver={(e) => { e.preventDefault(); setDragOverIndex(index); }}
@@ -301,9 +308,8 @@ export default function WireframeModal({ pageTitle, blocks: initialBlocks, onClo
                           dragOverIndex === index ? 'border-accent' : 'border-transparent'
                         }`}
                       >
-                        <div className="absolute top-2 right-2 z-10 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div data-export-ignore className="absolute top-2 right-2 z-10 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <div className="flex items-center gap-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-md px-1.5 py-1 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <span className="text-[10px] font-medium text-gray-500 mr-1">{meta.label}</span>
                             <GripVertical className="w-3.5 h-3.5 text-gray-400 cursor-grab" />
                             <button
                               onClick={() => removeBlock(block.id)}
@@ -315,8 +321,10 @@ export default function WireframeModal({ pageTitle, blocks: initialBlocks, onClo
                         </div>
                         <Component />
                       </div>
+                      </div>
                     );
                   })}
+                </div>
                 </div>
               )}
             </div>

@@ -8,10 +8,15 @@
 - Supabase for auth & data persistence
 - shadcn/ui + Tailwind for premium UI
 
-**Brand Colors:**
-- Accent: #C74504 (Orange)
-- Secondary: #FFFAEF (Cream)
-- Primary: #FFFFFF (White)
+**Design tokens** (shared with Assessly / Doxa; defined in `src/app/globals.css`, mapped in `tailwind.config.ts`):
+- `primary` #c74504 terracotta (the one accent), `primary-hover` #a93a03, `primary-soft` #fdefe7, `primary-text` #a93a03
+- `surface` / `secondary` / `muted` #f4f2ea oat cream for chrome; `card` / `background` #ffffff for working surfaces
+- `border` #e8ddc8 parchment hairline, `border-strong` #d6c7ab; `foreground` #1c1917, `muted-foreground` #6f6963
+- Semantic: `success`, `warning`, `info`, `destructive`, each with a `-soft` ground
+- `accent` is still the legacy terracotta scale (same hue as `primary`); prefer `primary` in new code
+- `gray-*` is remapped to Tailwind `stone`, so existing gray utilities are already warm
+- Dark mode is a warm brown-black ramp (#12100e ground), never neutral grey
+- Opacity modifiers work on tokens (`bg-primary/60`, `ring-ring/50`) via `color-mix`
 
 ## Architecture
 
@@ -96,7 +101,7 @@ const { data, error } = await supabase
 
 ### Styling
 - **Tailwind first:** Use @apply only for repeated patterns
-- **Colors:** Use `text-accent`, `bg-secondary` instead of hex
+- **Colors:** Use tokens (`bg-primary`, `bg-surface`, `text-muted-foreground`, `border-border`) instead of hex literals
 - **Dark mode:** Add `dark:` variants for all colors
 - **Spacing:** Use Tailwind scale (4px base): `p-4`, `gap-2`, etc.
 

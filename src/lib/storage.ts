@@ -149,3 +149,54 @@ export async function updateProfile(updates: { name?: string; avatar_url?: strin
     .eq('auth_id', user.id);
   if (error) throw new Error(error.message);
 }
+
+// ─── Shareable present links ────────────────────────────────────────────────
+
+export interface ShareState {
+  isPublic: boolean;
+  token: string | null;
+}
+
+export interface SharedProject {
+  title: string;
+  nodes: SharedNode[];
+  edges: Pick<Edge, 'source_node_id' | 'target_node_id'>[];
+}
+
+export type SharedNode = Pick<SitemapNode, 'id' | 'title' | 'url_slug' | 'wireframe'>;
+
+function newShareToken(): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(12));
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+export async function getShareState(projectId: string): Promise<ShareState | null> {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('is_public, public_token')
+    .eq('id', projectId)
+    .single();
+  if (error || !data) return null;
+  return { isPublic: !!data.is_public, token: data.public_token ?? null };
+}
+
+/** Turns sharing on/off. Re-enabling keeps the existing link unless `resetToken` is set. */
+export async function setSharing(
+  projectId: string,
+  enabled: boolean,
+  { resetToken = false, currentToken = null }: { resetToken?: boolean; currentToken?: string | null } = {}
+): Promise<ShareState | null> {
+  const token = enabled ? (resetToken || !currentToken ? newShareToken() : currentToken) : currentToken;
+  const { error } = await supabase
+    .from('projects')
+    .update({ is_public: enabled, public_token: token })
+    .eq('id', projectId);
+  if (error) return null;
+  return { isPublic: enabled, token };
+}
+
+export async function loadSharedProject(token: string): Promise<SharedProject | null> {
+  const { data, error } = await supabase.rpc('get_shared_project', { share_token: token });
+  if (error || !data) return null;
+  return data as SharedProject;
+}

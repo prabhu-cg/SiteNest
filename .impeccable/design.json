@@ -1,0 +1,424 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-22T22:20:41+00:00",
+  "title": "Design System: SiteNest",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Terracotta Pen",
+        "canonical": "oklch(57% 0.176 40)",
+        "tonalRamp": [
+          "#250600",
+          "#4f1601",
+          "#7d2800",
+          "#af3c03",
+          "#dc5924",
+          "#fe8154",
+          "#febba4",
+          "#ffeee8"
+        ]
+      },
+      "primary-deep": {
+        "role": "primary",
+        "displayName": "Terracotta Deep",
+        "canonical": "oklch(50% 0.156 40)",
+        "tonalRamp": [
+          "#250600",
+          "#4f1600",
+          "#7d2801",
+          "#ad3e0a",
+          "#d36136",
+          "#fa8459",
+          "#ffbba3",
+          "#feeee8"
+        ]
+      },
+      "primary-soft": {
+        "role": "primary",
+        "displayName": "Terracotta Tint",
+        "canonical": "oklch(96% 0.019 52)",
+        "tonalRamp": [
+          "#180f0a",
+          "#332923",
+          "#51463f",
+          "#70655e",
+          "#92857e",
+          "#b4a79f",
+          "#d8cac2",
+          "#fdefe7"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Oat Cream",
+        "canonical": "oklch(96% 0.011 95)",
+        "tonalRamp": [
+          "#13120c",
+          "#2d2c26",
+          "#4a4842",
+          "#696760",
+          "#8a8881",
+          "#acaaa2",
+          "#cfcdc6",
+          "#f4f2ea"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "oklch(100% 0.000 90)",
+        "tonalRamp": [
+          "#121212",
+          "#2c2c2c",
+          "#484848",
+          "#676767",
+          "#888888",
+          "#aaaaaa",
+          "#cdcdcd",
+          "#f2f2f2"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Warm Ink",
+        "canonical": "oklch(22% 0.006 56)",
+        "tonalRamp": [
+          "#14110f",
+          "#2e2b29",
+          "#4b4845",
+          "#6a6664",
+          "#8b8784",
+          "#ada9a6",
+          "#d1ccc9",
+          "#f5f1ee"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Stone",
+        "canonical": "oklch(52% 0.012 68)",
+        "tonalRamp": [
+          "#15110c",
+          "#302b25",
+          "#4d4742",
+          "#6c6660",
+          "#8d8780",
+          "#afa9a2",
+          "#d3ccc5",
+          "#f7f0e9"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Parchment Hairline",
+        "canonical": "oklch(90% 0.031 84)",
+        "tonalRamp": [
+          "#181003",
+          "#332a1a",
+          "#504736",
+          "#706654",
+          "#918773",
+          "#b3a995",
+          "#d7ccb7",
+          "#fcf1db"
+        ]
+      },
+      "hairline-strong": {
+        "role": "neutral",
+        "displayName": "Parchment Strong",
+        "canonical": "oklch(83% 0.041 83)",
+        "tonalRamp": [
+          "#191000",
+          "#362a12",
+          "#53472e",
+          "#73654c",
+          "#94866c",
+          "#b7a88d",
+          "#dbcbaf",
+          "#fff0d5"
+        ]
+      },
+      "success": {
+        "role": "semantic",
+        "displayName": "Success Green",
+        "canonical": "oklch(47% 0.104 157)",
+        "tonalRamp": [
+          "#00170a",
+          "#01351e",
+          "#045733",
+          "#26794f",
+          "#4b9b6f",
+          "#6ebe90",
+          "#92e2b2",
+          "#d2ffe2"
+        ]
+      },
+      "warning": {
+        "role": "semantic",
+        "displayName": "Warning Amber",
+        "canonical": "oklch(51% 0.108 73)",
+        "tonalRamp": [
+          "#1b0e00",
+          "#3e2600",
+          "#634003",
+          "#8c5c04",
+          "#af7d34",
+          "#d39f58",
+          "#f8c27b",
+          "#ffefdc"
+        ]
+      },
+      "info": {
+        "role": "semantic",
+        "displayName": "Info Blue",
+        "canonical": "oklch(48% 0.120 252)",
+        "tonalRamp": [
+          "#001228",
+          "#002c54",
+          "#024985",
+          "#2b6aa9",
+          "#4d8bce",
+          "#6faef3",
+          "#a9d1fe",
+          "#e9f3fe"
+        ]
+      },
+      "destructive": {
+        "role": "semantic",
+        "displayName": "Destructive Red",
+        "canonical": "oklch(50% 0.178 29)",
+        "tonalRamp": [
+          "#2b0000",
+          "#590101",
+          "#8c0103",
+          "#b82b22",
+          "#df5244",
+          "#ff7e6e",
+          "#ffb9af",
+          "#feeeeb"
+        ]
+      },
+      "night": {
+        "role": "neutral",
+        "displayName": "Brown Black",
+        "canonical": "oklch(17% 0.005 67)",
+        "tonalRamp": [
+          "#13110f",
+          "#2d2b29",
+          "#4a4845",
+          "#696764",
+          "#8a8784",
+          "#aca9a6",
+          "#d0cdca",
+          "#f4f1ee"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Landing hero only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Landing sections and the sign-in wordmark."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Auth card and panel headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "App copy and form text."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Panel buttons, tabs, finding titles, chips."
+      },
+      "micro": {
+        "displayName": "Micro",
+        "purpose": "Uppercase category and kind labels."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card",
+        "value": "0 1px 2px 0 #1010140a, 0 1px 3px 0 #1010140f",
+        "purpose": "Resting cards: page nodes, auth card."
+      },
+      {
+        "name": "raised",
+        "value": "0 2px 4px -1px #1010140f, 0 8px 24px -6px #1010141f",
+        "purpose": "Hover and selection on cards."
+      },
+      {
+        "name": "popover",
+        "value": "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
+        "purpose": "Dropdowns and the Share popover."
+      }
+    ],
+    "motion": [
+      {
+        "name": "rise-in",
+        "value": "240ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Entrances, staggered up to 8 steps of 35ms."
+      },
+      {
+        "name": "drawer-in",
+        "value": "280ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Wireframe drawer slide from the right."
+      },
+      {
+        "name": "state-change",
+        "value": "150ms ease",
+        "purpose": "Colour, border and shadow transitions. Reduced motion collapses all durations."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one terracotta action on a view.",
+      "html": "<button class=\"ds-btn-primary\">Create account</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:8px 16px;background:var(--primary,#c74504);color:#fff;font:600 14px Manrope,system-ui,sans-serif;border:0;border-radius:6px;cursor:pointer;transition:background .15s}.ds-btn-primary:hover{background:var(--primary-hover,#a93a03)}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(199,69,4,.5)}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary action on white; cream on hover.",
+      "html": "<button class=\"ds-btn-outline\">Cancel</button>",
+      "css": ".ds-btn-outline{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:8px 16px;background:#fff;color:#1c1917;font:600 14px Manrope,system-ui,sans-serif;border:1px solid #e8ddc8;border-radius:6px;cursor:pointer;transition:background .15s}.ds-btn-outline:hover{background:#f4f2ea}.ds-btn-outline:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(199,69,4,.5)}"
+    },
+    {
+      "name": "Icon Input",
+      "kind": "input",
+      "refersTo": "input-control",
+      "description": "Labelled field with a muted leading icon; terracotta border and 3px ring on focus.",
+      "html": "<div class=\"ds-input-wrap\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"20\" height=\"16\" x=\"2\" y=\"4\" rx=\"2\"/><path d=\"m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7\"/></svg><input class=\"ds-input\" placeholder=\"you@example.com\"></div>",
+      "css": ".ds-input-wrap{position:relative;width:260px;font-family:Manrope,system-ui,sans-serif}.ds-input-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:#6f6963}.ds-input{width:100%;box-sizing:border-box;height:40px;padding:8px 12px 8px 32px;background:#fff;color:#1c1917;font-size:14px;border:1px solid #e8ddc8;border-radius:6px;transition:border-color .15s,box-shadow .15s}.ds-input::placeholder{color:#6f6963}.ds-input:focus{outline:none;border-color:#c74504;box-shadow:0 0 0 3px rgba(199,69,4,.5)}"
+    },
+    {
+      "name": "Auth Card",
+      "kind": "card",
+      "refersTo": "card-auth",
+      "description": "White 16px card on the cream sign-in side with a segmented sign in / sign up control.",
+      "html": "<div class=\"ds-auth\"><h2>Welcome back</h2><p>Sign in to open your sitemaps</p><div class=\"ds-seg\"><button class=\"on\">Sign in</button><button>Sign up</button></div></div>",
+      "css": ".ds-auth{width:320px;box-sizing:border-box;padding:28px;background:#fff;border:1px solid #e8ddc8;border-radius:16px;box-shadow:0 1px 2px #1010140a,0 1px 3px #1010140f;font-family:Manrope,system-ui,sans-serif}.ds-auth h2{margin:0;font-size:18px;font-weight:600;color:#1c1917}.ds-auth p{margin:4px 0 16px;font-size:14px;color:#6f6963}.ds-seg{display:flex;padding:2px;background:#f4f2ea;border-radius:8px}.ds-seg button{flex:1;padding:6px 0;font:600 12px Manrope,system-ui,sans-serif;border:0;border-radius:6px;background:transparent;color:#6f6963;cursor:pointer}.ds-seg button.on{background:#fff;color:#1c1917;box-shadow:0 1px 2px #1010140a,0 1px 3px #1010140f}"
+    },
+    {
+      "name": "Page Node",
+      "kind": "custom",
+      "refersTo": "page-node",
+      "description": "The canvas card: accent bar, title, status pill, stacked blocks with link chips and connector dots.",
+      "html": "<div class=\"ds-node\"><div class=\"ds-node-bar\"></div><div class=\"ds-node-head\"><div class=\"ds-node-title\">Pricing</div><span class=\"ds-node-pill\">Draft</span></div><div class=\"ds-node-blocks\"><div class=\"ds-node-row\"><b>1</b><span>Navbar</span><i class=\"ds-node-dot off\"></i></div><div class=\"ds-node-row\"><b>2</b><span>CTA Banner</span><em class=\"ds-node-link\">&rarr; Checkout</em><i class=\"ds-node-dot\"></i></div></div></div>",
+      "css": ".ds-node{width:220px;background:#fff;border:1px solid #e8ddc8;border-radius:12px;overflow:hidden;box-shadow:0 1px 2px #1010140a,0 1px 3px #1010140f;font-family:Manrope,system-ui,sans-serif;transition:box-shadow .15s}.ds-node:hover{box-shadow:0 2px 4px -1px #1010140f,0 8px 24px -6px #1010141f}.ds-node-bar{height:4px;background:#c74504}.ds-node-head{padding:10px 12px}.ds-node-title{font-size:14px;font-weight:600;color:#1c1917}.ds-node-pill{display:inline-block;margin-top:8px;font-size:12px;font-weight:500;padding:2px 8px;border-radius:9999px;background:#f5f5f4;color:#57534e}.ds-node-blocks{border-top:1px solid #f5f5f4;padding-bottom:6px}.ds-node-row{position:relative;display:flex;align-items:center;gap:8px;padding:6px 28px 6px 12px;font-size:11px;font-weight:500;color:#57534e}.ds-node-row b{width:12px;font-size:9px;color:#d6d3d1}.ds-node-row span{flex:1}.ds-node-link{display:flex;align-items:center;gap:2px;font-size:9px;font-weight:600;color:#c74504}.ds-node-dot{position:absolute;right:8px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;border:2px solid #fff;background:#c74504}.ds-node-dot.off{background:#d6d3d1}"
+    },
+    {
+      "name": "Flow Finding",
+      "kind": "custom",
+      "refersTo": "panel",
+      "description": "One navigation-analysis result: severity dot, kind, page, plain explanation. Selected state shown.",
+      "html": "<button class=\"ds-finding\"><div class=\"ds-finding-kind\"><i></i>Unreachable page</div><div class=\"ds-finding-title\">Careers</div><div class=\"ds-finding-text\">No block links here, so visitors can never reach this page.</div></button>",
+      "css": ".ds-finding{width:290px;text-align:left;padding:8px 12px;border:1px solid #c74504;background:rgba(199,69,4,.05);border-radius:8px;font-family:Manrope,system-ui,sans-serif}.ds-finding-kind{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a8a29e}.ds-finding-kind i{width:6px;height:6px;border-radius:50%;background:#ef4444}.ds-finding-title{margin-top:2px;font-size:12px;font-weight:600;color:#1c1917}.ds-finding-text{margin-top:2px;font-size:11px;line-height:1.35;color:#6f6963}"
+    },
+    {
+      "name": "Block Name Tag",
+      "kind": "custom",
+      "refersTo": "panel",
+      "description": "Block number and name in the wireframe editor gutter, outside the block.",
+      "html": "<div class=\"ds-tag\"><b>3</b><span>Hero Centered</span></div>",
+      "css": ".ds-tag{display:inline-flex;align-items:baseline;gap:6px;font-family:Manrope,system-ui,sans-serif}.ds-tag b{font-size:10px;font-weight:700;color:#d6d3d1}.ds-tag span{font-size:11px;font-weight:500;color:#78716c}"
+    },
+    {
+      "name": "Segmented Control",
+      "kind": "custom",
+      "refersTo": "button-outline",
+      "description": "Assessly's filter pill: white hairline track, soft terracotta tint with deep-terracotta text on the selected segment.",
+      "html": "<div class=\"ds-seg2\"><button class=\"on\">Sign in</button><button>Sign up</button></div>",
+      "css": ".ds-seg2{display:flex;width:260px;padding:4px;background:#fff;border:1px solid #e8ddc8;border-radius:8px;font-family:Manrope,system-ui,sans-serif}.ds-seg2 button{flex:1;padding:6px 0;font:500 14px Manrope,system-ui,sans-serif;border:0;border-radius:6px;background:transparent;color:#6f6963;cursor:pointer;transition:color .15s}.ds-seg2 button:hover{color:#1c1917}.ds-seg2 button.on{background:#fdefe7;color:#a93a03}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Working Ledger",
+    "overview": "SiteNest is a working ledger: warm paper, ruled hairlines, and one orange pen. It shares its North Star and its tokens with Assessly, so the two products read as one family. Oat cream (`surface`, #f4f2ea) is the desk: the sign-in side, the canvas, the sidebar. White (`background`/`card`, #ffffff) is the paper: page nodes, panels, forms, and the wireframe blocks themselves. A single terracotta (`primary`, #c74504) marks what is live: the primary action, focus, the logo, a link between a block and a page. Manrope carries every word.\n\nThe product is an Operate surface. The user's content, not the chrome, supplies the interest: cards of pages, stacks of grey wireframe blocks, and a network of lines. So the chrome stays quiet and calm and precise. Depth is tonal, borders are hairline, shadows are faint. Colour is reserved for meaning. Two kinds of line exist and must never be confused: solid grey lines are sitemap structure (parent to child), dashed terracotta lines are navigation (a block links to a page). Sign-in is the one place the interface leaves the page plane for imagery: a terracotta-tinted photograph of a hand-drawn wireframe beside the form.",
+    "keyCharacteristics": [
+      "One accent, terracotta, for the primary action, focus, the mark and navigation links.",
+      "Cream desk, white paper, parchment hairlines; depth by tone, one faint resting shadow on cards.",
+      "Manrope only, small fixed scale, weight (not size) for hierarchy.",
+      "Solid grey = structure, dashed terracotta = navigation.",
+      "Wireframe blocks are always white and grey-slate, whatever the theme; they depict the user's future site, not SiteNest.",
+      "Light and dark: dark is a warm brown-black ramp (`night`, #12100e), never neutral grey."
+    ],
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "Terracotta is the only accent. It never appears next to a second decorative colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Lines Rule",
+        "body": "Structure is a solid grey line; navigation is a dashed terracotta line. Never draw a navigation link solid, or a structure edge dashed.",
+        "section": "colors"
+      },
+      {
+        "name": "The Token Only Rule",
+        "body": "Components use `primary`, `surface`, `card`, `border`, `muted-foreground`, never a hex literal, so dark mode and re-theming hold. The exceptions are SVG wireframe blocks, which are deliberately fixed, and canvas/export colours that must be literal.",
+        "section": "colors"
+      },
+      {
+        "name": "The Warm Gray Rule",
+        "body": "`gray-*` is remapped to Tailwind `stone`. Reach for it freely; it is already warm.",
+        "section": "colors"
+      },
+      {
+        "name": "The Weight Not Size Rule",
+        "body": "Emphasis comes from weight and `ink` versus `ink-muted`. No fluid type below the landing.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Numbers Rule",
+        "body": "Block numbers, click counts, depth badges and totals use `tabular-nums`.",
+        "section": "typography"
+      },
+      {
+        "name": "The Quiet Elevation Rule",
+        "body": "Rows, badges, inputs and chips have no resting shadow. Cards carry only `shadow-card`.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** use `bg-surface` for the desk and `bg-card` for paper; separate with a hairline.",
+      "**Do** keep terracotta to the primary action, focus, the mark and navigation links.",
+      "**Do** draw navigation dashed terracotta and structure solid grey.",
+      "**Do** put block names outside the block (gutter) or on hover; the block is the user's content.",
+      "**Do** keep wireframe blocks white and slate-grey with at most one terracotta accent, in light and dark.",
+      "**Do** give every analysis result a plain sentence that says what is wrong and why it matters.",
+      "**Do** use `tabular-nums` for counts, depths and block numbers.",
+      "**Do** keep white text on any tinted photograph behind a scrim that guarantees 4.5:1."
+    ],
+    "donts": [
+      "**Don't** write a literal brand hex or `bg-white` in components; use tokens.",
+      "**Don't** add a second accent colour or a gradient fill for decoration.",
+      "**Don't** add resting shadows to rows, badges or inputs.",
+      "**Don't** draw a hover outline as an inset shadow over a block with its own background.",
+      "**Don't** put a transform on a page-level wrapper; it traps fixed overlays.",
+      "**Don't** use neutral grey or blue-grey for chrome or dark mode; use the warm ramp.",
+      "**Don't** hide link or analysis meaning in colour alone; pair it with a label or shape.",
+      "**Don't** introduce paid or metered dependencies into a feature to decorate the interface."
+    ]
+  }
+}

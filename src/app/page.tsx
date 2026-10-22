@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Plus, FolderOpen, Trash2, Clock, Loader2, Pencil, LogOut, User } from 'lucide-react';
+import { Plus, FolderOpen, Trash2, Clock, Loader2, Pencil, LogOut, User, BookOpen, ArrowRight } from 'lucide-react';
 import { getProjectList, deleteProject, saveProject, renameProject, type ProjectMeta } from '@/lib/storage';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { AboutButton } from '@/components/ui/about-modal';
@@ -15,6 +15,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { ProfileModal } from '@/components/ui/profile-modal';
 import { DesktopOnlyGate } from '@/components/ui/desktop-only-gate';
 import LandingPage from '@/components/marketing/LandingPage';
+import { SAMPLE_PROJECT_ID, SAMPLE_PROJECT_TITLE, SAMPLE_PAGE_COUNT } from '@/lib/sampleProject';
 
 function formatLastEdited(iso: string): string {
   const d = new Date(iso);
@@ -120,7 +121,7 @@ export default function Home() {
         onClose={() => setProfileModalOpen(false)}
       />
     )}
-    <div className="min-h-screen bg-gradient-to-br from-[#FFFAEF] to-white dark:from-gray-950 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-surface to-white dark:from-gray-950 dark:to-gray-900">
       <DesktopOnlyGate />
       {/* Nav */}
       <nav className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-6 py-3 flex items-center justify-between">
@@ -179,6 +180,29 @@ export default function Home() {
       </nav>
 
       <div className="max-w-5xl mx-auto px-6 py-12">
+        {/* Built-in reference sample: read-only, lives in code, never saved to your account */}
+        <button
+          onClick={() => router.push(`/editor/${SAMPLE_PROJECT_ID}`)}
+          className="group w-full mb-10 flex items-center gap-5 text-left rounded-2xl border border-border bg-card p-5 shadow-card hover:border-primary/50 hover:shadow-raised hover:-translate-y-0.5 transition-all duration-200"
+        >
+          <span className="w-12 h-12 rounded-xl bg-primary-soft flex items-center justify-center flex-shrink-0">
+            <BookOpen className="w-6 h-6 text-primary" />
+          </span>
+          <span className="flex-1 min-w-0">
+            <span className="flex items-center gap-2">
+              <span className="font-semibold text-foreground truncate">{SAMPLE_PROJECT_TITLE}</span>
+              <span className="px-2 py-0.5 rounded-full bg-primary-soft text-primary-text text-[10px] font-bold uppercase tracking-wide">Sample · read-only</span>
+            </span>
+            <span className="block text-sm text-muted-foreground mt-0.5">
+              A {SAMPLE_PAGE_COUNT}-page coffee shop site with wireframes, block links and a few navigation problems for Flow to find. Explore it for reference.
+            </span>
+          </span>
+          <span className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-primary-text flex-shrink-0">
+            Explore
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+          </span>
+        </button>
+
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>

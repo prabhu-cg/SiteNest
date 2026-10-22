@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { COLOR_OPTIONS, STATUS_OPTIONS, toSlug } from '@/lib/utils';
 import { BLOCK_REGISTRY } from '@/components/wireframe/blocks';
-import { GripVertical, Trash2, Expand } from 'lucide-react';
+import { GripVertical, Trash2, Expand, Link2 } from 'lucide-react';
 import { Tooltip } from '@/components/ui/tooltip';
 import type { WireframeBlock } from '@/types';
 
@@ -16,12 +16,16 @@ interface PropertiesPanelProps {
 }
 
 function BlocksSection({
-  nodeId: _nodeId,
+  nodeId,
+  pages,
   blocks,
   onUpdate,
   onOpenEditor,
+  readOnly = false,
 }: {
+  readOnly?: boolean;
   nodeId: string;
+  pages: { id: string; title: string }[];
   blocks: WireframeBlock[];
   onUpdate: (blocks: WireframeBlock[]) => void;
   onOpenEditor: () => void;
@@ -35,6 +39,10 @@ function BlocksSection({
     const [moved] = next.splice(dragFrom, 1);
     next.splice(toIndex, 0, moved);
     onUpdate(next);
+  };
+
+  const setLink = (blockId: string, linkTo: string) => {
+    onUpdate(blocks.map((b) => (b.id === blockId ? { ...b, linkTo: linkTo || null } : b)));
   };
 
   const removeBlock = (blockId: string) => {
@@ -54,7 +62,7 @@ function BlocksSection({
           className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-accent transition-colors"
         >
           <Expand className="w-3 h-3" />
-          Open editor
+          {readOnly ? 'Preview page' : 'Open editor'}
         </button>
       </div>
 
@@ -67,7 +75,7 @@ function BlocksSection({
           return (
             <div
               key={block.id}
-              draggable
+              draggable={!readOnly}
               onDragStart={(e) => {
                 e.dataTransfer.effectAllowed = 'move';
                 setDragFrom(index);
@@ -98,12 +106,26 @@ function BlocksSection({
               <span className="text-xs text-gray-700 dark:text-gray-300 flex-1 truncate">
                 {meta.label}
               </span>
-              <button
+              <label className="flex items-center gap-1 flex-shrink-0" title="Page this block links to">
+                <Link2 className={`w-3 h-3 ${block.linkTo ? 'text-accent' : 'text-gray-300'}`} />
+                <select
+                  value={block.linkTo ?? ''}
+                  disabled={readOnly}
+                  onChange={(e) => setLink(block.id, e.target.value)}
+                  className={`w-24 h-6 px-1 text-[11px] rounded border bg-white dark:bg-gray-950 focus:outline-none focus:ring-1 focus:ring-accent ${block.linkTo ? 'border-accent/40 text-accent font-medium' : 'border-gray-200 dark:border-gray-700 text-gray-400'}`}
+                >
+                  <option value="">No link</option>
+                  {pages.filter((p) => p.id !== nodeId).map((p) => (
+                    <option key={p.id} value={p.id}>{p.title}</option>
+                  ))}
+                </select>
+              </label>
+              {!readOnly && <button
                 onClick={() => removeBlock(block.id)}
                 className="opacity-0 group-hover/block:opacity-100 p-0.5 rounded hover:bg-red-50 dark:hover:bg-red-950 text-gray-300 hover:text-red-500 transition-all flex-shrink-0"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-              </button>
+              </button>}
             </div>
           );
         })}
@@ -113,7 +135,7 @@ function BlocksSection({
 }
 
 export default function PropertiesPanel({ projectId: _projectId }: PropertiesPanelProps) {
-  const { nodes, selectedNodeId, updateNode, deleteNode, setWireframeNodeId } = useCanvasStore() as any;
+  const { nodes, selectedNodeId, updateNode, deleteNode, setWireframeNodeId, readOnly } = useCanvasStore() as any;
   const selectedNode = nodes.find((n: any) => n.id === selectedNodeId);
   const [colorOpen, setColorOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -148,10 +170,11 @@ export default function PropertiesPanel({ projectId: _projectId }: PropertiesPan
         {/* Header */}
         <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
           <p className="text-sm font-semibold text-gray-900 dark:text-gray-50">Page Properties</p>
-          <p className="text-xs text-gray-400 mt-0.5">Changes save automatically</p>
+          <p className="text-xs text-gray-400 mt-0.5">{readOnly ? 'Read-only sample' : 'Changes save automatically'}</p>
         </div>
 
         <div className="flex-1 p-4 space-y-4">
+          <fieldset disabled={readOnly} className="space-y-4 border-0 p-0 m-0 min-w-0">
           {/* Title */}
           <div>
             <Label htmlFor="title" className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
@@ -269,18 +292,22 @@ export default function PropertiesPanel({ projectId: _projectId }: PropertiesPan
             </div>
           </div>
 
+          </fieldset>
+
           {/* Blocks section */}
           <BlocksSection
             key={`blocks-${selectedNode.id}`}
             nodeId={selectedNode.id}
+            pages={nodes.map((n: any) => ({ id: n.id, title: n.title }))}
             blocks={selectedNode.wireframe ?? []}
             onUpdate={(blocks) => updateNode(selectedNode.id, { wireframe: blocks })}
             onOpenEditor={() => setWireframeNodeId(selectedNode.id)}
+            readOnly={readOnly}
           />
         </div>
 
         {/* Footer — Delete */}
-        <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800">
+        {!readOnly && <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800">
           <button
             type="button"
             onClick={handleDelete}
@@ -288,7 +315,7 @@ export default function PropertiesPanel({ projectId: _projectId }: PropertiesPan
           >
             Delete Page
           </button>
-        </div>
+        </div>}
       </div>
     </>
   );
