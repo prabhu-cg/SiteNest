@@ -216,6 +216,10 @@ The wireframe editor is a drawer with a block palette on the left and a column o
 
 Present mode is a full-screen overlay: a top bar (exit, back, restart, address bar, toggles), a 224px sitemap tree on the left, the page (max 1024px, white, centred) in the middle, and a bottom trail with the click count. Its chrome is always dark, so text there is white, never `primary-text`.
 
+The public information pages (`/about`, `/privacy`, `/terms`) are standalone pages, not modals: the shared marketing nav on top, a pale-butter header band or page ground, a narrow reading column (max 768px, `max-w-3xl`) and the shared footer. They use `h1`/`h2` in Newsreader, body copy in `ink-secondary`, and white 20px cards for grouped content such as the tech stack and legal sections.
+
+Marketing pages vary in height, so each marks its root with `.marketing-page`, which reserves the scrollbar gutter (`html:has(.marketing-page) { scrollbar-gutter: stable }`). Without it, short pages such as Privacy and Terms shift sideways against taller ones. The marketing nav and footer share one 1152px container (`max-w-6xl`) with 24px outer padding, so the logo and the footer links line up with the nav edges on every page.
+
 Sign-in is a split screen from 1024px: a 58% photograph panel and the form centred on white; below that the form fills the screen. The landing page alternates white and pale butter sections at 64-80px vertical padding. Spacing is the Tailwind 4px scale: 8, 12, 16, 24px dominate.
 
 ## Elevation & Depth
@@ -286,6 +290,10 @@ The landing page shows the product inside a CSS-built laptop: a dark lid with a 
 
 A white 20px card on the landing page that shows a real slice of the sample project (Home, Shop, Coffee Beans, Brewing Gear, Journal, Our Story) as indented rows with a section-colour dot, page name and slug, and an Explore link to `/editor/sample`. Never placeholder bars.
 
+### Marketing nav and footer
+
+One shared component (`MarketingChrome`) used by the landing page and the About, Privacy and Terms pages. The nav is sticky, 90% white with a hairline bottom border and a light backdrop blur; the logo and wordmark ("Nest" in ochre) link to `/`, and the right side holds a ghost Sign in and a pill Get started free. The footer repeats the logo, the copyright line and plain text links to About, Privacy and Terms. Never use a modal for these three; they are real pages.
+
 ### Navigation
 
 Toolbar buttons are 28px pill buttons with a 12px icon; the active mode (Flow open) takes an amber border and soft tint. The Share popover is a 320px white card with a switch, a monospace link field and a Copy button.
@@ -302,6 +310,9 @@ Toolbar buttons are 28px pill buttons with a 12px icon; the active mode (Flow op
 - **Do** put block names outside the block (gutter) or on hover; the block is the user's content.
 - **Do** keep wireframe blocks white and slate-grey with at most one amber accent, in light and dark.
 - **Do** make every button a pill.
+- **Do** make the logo in any top bar a link to the home page.
+- **Do** reserve the scrollbar gutter on marketing pages (`.marketing-page`) so navigating between them never shifts the layout.
+- **Do** keep feature claims on About and the landing page true to the product (55+ blocks, PNG export).
 - **Do** give every analysis result a plain sentence that says what is wrong and why it matters.
 - **Do** use `tabular-nums` for counts, depths and block numbers.
 - **Do** keep white text on any tinted photograph behind a scrim that guarantees 4.5:1.
@@ -320,4 +331,5 @@ Toolbar buttons are 28px pill buttons with a 12px icon; the active mode (Flow op
 - **Don't** use `text-primary-text` inside Present mode's always-dark chrome; use white.
 - **Don't** hide link or analysis meaning in colour alone; pair it with a label or shape.
 - **Don't** invent metrics, logos or testimonials.
+- **Don't** put About, Privacy or Terms in a modal.
 - **Don't** introduce paid or metered dependencies into a feature to decorate the interface.

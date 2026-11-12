@@ -31,6 +31,7 @@ Working positioning, formed from the build sessions and not separately confirmed
 - Projects are saved automatically to Supabase and are private to their owner.
 - Reviews happen with clients and stakeholders who do not have an account, hence the read-only present link.
 - Output leaves the product as a PNG of the sitemap or of a single page wireframe.
+- Public information pages: `/about`, `/privacy` and `/terms` are standalone routes (not modals), reachable without an account from the landing footer, the dashboard header and the editor toolbar info icon (opens About in a new tab). Their copy lives in `src/lib/siteContent.ts`.
 
 ## Capabilities and Constraints
 
@@ -50,7 +51,7 @@ Terminology: **page** (a node on the canvas), **block** (a wireframe section on 
 - Uses the Butter design system from the owner's portfolio (white and pale butter, one amber accent, Newsreader headlines, DM Sans body), so the owner's work reads as one family. Amber is a fill; accent text is ochre. See DESIGN.md.
 - Every button is a full pill.
 - Sign-in uses a photograph panel from Unsplash under an amber tint. The Unsplash licence needs no on-page credit, and the owner chose not to show one.
-- The About page speaks in the owner's first-person voice: who built SiteNest and why, in three short paragraphs, with an email contact.
+- The About page speaks in the owner's first-person voice: who built SiteNest and why, in three short paragraphs, with an email contact. It states only what the product does today: 55+ wireframe blocks and PNG export (there is no JSON export). Keep its feature claims in step with the landing page.
 
 ## Evidence on Hand
 
