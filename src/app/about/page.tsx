@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="marketing-page min-h-screen bg-background flex flex-col">
       <MarketingNav />
       <main className="flex-1">
         <header className="bg-surface border-b border-border">

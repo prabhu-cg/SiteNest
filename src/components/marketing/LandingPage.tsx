@@ -118,7 +118,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="marketing-page min-h-screen bg-background">
       <MarketingNav />
 
       {/* Hero + stats band */}

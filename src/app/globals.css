@@ -132,6 +132,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Marketing pages vary in height; always reserve the scrollbar gutter so navigating between them doesn't shift the layout */
+html:has(.marketing-page) {
+  scrollbar-gutter: stable;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);

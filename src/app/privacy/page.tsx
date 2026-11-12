@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: 'Privacy Policy | SiteNest' };
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="marketing-page min-h-screen bg-background flex flex-col">
       <MarketingNav />
       <LegalDocument title="Privacy Policy" updated={LAST_UPDATED} sections={PRIVACY_SECTIONS} />
       <MarketingFooter />

@@ -42,8 +42,8 @@ export function MarketingNav() {
 
 export function MarketingFooter() {
   return (
-      <footer className="border-t border-border bg-background">
-        <div className="max-w-6xl mx-auto flex flex-col items-center gap-4 px-6 py-12 sm:flex-row sm:justify-between">
+      <footer className="border-t border-border bg-background px-6">
+        <div className="max-w-6xl mx-auto flex flex-col items-center gap-4 py-12 sm:flex-row sm:justify-between">
           <Link href="/" className="flex items-center gap-3">
             <LogoMark size={28} />
             <div className="flex flex-col leading-none">
