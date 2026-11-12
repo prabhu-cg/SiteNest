@@ -19,7 +19,7 @@ export default function CalendarBlock() {
         ))
       )}
       {/* Events */}
-      <rect x="146" y="106" width="86" height="12" rx="3" fill="#C74504" />
+      <rect x="146" y="106" width="86" height="12" rx="3" fill="#e8b923" />
       <rect x="350" y="154" width="86" height="12" rx="3" fill="#334155" />
       <rect x="554" y="202" width="86" height="12" rx="3" fill="#94a3b8" />
     </svg>

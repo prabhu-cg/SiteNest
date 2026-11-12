@@ -7,7 +7,7 @@ export const SAMPLE_PROJECT_TITLE = 'Northwind Coffee Roasters';
 
 type BlockSpec = [type: WireframeBlockType, linkTo?: string];
 
-const SHOP = '#C74504';
+const SHOP = '#e8b923';
 const JOURNAL = '#3B82F6';
 const ABOUT = '#0D9488';
 const ACCOUNT = '#7C3AED';

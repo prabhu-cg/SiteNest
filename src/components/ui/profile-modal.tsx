@@ -109,7 +109,7 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
                 className={cn(
                   'relative flex-1 flex flex-col items-center gap-1.5 rounded-xl p-1.5 transition-all border-2',
                   selectedAvatar === null
-                    ? 'border-primary bg-orange-50 dark:bg-orange-950/20'
+                    ? 'border-primary bg-primary-soft dark:bg-primary/10'
                     : 'border-transparent hover:border-gray-200 dark:hover:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                 )}
                 title="Use initials"
@@ -135,7 +135,7 @@ export function ProfileModal({ name, email, avatarUrl, onSave, onClose }: Profil
                     className={cn(
                       'relative flex-1 flex flex-col items-center gap-1.5 rounded-xl p-1.5 transition-all border-2',
                       isSelected
-                        ? 'border-primary bg-orange-50 dark:bg-orange-950/20'
+                        ? 'border-primary bg-primary-soft dark:bg-primary/10'
                         : 'border-transparent hover:border-gray-200 dark:hover:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                     )}
                     title={label}

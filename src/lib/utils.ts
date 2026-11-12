@@ -75,14 +75,14 @@ export const STATUS_OPTIONS = [
 ] as const;
 
 export const COLOR_OPTIONS = [
-  { hex: '#C74504', name: 'Orange'  },
+  { hex: '#e8b923', name: 'Amber'   },
   { hex: '#64748B', name: 'Slate'   },
   { hex: '#3B82F6', name: 'Blue'    },
   { hex: '#0D9488', name: 'Teal'    },
   { hex: '#7C3AED', name: 'Violet'  },
   { hex: '#EC4899', name: 'Pink'    },
   { hex: '#10B981', name: 'Green'   },
-  { hex: '#F59E0B', name: 'Amber'   },
+  { hex: '#F97316', name: 'Orange'  },
   { hex: '#EF4444', name: 'Red'     },
   { hex: '#0EA5E9', name: 'Sky'     },
 ] as const;

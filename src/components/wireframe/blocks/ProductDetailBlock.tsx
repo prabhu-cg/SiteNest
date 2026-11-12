@@ -10,7 +10,7 @@ export default function ProductDetailBlock() {
       {/* Info */}
       <rect x="400" y="32" width="300" height="22" rx="4" fill="#334155" />
       <rect x="400" y="64" width="120" height="12" rx="3" fill="#94a3b8" />
-      <rect x="400" y="94" width="90" height="26" rx="4" fill="#C74504" />
+      <rect x="400" y="94" width="90" height="26" rx="4" fill="#e8b923" />
       <rect x="400" y="136" width="340" height="10" rx="3" fill="#e2e8f0" />
       <rect x="400" y="154" width="320" height="10" rx="3" fill="#e2e8f0" />
       <rect x="400" y="172" width="280" height="10" rx="3" fill="#e2e8f0" />

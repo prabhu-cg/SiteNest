@@ -44,7 +44,7 @@ export const useCanvasStore = create<ExtendedStore>((set, get) => ({
   error: null,
   isDirty: false,
   lastAction: '',
-  lastUsedColor: '#C74504',
+  lastUsedColor: '#e8b923',
   past: [],
   future: [],
 

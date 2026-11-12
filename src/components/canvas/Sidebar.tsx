@@ -93,20 +93,20 @@ export default function Sidebar({ projectId: _projectId, onAddNode }: SidebarPro
                   onClick={() => { setSelectedNode(node.id); if (readOnly) setFocusNodeId(node.id); }}
                   className={`group flex items-start gap-2 px-2 py-2 rounded-md cursor-pointer transition-all border ${
                     isSelected
-                      ? 'border-accent bg-orange-50 dark:bg-orange-950/20'
-                      : 'border-transparent hover:border-accent/40 hover:bg-orange-50/50 dark:hover:bg-orange-950/10'
+                      ? 'border-accent bg-primary-soft dark:bg-primary/10'
+                      : 'border-transparent hover:border-accent/40 hover:bg-primary-soft/50 dark:hover:bg-primary/10'
                   }`}
                 >
                   {/* Color circle */}
                   <span
                     className="w-2.5 h-2.5 rounded-full flex-shrink-0 border border-gray-200 mt-0.5"
-                    style={{ backgroundColor: node.color || '#C74504' }}
+                    style={{ backgroundColor: node.color || '#e8b923' }}
                   />
 
                   {/* Page info */}
                   <div className="flex-1 min-w-0">
                     <p className={`text-sm font-medium truncate leading-tight ${
-                      isSelected ? 'text-accent' : 'text-gray-800 dark:text-gray-200'
+                      isSelected ? 'text-primary-text' : 'text-gray-800 dark:text-gray-200'
                     }`}>
                       {node.title}
                     </p>

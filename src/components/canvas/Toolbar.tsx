@@ -43,7 +43,7 @@ function AutoLayoutMenu({ onAutoLayout }: { onAutoLayout: (dir: LayoutDirection)
       )}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="relative z-50 flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        className="relative z-50 flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
       >
         Auto Layout
         <ChevronDown className={`w-3 h-3 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} />
@@ -231,7 +231,7 @@ export default function Toolbar({
       <Tooltip content="Find orphan pages, dead ends & deep pages" side="bottom">
         <button
           onClick={() => setFlowPanelOpen(!flowPanelOpen)}
-          className={`flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium border rounded-md transition-colors ${flowPanelOpen ? 'text-accent border-accent bg-accent/5' : 'text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+          className={`flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium border rounded-full transition-colors ${flowPanelOpen ? 'text-primary-text border-accent bg-accent/5' : 'text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
         >
           <GitBranch className="w-3 h-3" />
           Flow
@@ -240,7 +240,7 @@ export default function Toolbar({
       <Tooltip content="Click through your sitemap like a visitor" side="bottom">
         <button
           onClick={() => setPresenting(true)}
-          className="flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          className="flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           <Play className="w-3 h-3" />
           Present
@@ -274,7 +274,7 @@ export default function Toolbar({
 
       <button
         onClick={() => onExport?.()}
-        className="ml-1 flex items-center gap-1.5 px-3 h-7 text-xs font-semibold text-white bg-accent hover:bg-accent/90 rounded-md transition-colors"
+        className="ml-1 flex items-center gap-1.5 px-3 h-7 text-xs font-semibold text-primary-foreground bg-accent hover:bg-accent/90 rounded-full transition-colors"
       >
         <Download className="w-3 h-3" />
         Export

@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS sitemap_nodes (
   url_slug VARCHAR(255),
   description TEXT,
   icon VARCHAR(50),
-  color VARCHAR(7) DEFAULT '#EE661D',
+  color VARCHAR(7) DEFAULT '#e8b923',
   status VARCHAR(50) DEFAULT 'draft',
   position_x FLOAT DEFAULT 0,
   position_y FLOAT DEFAULT 0,

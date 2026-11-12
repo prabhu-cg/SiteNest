@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
-import { Manrope, JetBrains_Mono } from "next/font/google";
+import { DM_Sans, Newsreader, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import AuthProvider from "@/components/providers/AuthProvider";
 
-const manrope = Manrope({
+const dmSans = DM_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const newsreader = Newsreader({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
 });
 
 const jetbrains_mono = JetBrains_Mono({
@@ -32,7 +39,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${manrope.variable} ${jetbrains_mono.variable} font-sans antialiased bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-50`}>
+      <body className={`${dmSans.variable} ${newsreader.variable} ${jetbrains_mono.variable} font-sans antialiased bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
             {children}

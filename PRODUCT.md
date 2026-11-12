@@ -47,13 +47,16 @@ Terminology: **page** (a node on the canvas), **block** (a wireframe section on 
 ## Brand Commitments
 
 - Name: SiteNest, with "Nest" highlighted in the wordmark.
-- Shares its design token system with the owner's other product, Assessly (the Doxa token family), so the products read as one family.
-- Sign-in uses a photograph panel from Unsplash. The Unsplash licence needs no on-page credit, and the owner chose not to show one.
+- Uses the Butter design system from the owner's portfolio (white and pale butter, one amber accent, Newsreader headlines, DM Sans body), so the owner's work reads as one family. Amber is a fill; accent text is ochre. See DESIGN.md.
+- Every button is a full pill.
+- Sign-in uses a photograph panel from Unsplash under an amber tint. The Unsplash licence needs no on-page credit, and the owner chose not to show one.
+- The About page speaks in the owner's first-person voice: who built SiteNest and why, in three short paragraphs, with an email contact.
 
 ## Evidence on Hand
 
-- `public/marketing/editor-screenshot.png` is a real editor screenshot.
+- `public/marketing/editor-screenshot.png` is a real light-mode editor screenshot of the built-in sample project. The landing page also shows a mini sitemap drawn from that sample. Retake the screenshot whenever the editor chrome changes visibly.
 - No customer testimonials, usage numbers, case studies or press exist. Do not invent any.
+- Pages saved with the old orange node colours (#C74504, #EE661D) are shown in the amber accent on load and persist the new colour on the next autosave.
 
 ## Product Principles
 

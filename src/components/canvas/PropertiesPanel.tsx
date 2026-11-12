@@ -59,7 +59,7 @@ function BlocksSection({
         </Label>
         <button
           onClick={onOpenEditor}
-          className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-accent transition-colors"
+          className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-primary-text transition-colors"
         >
           <Expand className="w-3 h-3" />
           {readOnly ? 'Preview page' : 'Open editor'}
@@ -98,7 +98,7 @@ function BlocksSection({
               className={[
                 'flex items-center gap-2 px-2 py-2 group/block transition-colors',
                 index !== blocks.length - 1 ? 'border-b border-gray-100 dark:border-gray-800' : '',
-                isOver ? 'bg-accent/5 border-t-2 border-t-accent' : 'hover:bg-orange-50/50 dark:hover:bg-orange-950/10',
+                isOver ? 'bg-accent/5 border-t-2 border-t-accent' : 'hover:bg-primary-soft/50 dark:hover:bg-primary/10',
                 dragFrom === index ? 'opacity-40' : '',
               ].join(' ')}
             >
@@ -107,12 +107,12 @@ function BlocksSection({
                 {meta.label}
               </span>
               <label className="flex items-center gap-1 flex-shrink-0" title="Page this block links to">
-                <Link2 className={`w-3 h-3 ${block.linkTo ? 'text-accent' : 'text-gray-300'}`} />
+                <Link2 className={`w-3 h-3 ${block.linkTo ? 'text-primary-text' : 'text-gray-300'}`} />
                 <select
                   value={block.linkTo ?? ''}
                   disabled={readOnly}
                   onChange={(e) => setLink(block.id, e.target.value)}
-                  className={`w-24 h-6 px-1 text-[11px] rounded border bg-white dark:bg-gray-950 focus:outline-none focus:ring-1 focus:ring-accent ${block.linkTo ? 'border-accent/40 text-accent font-medium' : 'border-gray-200 dark:border-gray-700 text-gray-400'}`}
+                  className={`w-24 h-6 px-1 text-[11px] rounded border bg-white dark:bg-gray-950 focus:outline-none focus:ring-1 focus:ring-accent ${block.linkTo ? 'border-accent/40 text-primary-text font-medium' : 'border-gray-200 dark:border-gray-700 text-gray-400'}`}
                 >
                   <option value="">No link</option>
                   {pages.filter((p) => p.id !== nodeId).map((p) => (
@@ -281,7 +281,7 @@ export default function PropertiesPanel({ projectId: _projectId }: PropertiesPan
                       <span className="w-4 h-4 rounded-full flex-shrink-0 border border-gray-200" style={{ backgroundColor: c.hex }} />
                       <span className="text-gray-700 dark:text-gray-300">{c.name}</span>
                       {selectedNode.color === c.hex && (
-                        <svg className="w-3 h-3 text-accent ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-3 h-3 text-primary-text ml-auto" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       )}
@@ -311,7 +311,7 @@ export default function PropertiesPanel({ projectId: _projectId }: PropertiesPan
           <button
             type="button"
             onClick={handleDelete}
-            className="w-full h-8 text-xs font-semibold text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-md hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
+            className="w-full h-8 text-xs font-semibold text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-full hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
           >
             Delete Page
           </button>

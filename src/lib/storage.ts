@@ -53,6 +53,10 @@ export async function getProjectList(): Promise<ProjectMeta[]> {
   }));
 }
 
+// Nodes saved before the Butter reskin carry the old orange; show them in the accent colour
+const LEGACY_NODE_COLORS = new Set(['#c74504', '#ee661d']);
+const ACCENT_NODE_COLOR = '#e8b923';
+
 export async function loadProject(id: string): Promise<ProjectData | null> {
   const [{ data: nodesData, error: nodesErr }, { data: edgesData, error: edgesErr }] =
     await Promise.all([
@@ -63,7 +67,9 @@ export async function loadProject(id: string): Promise<ProjectData | null> {
   if (nodesErr || edgesErr) return null;
 
   return {
-    nodes: (nodesData ?? []) as SitemapNode[],
+    nodes: ((nodesData ?? []) as SitemapNode[]).map((n) =>
+      n.color && LEGACY_NODE_COLORS.has(n.color.toLowerCase()) ? { ...n, color: ACCENT_NODE_COLOR } : n
+    ),
     edges: (edgesData ?? []) as Edge[],
   };
 }

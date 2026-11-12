@@ -17,7 +17,7 @@ export default function AuthPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-surface">
-        <Loader2 className="w-5 h-5 animate-spin text-primary" />
+        <Loader2 className="w-5 h-5 animate-spin text-primary-text" />
       </div>
     }>
       <AuthPageInner />
@@ -73,7 +73,7 @@ function AuthPageInner() {
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface">
-        <Loader2 className="w-5 h-5 animate-spin text-primary" />
+        <Loader2 className="w-5 h-5 animate-spin text-primary-text" />
       </div>
     );
   }
@@ -161,7 +161,7 @@ function AuthPageInner() {
                 </p>
               </div>
 
-              <div role="tablist" aria-label="Sign in or sign up" className="flex rounded-lg border border-border bg-card p-1 mb-5">
+              <div role="tablist" aria-label="Sign in or sign up" className="flex rounded-full border border-border bg-surface p-1 mb-5">
                 {(['signin', 'signup'] as const).map((m) => (
                   <button
                     key={m}
@@ -170,7 +170,7 @@ function AuthPageInner() {
                     aria-selected={mode === m}
                     onClick={() => switchMode(m)}
                     className={[
-                      'flex-1 py-1.5 text-sm font-medium rounded-md transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50',
+                      'flex-1 py-1.5 text-sm font-medium rounded-full transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50',
                       mode === m
                         ? 'bg-primary-soft text-primary-text'
                         : 'text-muted-foreground hover:text-foreground',

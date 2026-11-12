@@ -11,7 +11,7 @@ export default function CheckoutBlock() {
           <rect x="64" y={y + 14} width="392" height="30" rx="6" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
         </g>
       ))}
-      <rect x="64" y="256" width="392" height="40" rx="6" fill="#C74504" />
+      <rect x="64" y="256" width="392" height="40" rx="6" fill="#e8b923" />
       {/* Order summary */}
       <rect x="508" y="24" width="252" height="292" rx="10" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1.5" />
       <rect x="528" y="44" width="110" height="14" rx="4" fill="#334155" />

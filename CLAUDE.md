@@ -8,14 +8,15 @@
 - Supabase for auth & data persistence
 - shadcn/ui + Tailwind for premium UI
 
-**Design tokens** (shared with Assessly / Doxa; defined in `src/app/globals.css`, mapped in `tailwind.config.ts`):
-- `primary` #c74504 terracotta (the one accent), `primary-hover` #a93a03, `primary-soft` #fdefe7, `primary-text` #a93a03
-- `surface` / `secondary` / `muted` #f4f2ea oat cream for chrome; `card` / `background` #ffffff for working surfaces
-- `border` #e8ddc8 parchment hairline, `border-strong` #d6c7ab; `foreground` #1c1917, `muted-foreground` #6f6963
+**Design tokens** (Portfolio "Butter" system; defined in `src/app/globals.css`, mapped in `tailwind.config.ts`):
+- `primary` #e8b923 amber (the one accent, fill only), `primary-hover` #d4a615, `primary-soft` #faf4df, `primary-text` #826400 ochre (accent text + focus)
+- `surface` #fcfaf3 pale butter for bands and chrome; `secondary` / `muted` #f8f4e4 for hover tints; `card` / `background` #ffffff for working surfaces
+- `border` #ece5cc butter hairline, `border-strong` #dccfa6; `foreground` #353335 charcoal, `muted-foreground` #6b6b6b
 - Semantic: `success`, `warning`, `info`, `destructive`, each with a `-soft` ground
-- `accent` is still the legacy terracotta scale (same hue as `primary`); prefer `primary` in new code
+- `accent` is the legacy name for the same amber scale; prefer `primary` in new code. Amber is never text: use `text-primary-text`
 - `gray-*` is remapped to Tailwind `stone`, so existing gray utilities are already warm
-- Dark mode is a warm brown-black ramp (#12100e ground), never neutral grey
+- Dark mode is a warm charcoal ramp (#141312 ground), never neutral grey
+- Type: Newsreader (`font-display`, h1/h2) + DM Sans; buttons are fully round (`rounded-full`), cards 20px (`rounded-card`)
 - Opacity modifiers work on tokens (`bg-primary/60`, `ring-ring/50`) via `color-mix`
 
 ## Architecture

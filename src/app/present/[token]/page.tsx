@@ -28,7 +28,7 @@ export default function SharedPresentPage() {
   return (
     <div className="w-full h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-6">
       {status === 'loading' ? (
-        <Loader2 className="w-5 h-5 animate-spin text-accent" />
+        <Loader2 className="w-5 h-5 animate-spin text-primary-text" />
       ) : (
         <div className="text-center max-w-sm">
           <p className="text-base font-semibold text-gray-900 dark:text-gray-50">This link isn't available</p>

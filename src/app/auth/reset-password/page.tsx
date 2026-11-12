@@ -48,7 +48,7 @@ export default function ResetPasswordPage() {
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface">
-        <Loader2 className="w-5 h-5 animate-spin text-primary" />
+        <Loader2 className="w-5 h-5 animate-spin text-primary-text" />
       </div>
     );
   }
@@ -66,7 +66,7 @@ export default function ResetPasswordPage() {
           <>
             <div className="mb-5">
               <h2 className="flex items-center gap-2 text-lg font-semibold">
-                <Lock className="w-4 h-4 text-primary" />
+                <Lock className="w-4 h-4 text-primary-text" />
                 Set a new password
               </h2>
               <p className="text-sm text-muted-foreground mt-1">Choose a strong password for your account.</p>

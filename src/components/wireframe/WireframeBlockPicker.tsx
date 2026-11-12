@@ -158,7 +158,7 @@ export default function WireframeBlockPicker({ anchor, onAdd, onClose }: Wirefra
                       </div>
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold text-gray-800 dark:text-gray-200 group-hover:text-accent transition-colors truncate">
+                      <p className="text-xs font-semibold text-gray-800 dark:text-gray-200 group-hover:text-primary-text transition-colors truncate">
                         {meta.label}
                       </p>
                       <p className="text-[10px] text-gray-400 leading-tight mt-0.5 truncate">{meta.description}</p>

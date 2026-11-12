@@ -69,7 +69,7 @@ export function AboutButton({ variant = 'icon' }: AboutButtonProps) {
           >
             <button
               onClick={() => setOpen(false)}
-              className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-muted-foreground flex-shrink-0 transition-colors z-10"
+              className="absolute right-4 top-4 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-muted-foreground flex-shrink-0 transition-colors z-10"
             >
               <X className="w-4 h-4" />
             </button>
@@ -80,7 +80,7 @@ export function AboutButton({ variant = 'icon' }: AboutButtonProps) {
               <div className="flex-1 min-w-0">
                 <h2 className="text-xl font-extrabold text-foreground leading-none">About SiteNest</h2>
                 <p className="text-xs text-muted-foreground mt-1.5">Visual Sitemap Builder</p>
-                <span className="inline-block mt-1.5 px-2 py-0.5 rounded-full bg-accent/10 text-accent text-[10px] font-semibold">
+                <span className="inline-block mt-1.5 px-2 py-0.5 rounded-full bg-accent/10 text-primary-text text-[10px] font-semibold">
                   v0.1.0 — Phase 1 MVP
                 </span>
               </div>
@@ -122,17 +122,16 @@ export function AboutButton({ variant = 'icon' }: AboutButtonProps) {
               </section>
 
               <section>
-                <h3 className="mb-1.5 text-sm font-bold text-foreground">Who Built This</h3>
+                <h3 className="mb-1.5 text-sm font-bold text-foreground">Who built SiteNest, and why</h3>
                 <p>
-                  SiteNest is an independent side project by{' '}
-                  <a href="mailto:prabhu_cg@proton.me" className="text-accent hover:underline">Prabhu Raja</a>, a product designer with 15+ years across enterprise and B2B software — currently VP of User Experience at BNY, previously at Thomson Reuters HighQ, Sweepr, and Marston Holdings. Day to day, that work centres on design systems, accessibility, and turning ambiguous, high-stakes workflows into clear, systemised outcomes.
+                  I&apos;m Prabhu Raja, a senior designer with over 15 years of experience on enterprise products, design systems, and digital experiences. My work comes down to one idea: designing clarity from complexity.
                 </p>
                 <p className="mt-3">
-                  SiteNest is a small, focused tool: plan a site&apos;s structure, sketch it, connect it, and export it when you need to walk stakeholders through the plan — the same discipline applied to site planning that shipped teams already apply to product specs.
+                  Site structure is where that gets tested first. Every project I&apos;ve worked on starts with a sitemap, and almost every sitemap ends up in a slide deck that goes stale the moment scope changes. I built SiteNest to apply the same discipline to it: understand the site, simplify the structure, systemise the pages, and keep one live plan that you can click through and check.
                 </p>
                 <p className="mt-3">
-                  Feedback, feature requests, or just want to say hello —{' '}
-                  <a href="mailto:prabhu_cg@proton.me" className="text-accent hover:underline">prabhu_cg@proton.me</a>.
+                  SiteNest is an independent project. I scoped, designed, and built it myself with AI assistance. If you have feedback, a feature request, or just want to say hello, write to{' '}
+                  <a href="mailto:prabhu_cg@proton.me" className="text-primary-text hover:underline">prabhu_cg@proton.me</a>.
                 </p>
               </section>
             </div>

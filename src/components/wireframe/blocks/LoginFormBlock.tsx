@@ -12,7 +12,7 @@ export default function LoginFormBlock() {
       <rect x="288" y="200" width="224" height="10" rx="3" fill="#94a3b8" />
       <rect x="288" y="216" width="224" height="34" rx="6" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
       {/* Submit */}
-      <rect x="288" y="262" width="224" height="34" rx="6" fill="#C74504" />
+      <rect x="288" y="262" width="224" height="34" rx="6" fill="#e8b923" />
       <rect x="352" y="274" width="96" height="10" rx="3" fill="#ffffffcc" />
     </svg>
   );

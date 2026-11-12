@@ -54,7 +54,7 @@ export default function Home() {
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-5 h-5 animate-spin text-accent" />
+        <Loader2 className="w-5 h-5 animate-spin text-primary-text" />
       </div>
     );
   }
@@ -160,7 +160,7 @@ export default function Home() {
                   </div>
                   <button
                     onClick={() => { setProfileOpen(false); setProfileModalOpen(true); }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-orange-950/20 hover:text-accent transition-colors"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-primary-soft dark:hover:bg-primary/10 hover:text-primary-text transition-colors"
                   >
                     <User className="w-3.5 h-3.5 flex-shrink-0" />
                     Edit Profile
@@ -186,7 +186,7 @@ export default function Home() {
           className="group w-full mb-10 flex items-center gap-5 text-left rounded-2xl border border-border bg-card p-5 shadow-card hover:border-primary/50 hover:shadow-raised hover:-translate-y-0.5 transition-all duration-200"
         >
           <span className="w-12 h-12 rounded-xl bg-primary-soft flex items-center justify-center flex-shrink-0">
-            <BookOpen className="w-6 h-6 text-primary" />
+            <BookOpen className="w-6 h-6 text-primary-text" />
           </span>
           <span className="flex-1 min-w-0">
             <span className="flex items-center gap-2">
@@ -219,7 +219,7 @@ export default function Home() {
         {projects.length === 0 ? (
           <div className="text-center py-24 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-2xl">
             <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <FolderOpen className="w-6 h-6 text-accent" />
+              <FolderOpen className="w-6 h-6 text-primary-text" />
             </div>
             <h2 className="text-base font-semibold text-gray-800 dark:text-white mb-1">No projects yet</h2>
             <p className="text-sm text-gray-400">Click "New Project" above to create your first sitemap.</p>

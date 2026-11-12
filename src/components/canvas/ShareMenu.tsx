@@ -41,7 +41,7 @@ export default function ShareMenu({ projectId }: { projectId: string }) {
       {open && <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="relative z-50 flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        className="relative z-50 flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
       >
         <Share2 className="w-3 h-3" />
         Share
@@ -55,7 +55,7 @@ export default function ShareMenu({ projectId }: { projectId: string }) {
           </p>
 
           {status === 'loading' && (
-            <div className="py-6 flex justify-center"><Loader2 className="w-4 h-4 animate-spin text-accent" /></div>
+            <div className="py-6 flex justify-center"><Loader2 className="w-4 h-4 animate-spin text-primary-text" /></div>
           )}
 
           {status === 'error' && (
@@ -89,7 +89,7 @@ export default function ShareMenu({ projectId }: { projectId: string }) {
                     />
                     <button
                       onClick={copy}
-                      className="flex items-center gap-1 px-2.5 h-8 text-xs font-semibold text-white bg-accent hover:bg-accent/90 rounded-md transition-colors"
+                      className="flex items-center gap-1 px-2.5 h-8 text-xs font-semibold text-primary-foreground bg-accent hover:bg-accent/90 rounded-full transition-colors"
                     >
                       {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                       {copied ? 'Copied' : 'Copy'}

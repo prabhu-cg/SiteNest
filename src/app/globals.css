@@ -3,26 +3,28 @@
 @tailwind utilities;
 
 :root {
-  /* Assessly / Doxa tokens: warm cream chrome, white working surfaces, one terracotta voice */
+  /* Portfolio "Butter" tokens: white working surface, pale butter bands, one amber accent.
+     Amber is a fill only. Text that needs the accent uses --primary-text (ochre). */
   --background: #ffffff;
-  --foreground: #1c1917;
+  --foreground: #353335;
 
   --card: #ffffff;
-  --card-foreground: #1c1917;
+  --card-foreground: #353335;
   --popover: #ffffff;
-  --popover-foreground: #1c1917;
+  --popover-foreground: #353335;
 
-  --primary: #c74504;
-  --primary-foreground: #ffffff;
-  --primary-hover: #a93a03;
-  --primary-soft: #fdefe7;
-  --primary-text: #a93a03;
+  --primary: #e8b923;
+  --primary-foreground: #353335;
+  --primary-hover: #d4a615;
+  --primary-soft: #faf4df;
+  --primary-text: #826400;
 
-  --secondary: #f4f2ea;
-  --secondary-foreground: #1c1917;
-  --muted: #f4f2ea;
-  --muted-foreground: #6f6963;
-  --surface: #f4f2ea;
+  --secondary: #f8f4e4;
+  --secondary-foreground: #353335;
+  --muted: #f8f4e4;
+  --muted-foreground: #6b6b6b;
+  --ink-secondary: #4d4a4d;
+  --surface: #fcfaf3;
   --surface-raised: #ffffff;
 
   --destructive: #b3261e;
@@ -35,50 +37,65 @@
   --info: #1f5f9e;
   --info-soft: #ebf3fb;
 
-  --border: #e8ddc8;
-  --border-strong: #d6c7ab;
-  --input: #e8ddc8;
-  --ring: #c74504;
+  --border: #ece5cc;
+  --border-strong: #dccfa6;
+  --input: #dccfa6;
+  --ring: #826400;
 
-  --chart-1: #c74504;
-  --chart-2: #f59e0b;
-  --chart-3: #84cc16;
-  --chart-4: #06b6d4;
+  --olive: #71806a;
+  --terracotta: #a66c51;
+
+  --chart-1: #e8b923;
+  --chart-2: #71806a;
+  --chart-3: #a66c51;
+  --chart-4: #1f5f9e;
   --chart-5: #8b5cf6;
 
-  --sidebar: #f4f2ea;
-  --sidebar-foreground: #1c1917;
-  --sidebar-border: #e8ddc8;
-  --sidebar-accent: #fdefe7;
-  --sidebar-accent-foreground: #a93a03;
+  --sidebar: #fcfaf3;
+  --sidebar-foreground: #353335;
+  --sidebar-border: #ece5cc;
+  --sidebar-accent: #faf4df;
+  --sidebar-accent-foreground: #826400;
 }
 
 body {
   font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
 }
 
-/* Dark is a warm brown-black ramp, never neutral grey */
+h1, h2, .font-display {
+  font-family: var(--font-display, Georgia, serif);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: #faf4df;
+  color: #353335;
+}
+
+/* Dark: warm charcoal ramp (the portfolio has no dark theme yet; this keeps the editor usable) */
 .dark {
-  --background: #12100e;
-  --foreground: #faf7f2;
+  --background: #141312;
+  --foreground: #f5f2e8;
 
-  --card: #1c1916;
-  --card-foreground: #faf7f2;
-  --popover: #1c1916;
-  --popover-foreground: #faf7f2;
+  --card: #1c1b19;
+  --card-foreground: #f5f2e8;
+  --popover: #1c1b19;
+  --popover-foreground: #f5f2e8;
 
-  --primary: #c74504;
-  --primary-foreground: #ffffff;
-  --primary-hover: #dd5211;
-  --primary-soft: #26130a;
-  --primary-text: #ff8a5c;
+  --primary: #e8b923;
+  --primary-foreground: #353335;
+  --primary-hover: #f0c94a;
+  --primary-soft: #2a2410;
+  --primary-text: #f0c94a;
 
-  --secondary: #27221e;
-  --secondary-foreground: #faf7f2;
-  --muted: #27221e;
-  --muted-foreground: #a8a097;
-  --surface: #181512;
-  --surface-raised: #1c1916;
+  --secondary: #262421;
+  --secondary-foreground: #f5f2e8;
+  --muted: #262421;
+  --muted-foreground: #a9a69c;
+  --ink-secondary: #d2cfc4;
+  --surface: #181716;
+  --surface-raised: #1c1b19;
 
   --destructive: #ff9d95;
   --destructive-foreground: #ffffff;
@@ -90,22 +107,25 @@ body {
   --info: #8cc2f5;
   --info-soft: #10202e;
 
-  --border: #302a25;
-  --border-strong: #453d35;
-  --input: #302a25;
-  --ring: #ff8a5c;
+  --border: #2f2d29;
+  --border-strong: #46423a;
+  --input: #46423a;
+  --ring: #f0c94a;
 
-  --chart-1: #e2680f;
-  --chart-2: #f59e0b;
-  --chart-3: #84cc16;
-  --chart-4: #06b6d4;
+  --olive: #9aab92;
+  --terracotta: #c9917a;
+
+  --chart-1: #e8b923;
+  --chart-2: #9aab92;
+  --chart-3: #c9917a;
+  --chart-4: #8cc2f5;
   --chart-5: #8b5cf6;
 
-  --sidebar: #181512;
-  --sidebar-foreground: #faf7f2;
-  --sidebar-border: #302a25;
-  --sidebar-accent: #26130a;
-  --sidebar-accent-foreground: #ff8a5c;
+  --sidebar: #181716;
+  --sidebar-foreground: #f5f2e8;
+  --sidebar-border: #2f2d29;
+  --sidebar-accent: #2a2410;
+  --sidebar-accent-foreground: #f0c94a;
 }
 
 html {
@@ -124,19 +144,19 @@ body {
 }
 
 .react-flow__controls {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--card) 90%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
 }
 
 .react-flow__controls button {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 0.375rem;
 }
 
 .react-flow__controls button:hover {
-  background: #f3f4f6;
+  background: var(--muted);
 }
 
 .dark .react-flow__controls {
@@ -166,12 +186,12 @@ body {
 /* Show thin scrollbar — toggled via JS on scroll activity */
 .thin-scroll {
   scrollbar-width: thin;
-  scrollbar-color: #d1d5db transparent;
+  scrollbar-color: var(--border-strong) transparent;
 }
 .thin-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
 .thin-scroll::-webkit-scrollbar-track { background: transparent; }
-.thin-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 999px; }
-.thin-scroll::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+.thin-scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }
+.thin-scroll::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }
 .dark .thin-scroll { scrollbar-color: #4b5563 transparent; }
 .dark .thin-scroll::-webkit-scrollbar-thumb { background: #4b5563; }
 
@@ -186,12 +206,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--border-strong);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--muted-foreground);
 }
 
 .dark ::-webkit-scrollbar-thumb {

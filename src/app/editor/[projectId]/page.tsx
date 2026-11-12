@@ -142,7 +142,7 @@ export default function EditorPage() {
       url_slug: toSlug('New Page'),
       description: null,
       icon: null,
-      color: lastUsedColor ?? '#C74504',
+      color: lastUsedColor ?? '#e8b923',
       status: 'draft',
       position_x: 100 + Math.random() * 300,
       position_y: 100 + Math.random() * 300,
@@ -174,7 +174,7 @@ export default function EditorPage() {
   if ((!isSample && (authLoading || !user)) || isLoading) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
-        <Loader2 className="w-5 h-5 animate-spin text-accent" />
+        <Loader2 className="w-5 h-5 animate-spin text-primary-text" />
       </div>
     );
   }

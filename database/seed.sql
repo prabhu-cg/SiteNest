@@ -15,30 +15,30 @@ VALUES (
 
 -- Home Page
 INSERT INTO sitemap_nodes (project_id, title, url_slug, description, status, color, icon)
-SELECT id, 'Home', '/', 'Landing page and entry point', 'completed', '#EE661D', 'home'
+SELECT id, 'Home', '/', 'Landing page and entry point', 'completed', '#e8b923', 'home'
 FROM projects WHERE title = 'E-Commerce Platform Sitemap'
 RETURNING id AS home_id;
 
 -- Products Section
 INSERT INTO sitemap_nodes (project_id, title, url_slug, description, status, color, icon)
-SELECT id, 'Products', '/products', 'Products listing and browsing', 'completed', '#EE661D', 'package'
+SELECT id, 'Products', '/products', 'Products listing and browsing', 'completed', '#e8b923', 'package'
 FROM projects WHERE title = 'E-Commerce Platform Sitemap'
 RETURNING id AS products_id;
 
 -- Cart Section
 INSERT INTO sitemap_nodes (project_id, title, url_slug, description, status, color, icon)
-SELECT id, 'Shopping Cart', '/cart', 'Shopping cart management', 'draft', '#EE661D', 'shopping-cart'
+SELECT id, 'Shopping Cart', '/cart', 'Shopping cart management', 'draft', '#e8b923', 'shopping-cart'
 FROM projects WHERE title = 'E-Commerce Platform Sitemap'
 RETURNING id AS cart_id;
 
 -- Checkout Section
 INSERT INTO sitemap_nodes (project_id, title, url_slug, description, status, color, icon)
-SELECT id, 'Checkout', '/checkout', 'Order payment and confirmation', 'draft', '#EE661D', 'credit-card'
+SELECT id, 'Checkout', '/checkout', 'Order payment and confirmation', 'draft', '#e8b923', 'credit-card'
 FROM projects WHERE title = 'E-Commerce Platform Sitemap'
 RETURNING id AS checkout_id;
 
 -- Account Section
 INSERT INTO sitemap_nodes (project_id, title, url_slug, description, status, color, icon)
-SELECT id, 'Account', '/account', 'User account and orders', 'ready', '#EE661D', 'user'
+SELECT id, 'Account', '/account', 'User account and orders', 'ready', '#e8b923', 'user'
 FROM projects WHERE title = 'E-Commerce Platform Sitemap'
 RETURNING id AS account_id;

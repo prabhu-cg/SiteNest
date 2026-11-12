@@ -64,7 +64,7 @@ function CustomEdge({
         path={edgePath}
         markerEnd={selected ? 'url(#sn-arrow-accent)' : 'url(#sn-arrow)'}
         style={{
-          stroke: selected ? '#C74504' : '#bfb5a1',
+          stroke: selected ? '#826400' : '#bfb5a1',
           strokeWidth: selected ? 2.5 : 1.5,
           filter: selected ? 'drop-shadow(0 0 3px rgba(238,102,29,0.35))' : undefined,
           transition: 'stroke 0.15s ease, stroke-width 0.15s ease, filter 0.15s ease',
@@ -116,7 +116,7 @@ function LinkEdge({
         path={edgePath}
         markerEnd="url(#sn-arrow-accent)"
         style={{
-          stroke: '#C74504',
+          stroke: '#826400',
           strokeWidth: selected || data?.emphasis === 'on' ? 2.5 : 1.5,
           strokeDasharray: '6 4',
           // Dense maps: links dim unless they touch the selected page
@@ -229,7 +229,7 @@ function ExportController({
         const PIXEL_RATIO = 2;
         const dataUrl = await toPng(container, {
           pixelRatio: PIXEL_RATIO,
-          backgroundColor: '#f4f2ea',
+          backgroundColor: '#fcfaf3',
           filter: (el) => {
             if (!(el instanceof Element)) return true;
             if (el.hasAttribute('data-export-ignore')) return false;
@@ -354,7 +354,7 @@ function CustomControls({ readOnly = false }: { readOnly?: boolean }) {
     });
   };
 
-  const btnClass = 'w-8 h-8 flex items-center justify-center rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-orange-50/50 dark:hover:bg-orange-950/10 hover:border-accent/40 shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed';
+  const btnClass = 'w-8 h-8 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-primary-soft/50 dark:hover:bg-primary/10 hover:border-accent/40 shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed';
 
   return (
     <Panel position="bottom-left" className="flex flex-col gap-1 m-3" data-export-ignore>
@@ -680,7 +680,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
       url_slug: '/new-page',
       description: null,
       icon: null,
-      color: lastUsedColor ?? '#C74504',
+      color: lastUsedColor ?? '#e8b923',
       status: 'draft',
       position_x: contextMenu.flowX - 110,
       position_y: contextMenu.flowY - 30,
@@ -710,7 +710,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
       onConfirm={handleConfirmDeleteNode}
       onCancel={() => setConfirmDeleteNodeOpen(false)}
     />
-    <div ref={containerRef} className="w-full h-full relative" style={{ background: '#f4f2ea' }}>
+    <div ref={containerRef} className="w-full h-full relative" style={{ background: '#fcfaf3' }}>
       {/* SVG arrow marker definitions — referenced by CustomEdge via url(#id) */}
       <svg style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }} aria-hidden>
         <defs>
@@ -720,7 +720,7 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
           </marker>
           <marker id="sn-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5"
             markerWidth="5" markerHeight="5" orient="auto">
-            <path d="M0,1 L9,5 L0,9 Z" fill="#C74504" />
+            <path d="M0,1 L9,5 L0,9 Z" fill="#826400" />
           </marker>
         </defs>
       </svg>
@@ -801,9 +801,9 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
           >
             <button
               onClick={handleContextAddPage}
-              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-orange-950/20 hover:text-accent transition-colors"
+              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-primary-soft dark:hover:bg-primary/10 hover:text-primary-text transition-colors"
             >
-              <Plus className="w-3.5 h-3.5 text-accent flex-shrink-0" />
+              <Plus className="w-3.5 h-3.5 text-primary-text flex-shrink-0" />
               Add Page here
             </button>
           </div>
@@ -814,11 +814,11 @@ export default function Canvas({ projectId, projectTitle = 'sitemap', onNodeSele
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-8 text-center max-w-xs">
             <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <span className="text-accent text-xl">+</span>
+              <span className="text-primary-text text-xl">+</span>
             </div>
             <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-50 mb-1">Your canvas is empty</h3>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Click <span className="font-semibold text-accent">Add Page</span> in the sidebar to place your first node here.
+              Click <span className="font-semibold text-primary-text">Add Page</span> in the sidebar to place your first node here.
             </p>
           </div>
         </div>

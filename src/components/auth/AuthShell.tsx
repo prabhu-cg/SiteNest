@@ -29,12 +29,12 @@ function AuthPanel() {
       className="hidden lg:flex lg:w-[58%] relative flex-col justify-between p-12 overflow-hidden bg-primary bg-cover bg-center"
       style={{ backgroundImage: `url('${HERO_IMAGE}')` }}
     >
-      {/* Terracotta tint, then a dark scrim so the white text stays readable */}
-      <div aria-hidden className="absolute inset-0 pointer-events-none bg-primary/60 mix-blend-multiply" />
+      {/* Amber tint, then a dark scrim so the white text stays readable */}
+      <div aria-hidden className="absolute inset-0 pointer-events-none bg-primary/50 mix-blend-multiply" />
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'linear-gradient(to bottom, rgb(28 25 23 / 0.55), rgb(28 25 23 / 0.3) 45%, rgb(28 25 23 / 0.8))' }}
+        style={{ background: 'linear-gradient(to bottom, rgb(53 51 53 / 0.55), rgb(53 51 53 / 0.3) 45%, rgb(53 51 53 / 0.8))' }}
       />
 
       <Link href="/" className="relative flex items-center gap-3 w-fit">
@@ -43,29 +43,29 @@ function AuthPanel() {
       </Link>
 
       <div className="relative max-w-lg">
-        <span aria-hidden className="block text-white/20 leading-none select-none -ml-3" style={{ fontSize: '10rem', lineHeight: 1 }}>&ldquo;</span>
-        <blockquote className="text-white text-[1.6rem] font-semibold leading-snug -mt-6 [text-shadow:0_1px_12px_rgb(0_0_0/0.25)]">
+        <span aria-hidden className="block text-white/20 leading-none select-none -ml-3 font-display" style={{ fontSize: '10rem', lineHeight: 1 }}>&ldquo;</span>
+        <blockquote className="font-display text-white text-[2.25rem] font-medium leading-[1.15] tracking-[-0.02em] -mt-6 [text-shadow:0_1px_12px_rgb(0_0_0/0.25)]">
           {quote.text}
         </blockquote>
-        <p className="text-white/75 text-sm mt-5 font-medium tracking-wide">— {quote.author}</p>
+        <p className="text-white/80 text-sm mt-5 font-medium tracking-wide">— {quote.author}</p>
       </div>
 
-      <p className="relative text-white/60 text-xs">© {new Date().getFullYear()} SiteNest. All rights reserved.</p>
+      <p className="relative text-white/70 text-xs">© {new Date().getFullYear()} SiteNest. All rights reserved.</p>
     </div>
   );
 }
 
-/** Split-screen frame for every auth page: tinted photo on the left, form on cream on the right */
+/** Split-screen frame for every auth page: tinted photo on the left, form on white on the right */
 export default function AuthShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-svh flex">
       <AuthPanel />
-      <div className="flex-1 bg-surface flex flex-col items-center justify-center px-6 py-8 sm:py-12">
+      <div className="flex-1 bg-background flex flex-col items-center justify-center px-6 py-8 sm:py-12">
         <div className="w-full max-w-sm">
           <Link href="/" className="flex flex-col items-center mb-6 sm:mb-8">
-            <LogoMark size={52} className="mb-3 rounded-xl shadow-card" />
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Site<span className="text-primary">Nest</span>
+            <LogoMark size={52} className="mb-3 rounded-xl" />
+            <h1 className="font-display text-3xl text-foreground">
+              Site<span className="text-primary-text">Nest</span>
             </h1>
             <p className="text-muted-foreground text-sm mt-1.5">Visual sitemap builder</p>
           </Link>

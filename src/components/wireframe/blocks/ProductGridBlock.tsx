@@ -7,7 +7,7 @@ export default function ProductGridBlock() {
           <rect x={x} y="24" width="136" height="136" rx="8" fill="#e2e8f0" />
           <rect x={x} y="172" width="112" height="12" rx="3" fill="#334155" />
           <rect x={x} y="192" width="72" height="10" rx="3" fill="#94a3b8" />
-          <rect x={x} y="212" width="52" height="14" rx="3" fill="#C74504" />
+          <rect x={x} y="212" width="52" height="14" rx="3" fill="#e8b923" />
           <rect x={x} y="242" width="136" height="32" rx="6" fill="#f1f5f9" stroke="#cbd5e1" strokeWidth="1.5" />
         </g>
       ))}

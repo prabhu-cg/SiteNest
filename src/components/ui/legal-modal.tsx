@@ -45,7 +45,7 @@ export function LegalModalButton({ label, title, updated, sections }: LegalModal
               </div>
               <button
                 onClick={() => setOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 flex-shrink-0 transition-colors"
+                className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 flex-shrink-0 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>

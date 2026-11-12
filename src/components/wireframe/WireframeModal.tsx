@@ -94,7 +94,7 @@ export default function WireframeModal({ pageTitle, blocks: initialBlocks, onClo
       const slug = pageTitle.toLowerCase().replace(/\s+/g, '-') || 'wireframe';
       const pad = 32;
       const canvas = await html2canvas(el, {
-        backgroundColor: '#f4f2ea',
+        backgroundColor: '#fcfaf3',
         scale: 2,
         useCORS: true,
         ignoreElements: (el) => el.hasAttribute('data-export-ignore'),
@@ -257,7 +257,7 @@ export default function WireframeModal({ pageTitle, blocks: initialBlocks, onClo
                         </div>
                         <div className="px-2.5 py-1.5">
                           <p className="text-xs font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-1">
-                            <Plus className="w-3 h-3 text-accent opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                            <Plus className="w-3 h-3 text-primary-text opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                             {meta.label}
                           </p>
                           <p className="text-[10px] text-gray-400 leading-tight mt-0.5">{meta.description}</p>
@@ -275,7 +275,7 @@ export default function WireframeModal({ pageTitle, blocks: initialBlocks, onClo
 
           {/* Right: Canvas */}
           <div className="flex-1 flex flex-col min-w-0">
-            <div ref={scrollRef} className="thin-scroll flex-1 overflow-y-auto bg-[#f4f2ea] dark:bg-gray-900 p-6">
+            <div ref={scrollRef} className="thin-scroll flex-1 overflow-y-auto bg-[#fcfaf3] dark:bg-gray-900 p-6">
               {blocks.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center">
                   <div className="w-16 h-16 rounded-2xl bg-white border-2 border-dashed border-gray-300 flex items-center justify-center mb-4">

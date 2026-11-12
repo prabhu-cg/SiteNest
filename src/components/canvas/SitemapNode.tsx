@@ -45,7 +45,7 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
   const rootRef = useRef<HTMLDivElement>(null);
   const updateNodeInternals = useUpdateNodeInternals();
 
-  const accentColor = data.color || '#C74504';
+  const accentColor = data.color || '#e8b923';
   const statusStyle = STATUS_STYLES[data.status] ?? STATUS_STYLES.draft;
   const blocks = data.wireframe ?? [];
 
@@ -139,7 +139,7 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
               ) : (
                 <button
                 onClick={openPicker}
-                className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-accent transition-colors px-1.5 py-0.5 rounded-full border border-gray-200 dark:border-gray-700 hover:border-accent"
+                className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-primary-text transition-colors px-1.5 py-0.5 rounded-full border border-gray-200 dark:border-gray-700 hover:border-accent"
               >
                 <Plus className="w-3 h-3" />
                 <span>Add block</span>
@@ -179,7 +179,7 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
                       {meta.label}
                     </span>
                     {linkTitle && (
-                      <span className="flex items-center gap-0.5 max-w-[60px] text-[9px] font-semibold text-accent flex-shrink-0" title={`Links to ${linkTitle}`}>
+                      <span className="flex items-center gap-0.5 max-w-[60px] text-[9px] font-semibold text-primary-text flex-shrink-0" title={`Links to ${linkTitle}`}>
                         <Link2 className="w-2.5 h-2.5 flex-shrink-0" />
                         <span className="truncate">{linkTitle}</span>
                       </span>
@@ -213,7 +213,7 @@ const SitemapNode = memo(({ id, data, selected, isConnectable }: SitemapNodeProp
                   style={{ backgroundColor: '#fff7ed80' }}
                 >
                   <div className="flex items-center gap-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 shadow-sm">
-                    <Expand className="w-3 h-3 text-accent" />
+                    <Expand className="w-3 h-3 text-primary-text" />
                     <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">{readOnly ? 'Preview page' : 'Open editor'}</span>
                   </div>
                 </div>
