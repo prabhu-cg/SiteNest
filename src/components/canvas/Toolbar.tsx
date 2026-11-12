@@ -5,12 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useCanvasStore } from '@/store/canvasStore';
 import {
   Download, Undo2, Redo2, Moon, Sun,
-  ChevronDown, ChevronLeft, Check, Loader2, Play, GitBranch,
+  ChevronDown, ChevronLeft, Check, Loader2, Play, GitBranch, Info,
 } from 'lucide-react';
 import type { LayoutDirection } from '@/lib/layout';
 import { useTheme } from 'next-themes';
 import { Tooltip } from '@/components/ui/tooltip';
-import { AboutButton } from '@/components/ui/about-modal';
 import { LogoMark } from '@/components/ui/logo-mark';
 import ShareMenu from '@/components/canvas/ShareMenu';
 
@@ -265,7 +264,15 @@ export default function Toolbar({
       <div className="w-px h-4 bg-gray-200 dark:bg-gray-700" />
 
       <Tooltip content="About SiteNest" side="bottom">
-        <AboutButton variant="icon" />
+        <a
+          href="/about"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="About SiteNest"
+          className="inline-flex p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Info className="w-3.5 h-3.5" />
+        </a>
       </Tooltip>
 
       <div className="w-px h-4 bg-gray-200 dark:bg-gray-700" />

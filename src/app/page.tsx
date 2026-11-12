@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Plus, FolderOpen, Trash2, Clock, Loader2, Pencil, LogOut, User, BookOpen, ArrowRight } from 'lucide-react';
+import { Plus, FolderOpen, Trash2, Clock, Loader2, Pencil, LogOut, User, BookOpen, ArrowRight, Info } from 'lucide-react';
 import { getProjectList, deleteProject, saveProject, renameProject, type ProjectMeta } from '@/lib/storage';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { AboutButton } from '@/components/ui/about-modal';
+import Link from 'next/link';
 import { generateId } from '@/lib/utils';
 import { Tooltip } from '@/components/ui/tooltip';
 import { useAuthStore } from '@/store/authStore';
@@ -130,7 +130,10 @@ export default function Home() {
           <span className="text-lg font-bold text-gray-900 dark:text-white">SiteNest</span>
         </div>
         <div className="flex items-center gap-3">
-          <AboutButton variant="text" />
+          <Link href="/about" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Info className="w-3.5 h-3.5" />
+            About
+          </Link>
           {/* Profile dropdown */}
           <div className="relative">
             <button

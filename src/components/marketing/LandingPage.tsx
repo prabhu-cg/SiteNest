@@ -12,59 +12,9 @@ import {
   Check,
   ChevronDown,
 } from 'lucide-react';
-import { LogoMark } from '@/components/ui/logo-mark';
 import { MacbookFrame } from '@/components/marketing/MacbookFrame';
-import { AboutButton } from '@/components/ui/about-modal';
-import { LegalModalButton } from '@/components/ui/legal-modal';
+import { MarketingNav, MarketingFooter } from '@/components/marketing/MarketingChrome';
 import { SAMPLE_PROJECT_ID, SAMPLE_PROJECT_TITLE, SAMPLE_PAGE_COUNT } from '@/lib/sampleProject';
-
-const LAST_UPDATED = 'July 2026';
-
-const TERMS_SECTIONS = [
-  {
-    heading: 'Acceptance of terms',
-    body: 'By creating an account or using SiteNest, you agree to these terms. SiteNest is currently a Phase 1 MVP, and features, pricing, and functionality may change as the product evolves.',
-  },
-  {
-    heading: 'Your content',
-    body: 'You own the projects, pages, and wireframes you create. We store them only to provide the service to you and do not use your content for any purpose beyond that.',
-  },
-  {
-    heading: 'Acceptable use',
-    body: 'Do not use SiteNest to store or share illegal content, attempt to disrupt the service, or access accounts that are not yours.',
-  },
-  {
-    heading: 'No warranty',
-    body: 'SiteNest is provided "as is" during its MVP phase without warranties of any kind. We aim for reliability but cannot guarantee uninterrupted access.',
-  },
-  {
-    heading: 'Changes to these terms',
-    body: 'We may update these terms as SiteNest develops. Continued use of the service after a change means you accept the updated terms.',
-  },
-];
-
-const PRIVACY_SECTIONS = [
-  {
-    heading: 'What we collect',
-    body: 'Your email address, basic profile details (name, avatar), and the project data you create — pages, connections, and wireframes.',
-  },
-  {
-    heading: 'How we use it',
-    body: 'To authenticate you, save and sync your projects, and operate the core features of SiteNest. We do not use your data for advertising.',
-  },
-  {
-    heading: 'Where it’s stored',
-    body: 'Your data is stored in Supabase (PostgreSQL) with row-level security enabled, so only your account can access your projects.',
-  },
-  {
-    heading: 'Third parties',
-    body: 'We don’t sell your data. Supabase is used as our hosting and authentication infrastructure to run the service.',
-  },
-  {
-    heading: 'Your choices',
-    body: 'You can edit your profile, delete individual projects, or delete your account at any time from within the app.',
-  },
-];
 
 // A slice of the built-in sample project (src/lib/sampleProject.ts), shown as a mini sitemap
 const MINI_SITEMAP = [
@@ -169,33 +119,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Nav */}
-      <nav className="border-b border-border bg-background/90 backdrop-blur sticky top-0 z-20 px-6 py-3">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <LogoMark size={28} />
-            <div className="flex flex-col leading-none">
-              <span className="text-base font-bold tracking-tight text-foreground">Site<span className="text-primary-text">Nest</span></span>
-              <span className="mt-0.5 text-[11px] font-semibold text-muted-foreground">Visual sitemap builder</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 sm:gap-2">
-            <Link
-              href="/auth"
-              className="px-2 sm:px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/auth?mode=signup"
-              className="px-3 sm:px-5 h-10 inline-flex items-center text-sm font-semibold text-primary-foreground bg-primary hover:bg-primary-hover rounded-full transition-[background-color,transform] active:scale-[0.98] whitespace-nowrap"
-            >
-              <span className="sm:hidden">Get started</span>
-              <span className="hidden sm:inline">Get started free</span>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <MarketingNav />
 
       {/* Hero + stats band */}
       <div className="bg-surface">
@@ -382,24 +306,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-background">
-        <div className="max-w-6xl mx-auto flex flex-col items-center gap-4 px-6 py-12 sm:flex-row sm:justify-between">
-          <Link href="/" className="flex items-center gap-3">
-            <LogoMark size={28} />
-            <div className="flex flex-col leading-none">
-              <span className="text-sm font-bold tracking-tight text-foreground">Site<span className="text-primary-text">Nest</span></span>
-              <span className="mt-0.5 text-[10px] font-semibold text-muted-foreground">Visual sitemap builder</span>
-            </div>
-          </Link>
-          <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} SiteNest. Visual sitemap builder.</p>
-          <div className="flex items-center gap-5">
-            <AboutButton variant="plain" />
-            <LegalModalButton label="Privacy" title="Privacy Policy" updated={LAST_UPDATED} sections={PRIVACY_SECTIONS} />
-            <LegalModalButton label="Terms" title="Terms of Service" updated={LAST_UPDATED} sections={TERMS_SECTIONS} />
-          </div>
-        </div>
-      </footer>
+      <MarketingFooter />
     </div>
   );
 }
