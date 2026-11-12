@@ -62,7 +62,7 @@ export const TECH_STACK = [
 export const WHAT_IT_DOES = [
   { term: 'Infinite canvas', description: 'drag pages anywhere, zoom out for the big picture, or zoom in to work on one section.' },
   { term: 'Smart connections', description: 'link pages together to map navigation and how visitors move through the site.' },
-  { term: '19+ wireframe blocks', description: "heroes, forms, footers, and more to sketch a page layout in seconds." },
+  { term: '55+ wireframe blocks', description: "heroes, forms, footers, and more to sketch a page layout in seconds." },
   { term: 'Properties panel', description: 'edit titles, URLs, notes, and colors for every page without leaving the canvas.' },
-  { term: 'PNG & JSON export', description: 'for stakeholder reviews and handing work off to the rest of the team.' },
+  { term: 'PNG export', description: 'download the sitemap or any page wireframe for stakeholder reviews and handoffs.' },
 ];
